@@ -64,6 +64,10 @@ public class ItemsetMinerRunner {
         new ItemsetMinerRunner(itemsetMinerConfiguration);
     }
 
+    public ItemsetMiner<String> getItemsetMiner() {
+        return itemsetMiner;
+    }
+
     private void outputResults() throws IOException {
 
         logger.info(">>>STEP 7<<< writing results");

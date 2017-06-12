@@ -1,5 +1,6 @@
 package de.bioforscher.mmm.io;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import de.bioforscher.mmm.model.configurations.Jsonizable;
 
 /**
@@ -8,9 +9,14 @@ import de.bioforscher.mmm.model.configurations.Jsonizable;
 public class DataPointReaderConfiguration implements Jsonizable<DataPointReaderConfiguration> {
 
     private static final String DEFAULT_CHAIN_LIST_SEPARATOR = "\t";
+
+    @JsonProperty("pdb-location")
     private String pdbLocation;
+    @JsonProperty("chain-list-separator")
     private String chainListSeparator = DEFAULT_CHAIN_LIST_SEPARATOR;
+    @JsonProperty("parse-ligands")
     private boolean parseLigands;
+    @JsonProperty("parse-nucleotides")
     private boolean parseNucleotides;
 
     public boolean isParseNucleotides() {
