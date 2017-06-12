@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/mmm.iml" filepath="$PROJECT_DIR$/.idea/mmm.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mmm-all/mmm-all.iml" filepath="$PROJECT_DIR$/mmm-all/mmm-all.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mmm-benchmark/mmm-benchmark.iml" filepath="$PROJECT_DIR$/mmm-benchmark/mmm-benchmark.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mmm-classify/mmm-classify.iml" filepath="$PROJECT_DIR$/mmm-classify/mmm-classify.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mmm-core/mmm-core.iml" filepath="$PROJECT_DIR$/mmm-core/mmm-core.iml" />
+    </modules>
+  </component>
+</project>

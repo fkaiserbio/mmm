@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="MavenProjectsManager">
+    <option name="originalFiles">
+      <list>
+        <option value="$PROJECT_DIR$/mmm-core/pom.xml" />
+        <option value="$PROJECT_DIR$/mmm-all/pom.xml" />
+        <option value="$PROJECT_DIR$/mmm-classify/pom.xml" />
+        <option value="$PROJECT_DIR$/mmm-benchmark/pom.xml" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_6" />
+</project>

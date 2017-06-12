@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="mmm-all" />
+        <module name="mmm-benchmark" />
+        <module name="mmm-classify" />
+        <module name="mmm-core" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="mmm-all" target="1.8" />
+      <module name="mmm-benchmark" target="1.8" />
+      <module name="mmm-classify" target="1.8" />
+      <module name="mmm-core" target="1.8" />
+    </bytecodeTargetLevel>
+  </component>
+</project>
