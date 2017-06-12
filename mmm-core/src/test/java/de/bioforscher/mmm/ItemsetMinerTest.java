@@ -1,6 +1,7 @@
 package de.bioforscher.mmm;
 
 import de.bioforscher.mmm.io.DataPointReader;
+import de.bioforscher.mmm.io.DataPointReaderConfiguration;
 import de.bioforscher.mmm.model.DataPoint;
 import de.bioforscher.mmm.model.ItemsetComparatorType;
 import de.bioforscher.mmm.model.configurations.ItemsetMinerConfiguration;
@@ -37,8 +38,12 @@ public class ItemsetMinerTest {
         structureParserOptions.retrieveLigandInformation(true);
         structureParserOptions.omitHydrogens(true);
 
+        DataPointReaderConfiguration dataPointReaderConfiguration = new DataPointReaderConfiguration();
+        dataPointReaderConfiguration.setPdbLocation(null);
+        dataPointReaderConfiguration.setParseLigands(true);
+
         // read data points
-        DataPointReader dataPointReader = new DataPointReader(structureParserOptions, inputListPath, "\t");
+        DataPointReader dataPointReader = new DataPointReader(dataPointReaderConfiguration, inputListPath);
         List<DataPoint<String>> dataPoints = dataPointReader.readDataPoints();
 
 //        // map data points

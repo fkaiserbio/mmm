@@ -8,8 +8,8 @@ import de.bioforscher.singa.chemistry.parser.pdb.structures.StructureParser;
 import de.bioforscher.singa.chemistry.parser.pdb.structures.StructureParser.MultiParser;
 import de.bioforscher.singa.chemistry.parser.pdb.structures.StructureParserOptions;
 import de.bioforscher.singa.chemistry.physical.branches.StructuralModel;
-import de.bioforscher.singa.chemistry.physical.leaves.AminoAcid;
 import de.bioforscher.singa.chemistry.physical.leaves.LeafSubstructure;
+import de.bioforscher.singa.chemistry.physical.model.StructuralEntityFilter.LeafFilter;
 import de.bioforscher.singa.chemistry.physical.model.Structure;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,11 +17,13 @@ import org.slf4j.LoggerFactory;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
  * A reader for {@link DataPoint}s from PDB files. One needs to supply a list of PDB-IDs and chain IDs in the format [PDB-ID]_[chain-ID] separated by line breaks.
  * <p>
+ *
  * @author fk
  */
 public class DataPointReader {
@@ -30,13 +32,45 @@ public class DataPointReader {
 
     private final MultiParser multiParser;
     private final StructureParserOptions structureParserOptions;
+    private Predicate<LeafSubstructure<?, ?>> leafSubstructureFilter;
 
-    public DataPointReader(StructureParserOptions structureParserOptions, Path chainListPath, String separator) {
-        this.structureParserOptions = structureParserOptions;
-        multiParser = StructureParser.online()
-                                     .chainList(chainListPath, separator)
-                                     .setOptions(structureParserOptions);
+    public DataPointReader(DataPointReaderConfiguration dataPointReaderConfiguration, Path chainListPath) {
+        // create structure parser options
+        structureParserOptions = new StructureParserOptions();
+        structureParserOptions.retrieveLigandInformation(true);
+        structureParserOptions.omitHydrogens(true);
+
+        if (dataPointReaderConfiguration.getPdbLocation() != null) {
+            multiParser = StructureParser.local()
+                                         .localPDB(new StructureParser.LocalPDB(dataPointReaderConfiguration.getPdbLocation()))
+                                         .chainList(chainListPath, dataPointReaderConfiguration.getChainListSeparator())
+                                         .setOptions(structureParserOptions);
+        } else {
+            multiParser = StructureParser.online()
+                                         .chainList(chainListPath, dataPointReaderConfiguration.getChainListSeparator())
+                                         .setOptions(structureParserOptions);
+        }
+
+        createLeafSubstructureFilter(dataPointReaderConfiguration);
+
         logger.info("structure reader initialized with {} structures", multiParser.getNumberOfQueuedStructures());
+    }
+
+    /**
+     * Determines the {@link Predicate} to be used to filter {@link LeafSubstructure}s.
+     *
+     * @param dataPointReaderConfiguration The {@link DataPointReaderConfiguration} holding the desired filter information.
+     */
+    private void createLeafSubstructureFilter(DataPointReaderConfiguration dataPointReaderConfiguration) {
+        if (dataPointReaderConfiguration.isParseNucleotides()) {
+            leafSubstructureFilter = LeafFilter.isAminoAcid().or(LeafFilter.isNucleotide());
+        }
+        if (dataPointReaderConfiguration.isParseLigands()
+            && dataPointReaderConfiguration.isParseNucleotides()) {
+            leafSubstructureFilter = LeafFilter.isAminoAcid().or(LeafFilter.isNucleotide()).or(LeafFilter.isAtomContainer());
+        } else {
+            leafSubstructureFilter = LeafFilter.isAminoAcid();
+        }
     }
 
     /**
@@ -73,7 +107,7 @@ public class DataPointReader {
         StructuralModel firstModel = structure.getFirstModel().orElseThrow(() -> new RuntimeException("no model found for structure " + structure));
         List<Item<String>> items = firstModel.getLeafSubstructures().stream()
                                              // FIXME only amino acids are considered
-                                             .filter(AminoAcid.class::isInstance)
+                                             .filter(leafSubstructureFilter)
                                              .map(this::toItem)
                                              .collect(Collectors.toList());
         DataPointIdentifier dataPointIdentifier = new DataPointIdentifier(pdbIdentifier, chainIdentifier);

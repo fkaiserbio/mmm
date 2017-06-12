@@ -1,6 +1,7 @@
 package de.bioforscher.mmm.model.configurations.metrics;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import de.bioforscher.mmm.model.Itemset;
 import de.bioforscher.mmm.model.configurations.Jsonizable;
 import de.bioforscher.singa.chemistry.physical.atoms.representations.RepresentationSchemeType;
@@ -8,6 +9,7 @@ import de.bioforscher.singa.chemistry.physical.atoms.representations.Representat
 /**
  * @author fk
  */
+@JsonTypeName("ADHERENCE")
 public class AdherenceMetricConfiguration<LabelType extends Comparable<LabelType>> implements ExtractionMetricConfiguration<LabelType>, Jsonizable<CohesionMetricConfiguration> {
 
     /**

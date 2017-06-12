@@ -1,7 +1,11 @@
 package de.bioforscher.mmm.model.configurations;
 
+import de.bioforscher.mmm.io.DataPointReaderConfiguration;
 import de.bioforscher.mmm.model.ItemsetComparatorType;
-import de.bioforscher.mmm.model.configurations.metrics.*;
+import de.bioforscher.mmm.model.configurations.metrics.AdherenceMetricConfiguration;
+import de.bioforscher.mmm.model.configurations.metrics.ConsensusMetricConfiguration;
+import de.bioforscher.mmm.model.configurations.metrics.SeparationMetricConfiguration;
+import de.bioforscher.mmm.model.configurations.metrics.SupportMetricConfiguration;
 import de.bioforscher.mmm.model.enrichment.DataPointEnricherType;
 import de.bioforscher.mmm.model.mapping.rules.ChemicalGroupsMappingRule;
 import de.bioforscher.singa.chemistry.physical.atoms.representations.RepresentationSchemeType;
@@ -31,6 +35,12 @@ public class JsonConfigurationTest {
         itemsetMinerConfiguration.setDataPointEnricherType(DataPointEnricherType.INTERACTION);
         itemsetMinerConfiguration.setOutputLocation("/tmp/itemset-miner");
         itemsetMinerConfiguration.setMaximalEpochs(-1);
+
+        DataPointReaderConfiguration dataPointReaderConfiguration = new DataPointReaderConfiguration();
+        dataPointReaderConfiguration.setPdbLocation("/srv/pdb");
+        dataPointReaderConfiguration.setParseLigands(false);
+        dataPointReaderConfiguration.setParseNucleotides(false);
+        itemsetMinerConfiguration.setDataPointReaderConfiguration(dataPointReaderConfiguration);
 
         // add data point enricher type
         itemsetMinerConfiguration.setDataPointEnricherType(DataPointEnricherType.INTERACTION);

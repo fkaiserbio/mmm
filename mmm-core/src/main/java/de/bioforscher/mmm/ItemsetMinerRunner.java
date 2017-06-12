@@ -34,7 +34,6 @@ import java.util.stream.Collectors;
 public class ItemsetMinerRunner {
 
     private static final Logger logger = LoggerFactory.getLogger(ItemsetMinerRunner.class);
-    private static final String DEFAULT_CHAIN_LIST_SEPARATOR = "\t";
 
     private final ItemsetMinerConfiguration<String> itemsetMinerConfiguration;
     private List<DataPoint<String>> dataPoints;
@@ -166,7 +165,7 @@ public class ItemsetMinerRunner {
             logger.info("external input list will be used");
         }
 
-        DataPointReader dataPointReader = new DataPointReader(structureParserOptions, inputListPath, DEFAULT_CHAIN_LIST_SEPARATOR);
+        DataPointReader dataPointReader = new DataPointReader(itemsetMinerConfiguration.getDataPointReaderConfiguration(), inputListPath);
         dataPoints = dataPointReader.readDataPoints();
     }
 

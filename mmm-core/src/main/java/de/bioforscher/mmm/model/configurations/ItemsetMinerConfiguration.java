@@ -2,6 +2,7 @@ package de.bioforscher.mmm.model.configurations;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
+import de.bioforscher.mmm.io.DataPointReaderConfiguration;
 import de.bioforscher.mmm.model.ItemsetComparatorType;
 import de.bioforscher.mmm.model.configurations.metrics.ExtractionDependentMetricConfiguration;
 import de.bioforscher.mmm.model.configurations.metrics.ExtractionMetricConfiguration;
@@ -38,19 +39,18 @@ public class ItemsetMinerConfiguration<LabelType extends Comparable<LabelType>> 
     private String inputListLocation;
     @JsonProperty("output-location")
     private String outputLocation;
-
+    @JsonProperty("data-point-reader-configuration")
+    private DataPointReaderConfiguration dataPointReaderConfiguration;
     @JsonProperty("data-point-enricher-type")
     private DataPointEnricherType dataPointEnricherType;
     @JsonProperty("mapping-rule")
     private MappingRule<LabelType> mappingRule;
-
     @JsonProperty("simple-metrics")
     private List<SimpleMetricConfiguration<LabelType>> simpleMetricConfigurations;
     @JsonProperty("extraction-metric")
     private ExtractionMetricConfiguration<LabelType> extractionMetricConfiguration;
     @JsonProperty("extraction-dependent-metric")
     private List<ExtractionDependentMetricConfiguration<LabelType>> extractionDependentMetricConfigurations;
-
     @JsonProperty("itemset-comparator-type")
     private ItemsetComparatorType itemsetComparatorType = DEFAULT_ITEMSET_COMPARATOR;
     @JsonProperty("maximal-epochs")
@@ -68,6 +68,14 @@ public class ItemsetMinerConfiguration<LabelType extends Comparable<LabelType>> 
         logger.info("reading configuration from {}", configurationPath);
         String json = Files.lines(configurationPath).collect(Collectors.joining());
         return new ItemsetMinerConfiguration<>().fromJson(json);
+    }
+
+    public DataPointReaderConfiguration getDataPointReaderConfiguration() {
+        return dataPointReaderConfiguration;
+    }
+
+    public void setDataPointReaderConfiguration(DataPointReaderConfiguration dataPointReaderConfiguration) {
+        this.dataPointReaderConfiguration = dataPointReaderConfiguration;
     }
 
     public ItemsetComparatorType getItemsetComparatorType() {
