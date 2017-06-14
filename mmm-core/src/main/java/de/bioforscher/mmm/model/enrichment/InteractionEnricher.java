@@ -36,7 +36,7 @@ public class InteractionEnricher implements DataPointEnricher<String> {
     public static final Map<InteractionType, String> INTERACTION_LABEL_MAP;
     public static final List<InteractionType> ACTIVE_INTERACTIONS;
     private static final Logger logger = LoggerFactory.getLogger(InteractionEnricher.class);
-    private static final String PLIP_REST_PROVIDER_URL = "http://141.55.231.200:8731/plip/";
+    private static final String PLIP_REST_PROVIDER_URL = "https://biosciences.hs-mittweida.de/plip/interaction/";
     private static final String PLIP_REST_PROVIDER_CREDENTIALS = "itemset-miner:Eimo~Naeng4ahb7i";
 
 
