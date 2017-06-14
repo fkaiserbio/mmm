@@ -23,8 +23,11 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -37,10 +40,22 @@ public class InteractionEnricher implements DataPointEnricher<String> {
     public static final List<InteractionType> ACTIVE_INTERACTIONS;
     private static final Logger logger = LoggerFactory.getLogger(InteractionEnricher.class);
     private static final String PLIP_REST_PROVIDER_URL = "https://biosciences.hs-mittweida.de/plip/interaction/";
-    private static final String PLIP_REST_PROVIDER_CREDENTIALS = "itemset-miner:Eimo~Naeng4ahb7i";
+    private static String PLIP_REST_PROVIDER_CREDENTIALS;
 
 
     static {
+
+        // load PLIP credentials
+        URL baseConfigurationResource = Thread.currentThread().getContextClassLoader()
+                                              .getResource("plip_credentials.txt");
+        if (baseConfigurationResource != null) {
+            try {
+                PLIP_REST_PROVIDER_CREDENTIALS = Files.readAllLines(Paths.get(baseConfigurationResource.toURI())).get(0);
+            } catch (IOException | URISyntaxException e) {
+                throw new RuntimeException("failed to load PLIP credentials, please provide file plip_credentials.txt under class resources");
+            }
+        }
+
         INTERACTION_LABEL_MAP = new HashMap<>();
         INTERACTION_LABEL_MAP.put(InteractionType.HALOGEN_BOND, "hal");
         INTERACTION_LABEL_MAP.put(InteractionType.HYDROGEN_BOND, "hyb");
