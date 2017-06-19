@@ -1,0 +1,4 @@
+language: java
+before_install:
+- git clone https://github.com/cleberecht/singa.git
+- mvn clean install
