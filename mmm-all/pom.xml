@@ -7,6 +7,7 @@
     <groupId>de.bioforscher.mmm</groupId>
     <artifactId>mmm-all</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
 
     <build>
         <plugins>
@@ -42,27 +43,21 @@
             <version>1.7.21</version>
             <!--<scope>test</scope>-->
         </dependency>
-        <dependency>
-            <groupId>de.bioforscher.mmm</groupId>
-            <artifactId>mmm-core</artifactId>
-            <version>1.0-SNAPSHOT</version>
-            <!--<scope>test</scope>-->
-        </dependency>
         <!-- SINGA framework-->
         <dependency>
             <groupId>de.bioforscher.singa</groupId>
             <artifactId>singa-core</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>0.1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>de.bioforscher.singa</groupId>
             <artifactId>singa-mathematics</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>0.1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>de.bioforscher.singa</groupId>
             <artifactId>singa-chemistry</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>0.1.0-SNAPSHOT</version>
         </dependency>
         <!--JSON-->
         <dependency>

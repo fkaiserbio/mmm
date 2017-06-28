@@ -1,5 +1,6 @@
 package de.bioforscher.mmm.model.metrics;
 
+import de.bioforscher.mmm.model.Distribution;
 import de.bioforscher.mmm.model.Itemset;
 import de.bioforscher.mmm.model.configurations.metrics.ConsensusMetricConfiguration;
 import de.bioforscher.singa.chemistry.algorithms.superimposition.consensus.ConsensusAlignment;
@@ -22,7 +23,7 @@ import java.util.stream.Collectors;
 /**
  * @author fk
  */
-public class ConsensusMetric<LabelType extends Comparable<LabelType>> extends AbstractExtractionDependentMetric<LabelType> implements ParallelizableMetric<LabelType> {
+public class ConsensusMetric<LabelType extends Comparable<LabelType>> extends AbstractExtractionDependentMetric<LabelType> implements ParallelizableMetric<LabelType>, DistributionMetric<LabelType> {
 
     public static final Comparator<Itemset<?>> COMPARATOR = Comparator.comparing(Itemset::getConsensus);
 
@@ -36,6 +37,7 @@ public class ConsensusMetric<LabelType extends Comparable<LabelType>> extends Ab
     private final ExecutorService executorService;
     private final boolean alignWithinClusters;
     private final RepresentationSchemeType representationSchemeType;
+    private Map<Itemset<LabelType>, Distribution> distributions;
 
     public ConsensusMetric(ConsensusMetricConfiguration consensusMetricConfiguration) {
         maximalConsensus = consensusMetricConfiguration.getMaximalConsensus();
@@ -46,7 +48,8 @@ public class ConsensusMetric<LabelType extends Comparable<LabelType>> extends Ab
         representationSchemeType = consensusMetricConfiguration.getRepresentationSchemeType();
         alignWithinClusters = consensusMetricConfiguration.isAlignWithinClusters();
 
-        this.clusteredItemsets = new HashMap<>();
+        distributions = new HashMap<>();
+        clusteredItemsets = new HashMap<>();
     }
 
     public Map<Itemset<LabelType>, ConsensusAlignment> getClusteredItemsets() {
@@ -105,6 +108,10 @@ public class ConsensusMetric<LabelType extends Comparable<LabelType>> extends Ab
         extractedItemsets.entrySet().removeIf(entry -> entry.getKey().getConsensus() > maximalConsensus);
     }
 
+    @Override public Map<Itemset<LabelType>, Distribution> getDistributions() {
+        return distributions;
+    }
+
     private class ConsensusCalculator implements Callable<Map<Itemset<LabelType>, ConsensusAlignment>> {
         private final List<Itemset<LabelType>> itemsets;
 
@@ -144,6 +151,7 @@ public class ConsensusMetric<LabelType extends Comparable<LabelType>> extends Ab
                                                          .run();
                 }
 
+                consensusAlignment.getAlignmentTrace().forEach(observationValue -> addObservationForItemset(itemset, observationValue));
                 consensusAlignment.writeClusters(Paths.get("/tmp/test"));
 
                 // store consensus score

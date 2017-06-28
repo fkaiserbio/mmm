@@ -2,6 +2,7 @@ package de.bioforscher.mmm.model.metrics;
 
 import de.bioforscher.mmm.Itemsets;
 import de.bioforscher.mmm.model.DataPoint;
+import de.bioforscher.mmm.model.Distribution;
 import de.bioforscher.mmm.model.Itemset;
 import de.bioforscher.mmm.model.configurations.metrics.CohesionMetricConfiguration;
 import de.bioforscher.mmm.model.metrics.cohesion.CohesionMetricException;
@@ -19,7 +20,7 @@ import java.util.stream.Collectors;
 /**
  * @author fk
  */
-public class CohesionMetric<LabelType extends Comparable<LabelType>> extends AbstractExtractionMetric<LabelType> implements ParallelizableMetric<LabelType> {
+public class CohesionMetric<LabelType extends Comparable<LabelType>> extends AbstractExtractionMetric<LabelType> implements ParallelizableMetric<LabelType>, DistributionMetric<LabelType> {
 
     public static final Comparator<Itemset<?>> COMPARATOR = Comparator.comparing(Itemset::getCohesion);
 
@@ -30,9 +31,11 @@ public class CohesionMetric<LabelType extends Comparable<LabelType>> extends Abs
     private final int levelOfParallelism;
     private final ExecutorService executorService;
     private Map<Itemset<LabelType>, Integer> itemsetObservationsCounts;
+    private Map<Itemset<LabelType>, Distribution> distributions;
 
     public CohesionMetric(List<DataPoint<LabelType>> dataPoints, CohesionMetricConfiguration cohesionMetricConfiguration) {
         super(dataPoints, cohesionMetricConfiguration.getRepresentationSchemeType());
+        distributions = new HashMap<>();
         maximalCohesion = cohesionMetricConfiguration.getMaximalCohesion();
         vertexOne = cohesionMetricConfiguration.isVertexOne();
         levelOfParallelism = cohesionMetricConfiguration.getLevelOfParallelism();
@@ -116,10 +119,15 @@ public class CohesionMetric<LabelType extends Comparable<LabelType>> extends Abs
         }
     }
 
+    @Override
+    public Map<Itemset<LabelType>, Distribution> getDistributions() {
+        return distributions;
+    }
+
     private class CohesionCalculator implements Callable<Void> {
         private List<Itemset<LabelType>> itemsets;
 
-        public CohesionCalculator(List<Itemset<LabelType>> itemsets) {
+        CohesionCalculator(List<Itemset<LabelType>> itemsets) {
             this.itemsets = itemsets;
         }
 
@@ -146,6 +154,10 @@ public class CohesionMetric<LabelType extends Comparable<LabelType>> extends Abs
                         addToExtractedItemsets(itemset, bestCandidate);
 
                         double squaredExtent = Itemsets.calculateMaximalSquaredExtent(bestCandidate);
+
+                        // store extent for probability distribution
+                        addObservationForItemset(itemset, Math.sqrt(squaredExtent));
+
                         itemset.setCohesion(itemset.getCohesion() + squaredExtent);
                     } else {
                         logger.debug("no candidates found for itemset {} in data point {}", itemset, dataPoint);

@@ -37,6 +37,8 @@ public class ItemsetMinerConfiguration<LabelType extends Comparable<LabelType>> 
 
     @JsonProperty("input-list-location")
     private String inputListLocation;
+    @JsonProperty("input-directory-location")
+    private String inputDirectoryLocation;
     @JsonProperty("output-location")
     private String outputLocation;
     @JsonProperty("data-point-reader-configuration")
@@ -55,7 +57,6 @@ public class ItemsetMinerConfiguration<LabelType extends Comparable<LabelType>> 
     private ItemsetComparatorType itemsetComparatorType = DEFAULT_ITEMSET_COMPARATOR;
     @JsonProperty("maximal-epochs")
     private int maximalEpochs;
-
     public ItemsetMinerConfiguration() {
         this.creationUser = System.getProperty("user.name");
         this.creationDate = LocalDateTime.now().toString();
@@ -68,6 +69,14 @@ public class ItemsetMinerConfiguration<LabelType extends Comparable<LabelType>> 
         logger.info("reading configuration from {}", configurationPath);
         String json = Files.lines(configurationPath).collect(Collectors.joining());
         return new ItemsetMinerConfiguration<>().fromJson(json);
+    }
+
+    public String getInputDirectoryLocation() {
+        return inputDirectoryLocation;
+    }
+
+    public void setInputDirectoryLocation(String inputDirectoryLocation) {
+        this.inputDirectoryLocation = inputDirectoryLocation;
     }
 
     public DataPointReaderConfiguration getDataPointReaderConfiguration() {

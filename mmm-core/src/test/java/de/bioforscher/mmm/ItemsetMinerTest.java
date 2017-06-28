@@ -23,6 +23,12 @@ import java.util.List;
 public class ItemsetMinerTest {
 
     @Test
+    public void shouldCalculateMutualInformation() {
+
+//        MutualInformation.calculateConditionalMutualInformation();
+    }
+
+    @Test
     public void shouldCorrectlyCreateCandidates() throws Exception {
 
         Path inputListPath = Paths.get(Thread.currentThread().getContextClassLoader()

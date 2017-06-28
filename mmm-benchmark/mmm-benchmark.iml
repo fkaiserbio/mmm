@@ -16,16 +16,14 @@
     <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.7.21" level="project" />
     <orderEntry type="library" name="Maven: org.slf4j:slf4j-log4j12:1.7.21" level="project" />
     <orderEntry type="library" name="Maven: log4j:log4j:1.2.17" level="project" />
-    <orderEntry type="module" module-name="mmm-core" />
-    <orderEntry type="library" name="Maven: de.bioforscher.singa:singa-core:1.0-SNAPSHOT" level="project" />
-    <orderEntry type="library" name="Maven: javax.ws.rs:javax.ws.rs-api:2.0.1" level="project" />
-    <orderEntry type="library" name="Maven: de.bioforscher.singa:singa-mathematics:1.0-SNAPSHOT" level="project" />
-    <orderEntry type="library" name="Maven: de.bioforscher.singa:singa-chemistry:1.0-SNAPSHOT" level="project" />
-    <orderEntry type="library" name="Maven: de.bioforscher.singa:singa-units:1.0-SNAPSHOT" level="project" />
+    <orderEntry type="library" name="Maven: de.bioforscher.singa:singa-core:0.1.0-SNAPSHOT" level="project" />
+    <orderEntry type="library" name="Maven: de.bioforscher.singa:singa-mathematics:0.1.0-SNAPSHOT" level="project" />
+    <orderEntry type="library" name="Maven: de.bioforscher.singa:singa-chemistry:0.1.0-SNAPSHOT" level="project" />
+    <orderEntry type="library" name="Maven: de.bioforscher.singa:singa-features:0.1.0-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: tec.units:unit-ri:1.0" level="project" />
     <orderEntry type="library" name="Maven: javax.measure:unit-api:1.0" level="project" />
     <orderEntry type="library" name="Maven: tec.uom.lib:uom-lib-common:1.0" level="project" />
-    <orderEntry type="library" name="Maven: uk.ac.ebi.chebi.webapps.chebiWS.client:chebiWS-client:2.2.2" level="project" />
+    <orderEntry type="library" name="Maven: uk.ac.ebi.chebi.webapps.chebiWS.client:chebiWS-client:2.3.1" level="project" />
     <orderEntry type="library" name="Maven: com.sun.xml.ws:jaxws-rt:2.1.7" level="project" />
     <orderEntry type="library" name="Maven: com.sun.xml.bind:jaxb-impl:2.1.11" level="project" />
     <orderEntry type="library" name="Maven: com.sun.xml.stream.buffer:streambuffer:0.9" level="project" />

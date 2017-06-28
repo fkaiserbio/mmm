@@ -68,6 +68,11 @@ public class FingerprintMiner {
         this.familyChainListPath = familyChainListPath;
         this.blacklistChainListPath = blacklistChainListPath;
         this.decoyChainListPath = decoyChainListPath;
+
+        logger.info("fingerprint miner initialized with input {}", familyChainListPath);
+        logger.info("fingerprint miner initialized with blacklist {}", blacklistChainListPath);
+        logger.info("fingerprint miner initialized with decoy {}", decoyChainListPath);
+
         topScoringClusters = new HashMap<>();
         decoyDatasets = new HashMap<>();
 
@@ -100,16 +105,20 @@ public class FingerprintMiner {
 
         ItemsetMinerConfiguration<String> itemsetMinerConfiguration = ItemsetMinerConfiguration.from(Paths.get(baseConfigurationResource.toURI()));
 
-        // use all given input lists in directory
-        String inputListsLocation = args[0];
+        // use all given inputs in directory
+        String inputLocation = args[0];
         String blackListsLocation = args[1];
         String outputLocation = args[2];
-        Path inputListsPath = Paths.get(inputListsLocation);
+        Path inputPath = Paths.get(inputLocation);
         Path blackListsPath = Paths.get(blackListsLocation);
-        List<Path> inputLists = Files.list(inputListsPath).collect(Collectors.toList());
+        List<Path> inputLists = Files.list(inputPath).collect(Collectors.toList());
         for (Path inputList : inputLists) {
             logger.info("mining family {}", inputList);
-            itemsetMinerConfiguration.setInputListLocation(inputList.toString());
+            if (inputList.toFile().isFile()) {
+                itemsetMinerConfiguration.setInputListLocation(inputList.toString());
+            } else if (inputList.toFile().isDirectory()) {
+                itemsetMinerConfiguration.setInputDirectoryLocation(inputList.toString());
+            }
             Path familyOutputLocation = Paths.get(outputLocation).resolve(inputList.getFileName()).resolve("itemset-miner");
             itemsetMinerConfiguration.setOutputLocation(familyOutputLocation.toString());
             // assemble path to blacklist

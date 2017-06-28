@@ -6,7 +6,6 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="mmm-all" />
         <module name="mmm-benchmark" />
         <module name="mmm-classify" />
         <module name="mmm-core" />

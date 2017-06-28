@@ -32,7 +32,6 @@ public class ItemsetMiner<LabelType extends Comparable<LabelType>> {
     private int previousItemsetSize;
     private List<Itemset<LabelType>> totalItemsets;
     private Map<Itemset<LabelType>, List<Itemset<LabelType>>> totalExtractedItemsets;
-
     public ItemsetMiner(List<DataPoint<LabelType>> dataPoints, List<EvaluationMetric<LabelType>> evaluationMetrics, ItemsetMinerConfiguration<LabelType> itemsetMinerConfiguration) {
         this.dataPoints = dataPoints;
         this.evaluationMetrics = evaluationMetrics;
@@ -42,6 +41,10 @@ public class ItemsetMiner<LabelType extends Comparable<LabelType>> {
 
         logger.info("initialized with {} data points", dataPoints.size());
         initialize();
+    }
+
+    public List<EvaluationMetric<LabelType>> getEvaluationMetrics() {
+        return evaluationMetrics;
     }
 
     public List<Itemset<LabelType>> getTotalItemsets() {

@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -148,7 +149,7 @@ public class ItemsetMinerRunner {
         }
     }
 
-    private void readDataPoints() throws URISyntaxException {
+    private void readDataPoints() throws URISyntaxException, IOException {
 
         // create structure parser options
         StructureParserOptions structureParserOptions = new StructureParserOptions();
@@ -158,18 +159,28 @@ public class ItemsetMinerRunner {
         logger.info(">>>STEP 1<<< reading data points");
         // input path is resource
         String inputListLocation = itemsetMinerConfiguration.getInputListLocation();
-        Path inputListPath;
-        URL inputListResourceURL = Thread.currentThread().getContextClassLoader()
-                                         .getResource(inputListLocation);
-        if (inputListResourceURL != null) {
-            inputListPath = Paths.get(inputListResourceURL.toURI());
-            logger.info("found input list in resources");
-        } else {
-            inputListPath = Paths.get(inputListLocation);
-            logger.info("external input list will be used");
-        }
 
-        DataPointReader dataPointReader = new DataPointReader(itemsetMinerConfiguration.getDataPointReaderConfiguration(), inputListPath);
+        // decide whether to use directory or chain list to mine
+        DataPointReader dataPointReader;
+        if (itemsetMinerConfiguration.getInputListLocation() == null) {
+            List<Path> structurePaths = Files.list(Paths.get(itemsetMinerConfiguration.getInputDirectoryLocation()))
+                                             .filter(path -> path.toFile().isFile())
+                                             .collect(Collectors.toList());
+            dataPointReader = new DataPointReader(itemsetMinerConfiguration.getDataPointReaderConfiguration(), structurePaths);
+
+        } else {
+            Path inputListPath;
+            URL inputListResourceURL = Thread.currentThread().getContextClassLoader()
+                                             .getResource(inputListLocation);
+            if (inputListResourceURL != null) {
+                inputListPath = Paths.get(inputListResourceURL.toURI());
+                logger.info("found input list in resources");
+            } else {
+                inputListPath = Paths.get(inputListLocation);
+                logger.info("external input list will be used");
+            }
+            dataPointReader = new DataPointReader(itemsetMinerConfiguration.getDataPointReaderConfiguration(), inputListPath);
+        }
         dataPoints = dataPointReader.readDataPoints();
     }
 

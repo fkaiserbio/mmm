@@ -11,6 +11,7 @@ import de.bioforscher.singa.chemistry.physical.branches.StructuralModel;
 import de.bioforscher.singa.chemistry.physical.leaves.LeafSubstructure;
 import de.bioforscher.singa.chemistry.physical.model.StructuralEntityFilter.LeafFilter;
 import de.bioforscher.singa.chemistry.physical.model.Structure;
+import de.bioforscher.singa.chemistry.physical.model.Structures;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,15 +31,22 @@ public class DataPointReader {
 
     private static final Logger logger = LoggerFactory.getLogger(ItemsetMiner.class);
 
-    private final MultiParser multiParser;
-    private final StructureParserOptions structureParserOptions;
+    private MultiParser multiParser;
+    private StructureParserOptions structureParserOptions;
     private Predicate<LeafSubstructure<?, ?>> leafSubstructureFilter;
 
+    public DataPointReader(DataPointReaderConfiguration dataPointReaderConfiguration, List<Path> structurePaths) {
+        createStructrueParserOptions();
+        multiParser = StructureParser.local()
+                                     .paths(structurePaths)
+                                     .everything()
+                                     .setOptions(structureParserOptions);
+        createLeafSubstructureFilter(dataPointReaderConfiguration);
+        logger.info("structure reader initialized with {} structures from paths", multiParser.getNumberOfQueuedStructures());
+    }
+
     public DataPointReader(DataPointReaderConfiguration dataPointReaderConfiguration, Path chainListPath) {
-        // create structure parser options
-        structureParserOptions = new StructureParserOptions();
-        structureParserOptions.retrieveLigandInformation(true);
-        structureParserOptions.omitHydrogens(true);
+        createStructrueParserOptions();
 
         if (dataPointReaderConfiguration.getPdbLocation() != null) {
             multiParser = StructureParser.local()
@@ -53,7 +61,14 @@ public class DataPointReader {
 
         createLeafSubstructureFilter(dataPointReaderConfiguration);
 
-        logger.info("structure reader initialized with {} structures", multiParser.getNumberOfQueuedStructures());
+        logger.info("structure reader initialized with {} structures from chain list", multiParser.getNumberOfQueuedStructures());
+    }
+
+    private void createStructrueParserOptions() {
+        // create structure parser options
+        structureParserOptions = new StructureParserOptions();
+        structureParserOptions.retrieveLigandInformation(true);
+        structureParserOptions.omitHydrogens(true);
     }
 
     /**
@@ -82,7 +97,12 @@ public class DataPointReader {
         int queuedStructures = multiParser.getNumberOfQueuedStructures();
         List<DataPoint<String>> dataPoints = new ArrayList<>();
         while (multiParser.hasNext()) {
-            dataPoints.add(toDataPoint(multiParser.next(), multiParser.getCurrentPdbIdentifier(), multiParser.getCurrentChainIdentifier()));
+            Structure structure = multiParser.next();
+            if (Structures.isAlphaCarbonStructure(structure) || Structures.isBackboneStructure(structure)) {
+                logger.warn("detected alpha carbon/backbone only structure, skipping {}", structure);
+                continue;
+            }
+            dataPoints.add(toDataPoint(structure, structure.getPdbIdentifier(), structure.getFirstModel().get().getFirstChain().get().getChainIdentifier()));
             int remainingStructures = multiParser.getNumberOfRemainingStructures();
             if (remainingStructures % 10 == 0) {
                 logger.info("read {} out of {} structures", queuedStructures - remainingStructures, queuedStructures);

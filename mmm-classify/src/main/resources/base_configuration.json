@@ -3,6 +3,7 @@
   "creation-user": "fkaiser",
   "creation-date": "2017-06-06T10:45:14.401",
   "input-list-location": null,
+  "input-directory-location": null,
   "output-location": null,
   "data-point-reader-configuration": {
     "type": "DataPointReaderConfiguration",
@@ -23,7 +24,7 @@
   ],
   "extraction-metric": {
     "type": "COHESION",
-    "maximal-cohesion": 15.0,
+    "maximal-cohesion": 10.0,
     "vertex-one": false,
     "level-of-parallelism": -1
   },
@@ -40,7 +41,7 @@
   "extraction-dependent-metric": [
     {
       "type": "SEPARATION",
-      "maximal-separation": 300.0,
+      "maximal-separation": 100.0,
       "optimal-separation": 5.0,
       "morse-well-depth": 500.0,
       "morse-shape": 0.2
