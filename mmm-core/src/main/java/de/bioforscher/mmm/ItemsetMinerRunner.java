@@ -184,11 +184,11 @@ public class ItemsetMinerRunner {
         dataPoints = dataPointReader.readDataPoints();
     }
 
-    private void printReport() {
+    private void printReport() throws IOException {
 
         logger.info(">>>STEP 6<<< printing report");
 
-        StringBuilder sb = new StringBuilder()
+        StringBuilder report = new StringBuilder()
                 .append("\n\n\t>>>Itemset Miner<<<")
                 .append("\n\n\tCopyright (c) 2017.\n")
                 .append("\tFlorian Kaiser, bioinformatics group Mittweida\n")
@@ -199,12 +199,12 @@ public class ItemsetMinerRunner {
                 .append(evaluationMetrics.stream()
                                          .map(EvaluationMetric::toString)
                                          .collect(Collectors.joining("\n\t\t", "\tevaluation metrics:\n\t\t", "\n")));
-        sb.append("\tsorting by\t\t\t")
-          .append(itemsetMinerConfiguration.getItemsetComparatorType())
-          .append("\n");
+        report.append("\tsorting by\t\t\t")
+              .append(itemsetMinerConfiguration.getItemsetComparatorType())
+              .append("\n");
 
-        sb.append("\n====RESULTS==========================================================\n");
-        sb.append("rank\titemset\n");
+        report.append("\n====RESULTS==========================================================\n");
+        report.append("rank\titemset\n");
         List<Itemset<String>> totalItemsets = itemsetMiner.getTotalItemsets();
         for (int i = 0; i < totalItemsets.size(); i++) {
             int rank = i + 1;
@@ -213,10 +213,16 @@ public class ItemsetMinerRunner {
             stringJoiner.add(rank + "/" + totalItemsets.size());
             stringJoiner.add(itemset.toString());
             stringJoiner.add("(" + itemsetMiner.getTotalExtractedItemsets().get(itemset).size() + " observations)");
-            sb.append(stringJoiner.toString());
+            report.append(stringJoiner.toString());
         }
 
-        sb.append("=====================================================================\n");
-        logger.info("mining report: {}", sb.toString());
+        report.append("=====================================================================\n");
+        logger.info("mining report: {}", report.toString());
+
+        Path reportOutputPath = Paths.get(itemsetMinerConfiguration.getOutputLocation()).resolve("report.txt");
+        Files.createDirectories(reportOutputPath.getParent());
+
+        logger.info("writing report to {}", reportOutputPath);
+        Files.write(reportOutputPath, report.toString().getBytes());
     }
 }
