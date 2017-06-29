@@ -28,7 +28,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -38,7 +37,6 @@ import java.util.stream.Collectors;
 
 /**
  * @author fk
- *         TODO construct from JSON configuration object
  */
 public class FingerprintMiner {
 
@@ -60,14 +58,11 @@ public class FingerprintMiner {
     private List<Itemset<String>> topScoringItemsets;
     private StructureParserOptions structureParserOptions;
 
-    public FingerprintMiner(ItemsetMinerConfiguration<String> itemsetMinerConfiguration, Path familyChainListPath, Path blacklistChainListPath, Path decoyChainListPath) throws
-                                                                                                                                                                         IOException,
-                                                                                                                                                                         URISyntaxException,
-                                                                                                                                                                         FingerprintMinerException {
-        this.itemsetMinerConfiguration = itemsetMinerConfiguration;
-        this.familyChainListPath = familyChainListPath;
-        this.blacklistChainListPath = blacklistChainListPath;
-        this.decoyChainListPath = decoyChainListPath;
+    public FingerprintMiner(FingerprintMinerConfiguration fingerprintMinerConfiguration) throws IOException, URISyntaxException, FingerprintMinerException {
+        this.itemsetMinerConfiguration = fingerprintMinerConfiguration.getItemsetMinerConfiguration();
+        this.familyChainListPath = Paths.get(fingerprintMinerConfiguration.getInputListLocation());
+        this.blacklistChainListPath = Paths.get(fingerprintMinerConfiguration.getBlacklistLocation());
+        this.decoyChainListPath = Paths.get(fingerprintMinerConfiguration.getDecoyListLocation());
 
         logger.info("fingerprint miner initialized with input {}", familyChainListPath);
         logger.info("fingerprint miner initialized with blacklist {}", blacklistChainListPath);
@@ -86,50 +81,6 @@ public class FingerprintMiner {
         selectTopScoringItemsets();
         createDecoy();
         outputResults();
-    }
-
-    public static void main(String[] args) throws URISyntaxException, IOException, FingerprintMinerException {
-        logger.info("loading base configuration");
-        URL baseConfigurationResource = Thread.currentThread().getContextClassLoader()
-                                              .getResource("base_configuration.json");
-        if (baseConfigurationResource == null) {
-            throw new FingerprintMinerException("failed to load base configuration");
-        }
-
-        logger.info("loading decoy chain list");
-        URL decoyChainListResource = Thread.currentThread().getContextClassLoader()
-                                           .getResource("nrPDB_chains_BLAST_10e80");
-        if (decoyChainListResource == null) {
-            throw new FingerprintMinerException("failed to load decoy chain list");
-        }
-
-        ItemsetMinerConfiguration<String> itemsetMinerConfiguration = ItemsetMinerConfiguration.from(Paths.get(baseConfigurationResource.toURI()));
-
-        // use all given inputs in directory
-        String inputLocation = args[0];
-        String blackListsLocation = args[1];
-        String outputLocation = args[2];
-        Path inputPath = Paths.get(inputLocation);
-        Path blackListsPath = Paths.get(blackListsLocation);
-        List<Path> inputLists = Files.list(inputPath).collect(Collectors.toList());
-        for (Path inputList : inputLists) {
-            logger.info("mining family {}", inputList);
-            if (inputList.toFile().isFile()) {
-                itemsetMinerConfiguration.setInputListLocation(inputList.toString());
-            } else if (inputList.toFile().isDirectory()) {
-                itemsetMinerConfiguration.setInputDirectoryLocation(inputList.toString());
-            }
-            Path familyOutputLocation = Paths.get(outputLocation).resolve(inputList.getFileName()).resolve("itemset-miner");
-            itemsetMinerConfiguration.setOutputLocation(familyOutputLocation.toString());
-            // assemble path to blacklist
-            Path blackList = blackListsPath.resolve(inputList.getFileName() + "_blacklist");
-            // run fingerprint miner
-            try {
-                new FingerprintMiner(itemsetMinerConfiguration, inputList, blackList, Paths.get(decoyChainListResource.toURI()));
-            } catch (IOException | URISyntaxException | FingerprintMinerException e) {
-                logger.warn("failed to mine family {}", inputList, e);
-            }
-        }
     }
 
     private void outputResults() throws IOException {

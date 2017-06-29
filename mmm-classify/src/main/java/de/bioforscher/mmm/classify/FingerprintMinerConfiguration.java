@@ -7,7 +7,7 @@ import de.bioforscher.mmm.model.configurations.Jsonizable;
 /**
  * @author fk
  */
-public class FingerPrintMinerConfiguration implements Jsonizable<FingerPrintMinerConfiguration> {
+public class FingerprintMinerConfiguration implements Jsonizable<FingerprintMinerConfiguration> {
 
     @JsonProperty("input-list-location")
     private String inputListLocation;
@@ -21,6 +21,14 @@ public class FingerPrintMinerConfiguration implements Jsonizable<FingerPrintMine
     private double decoyRmsdCutoff;
     @JsonProperty("itemset-miner-configuration")
     private ItemsetMinerConfiguration<String> itemsetMinerConfiguration;
+
+    public ItemsetMinerConfiguration<String> getItemsetMinerConfiguration() {
+        return itemsetMinerConfiguration;
+    }
+
+    public void setItemsetMinerConfiguration(ItemsetMinerConfiguration<String> itemsetMinerConfiguration) {
+        this.itemsetMinerConfiguration = itemsetMinerConfiguration;
+    }
 
     public String getInputListLocation() {
         return inputListLocation;
