@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 public class MutualInformationAnalyzer<LabelType extends Comparable<LabelType>> extends AbstractItemsetMinerAnalyzer<LabelType> {
 
     private static final Logger logger = LoggerFactory.getLogger(MutualInformationAnalyzer.class);
-    private static final double MINIMAL_MUTUAL_INFORMATION = 1.0;
+    private static final double MINIMAL_MUTUAL_INFORMATION = 1.2;
     private final Class<? extends DistributionMetric> distributionMetricType;
     private TreeMap<Double, Pair<Itemset<LabelType>>> mutualInformation;
 

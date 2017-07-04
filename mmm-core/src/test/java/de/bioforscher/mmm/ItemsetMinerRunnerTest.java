@@ -2,7 +2,7 @@ package de.bioforscher.mmm;
 
 import de.bioforscher.mmm.model.analysis.association.MutualInformationAnalyzer;
 import de.bioforscher.mmm.model.configurations.ItemsetMinerConfiguration;
-import de.bioforscher.mmm.model.metrics.ConsensusMetric;
+import de.bioforscher.mmm.model.metrics.CohesionMetric;
 import de.bioforscher.mmm.model.metrics.DistributionMetric;
 import de.bioforscher.mmm.model.metrics.EvaluationMetric;
 import org.junit.Test;
@@ -31,6 +31,7 @@ public class ItemsetMinerRunnerTest {
         }
 
         ItemsetMiner<String> itemsetMiner = itemsetMinerRunner.getItemsetMiner();
-        MutualInformationAnalyzer<String> analyzer = new MutualInformationAnalyzer<>(itemsetMiner, ConsensusMetric.class);
+//        ConfidenceAnalyzer<String> confidenceAnalyzer = new ConfidenceAnalyzer<>(itemsetMiner);
+        MutualInformationAnalyzer<String> analyzer = new MutualInformationAnalyzer<>(itemsetMiner, CohesionMetric.class);
     }
 }

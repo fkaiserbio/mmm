@@ -12,7 +12,7 @@
     "parse-ligands": false,
     "parse-nucleotides": false
   },
-  "data-point-enricher-type": "INTERACTION",
+  /*"data-point-enricher-type": "INTERACTION",*/
   /*"mapping-rule": {
     "type": "CHEMICAL_GROUPS"
   },*/
@@ -57,5 +57,5 @@
     }
   ],
   "itemset-comparator-type": "CONSENSUS",
-  "maximal-epochs": -1
+  "maximal-epochs": 3
 }
