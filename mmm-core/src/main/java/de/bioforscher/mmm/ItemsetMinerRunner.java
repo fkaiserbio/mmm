@@ -9,7 +9,8 @@ import de.bioforscher.mmm.model.configurations.metrics.ExtractionDependentMetric
 import de.bioforscher.mmm.model.configurations.metrics.ExtractionMetricConfiguration;
 import de.bioforscher.mmm.model.configurations.metrics.SimpleMetricConfiguration;
 import de.bioforscher.mmm.model.enrichment.DataPointEnricherType;
-import de.bioforscher.mmm.model.enrichment.InteractionEnricher;
+import de.bioforscher.mmm.model.enrichment.IntraChainInteractionEnricher;
+import de.bioforscher.mmm.model.enrichment.LigandInteractionEnricher;
 import de.bioforscher.mmm.model.mapping.DataPointLabelMapper;
 import de.bioforscher.mmm.model.mapping.MappingRule;
 import de.bioforscher.mmm.model.metrics.EvaluationMetric;
@@ -139,9 +140,13 @@ public class ItemsetMinerRunner {
         if (dataPointEnricherType != null) {
             logger.info("applying data point enricher {}", dataPointEnricherType);
             switch (dataPointEnricherType) {
-                case INTERACTION:
-                    InteractionEnricher interactionEnricher = new InteractionEnricher();
-                    dataPoints.forEach(interactionEnricher::enrichDataPoint);
+                case INTRA_CHAIN_INTERACTION:
+                    IntraChainInteractionEnricher intraChainInteractionEnricher = new IntraChainInteractionEnricher();
+                    dataPoints.forEach(intraChainInteractionEnricher::enrichDataPoint);
+                    break;
+                case LIGAND_INTERACTION:
+                    LigandInteractionEnricher ligandInteractionEnricher = new LigandInteractionEnricher();
+                    dataPoints.forEach(ligandInteractionEnricher::enrichDataPoint);
                     break;
             }
         } else {

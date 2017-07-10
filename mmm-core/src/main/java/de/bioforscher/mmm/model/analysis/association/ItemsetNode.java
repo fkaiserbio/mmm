@@ -23,4 +23,10 @@ public class ItemsetNode<LabelType extends Comparable<LabelType>> extends Abstra
     public Itemset<LabelType> getItemset() {
         return itemset;
     }
+
+    @Override public String toString() {
+        return "ItemsetNode{" +
+               "itemset=" + itemset.toSimpleString() +
+               '}';
+    }
 }

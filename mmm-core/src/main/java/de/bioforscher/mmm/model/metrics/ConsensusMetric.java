@@ -11,7 +11,6 @@ import de.bioforscher.singa.chemistry.physical.branches.StructuralMotif;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
@@ -152,7 +151,6 @@ public class ConsensusMetric<LabelType extends Comparable<LabelType>> extends Ab
                 }
 
                 consensusAlignment.getAlignmentTrace().forEach(observationValue -> addObservationForItemset(itemset, observationValue));
-                consensusAlignment.writeClusters(Paths.get("/tmp/test"));
 
                 // store consensus score
                 itemset.setConsensus(consensusAlignment.getNormalizedConsensusScore());

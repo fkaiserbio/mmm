@@ -151,6 +151,7 @@ public class Itemset<LabelType extends Comparable<LabelType>> implements Compara
                                                                   .collect(Collectors.toList());
 
             // sort leaves based on three letter code
+            // FIXME adapt sorting from VCG
             leafSubstructures.sort(Comparator.comparing(leafSubstructure -> leafSubstructure.getFamily().getThreeLetterCode()));
             if (!leafSubstructures.isEmpty()) {
                 structuralMotif = StructuralMotif.fromLeaves(leafSubstructures);

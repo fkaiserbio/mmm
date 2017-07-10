@@ -3,6 +3,9 @@ package de.bioforscher.mmm.io;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import de.bioforscher.mmm.model.configurations.Jsonizable;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author fk
  */
@@ -16,8 +19,32 @@ public class DataPointReaderConfiguration implements Jsonizable<DataPointReaderC
     private String chainListSeparator = DEFAULT_CHAIN_LIST_SEPARATOR;
     @JsonProperty("parse-ligands")
     private boolean parseLigands;
+    @JsonProperty("ligand-label-whitelist")
+    private List<String> ligandLabelWhitelist = new ArrayList<>();
     @JsonProperty("parse-nucleotides")
     private boolean parseNucleotides;
+    @JsonProperty("parse-water")
+    private boolean parseWater;
+
+    public List<String> getLigandLabelWhitelist() {
+        return ligandLabelWhitelist;
+    }
+
+    public void setLigandLabelWhitelist(List<String> ligandLabelWhitelist) {
+        this.ligandLabelWhitelist = ligandLabelWhitelist;
+    }
+
+    public void addToLigandLabelWhiteList(String ligandLabel) {
+        ligandLabelWhitelist.add(ligandLabel);
+    }
+
+    public boolean isParseWater() {
+        return parseWater;
+    }
+
+    public void setParseWater(boolean parseWater) {
+        this.parseWater = parseWater;
+    }
 
     public boolean isParseNucleotides() {
         return parseNucleotides;

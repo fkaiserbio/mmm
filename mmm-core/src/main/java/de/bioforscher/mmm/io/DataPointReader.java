@@ -8,6 +8,7 @@ import de.bioforscher.singa.chemistry.parser.pdb.structures.StructureParser;
 import de.bioforscher.singa.chemistry.parser.pdb.structures.StructureParser.MultiParser;
 import de.bioforscher.singa.chemistry.parser.pdb.structures.StructureParserOptions;
 import de.bioforscher.singa.chemistry.physical.branches.StructuralModel;
+import de.bioforscher.singa.chemistry.physical.leaves.AtomContainer;
 import de.bioforscher.singa.chemistry.physical.leaves.LeafSubstructure;
 import de.bioforscher.singa.chemistry.physical.model.StructuralEntityFilter.LeafFilter;
 import de.bioforscher.singa.chemistry.physical.model.Structure;
@@ -34,19 +35,21 @@ public class DataPointReader {
     private MultiParser multiParser;
     private StructureParserOptions structureParserOptions;
     private Predicate<LeafSubstructure<?, ?>> leafSubstructureFilter;
+    private List<String> labelWhiteList;
 
     public DataPointReader(DataPointReaderConfiguration dataPointReaderConfiguration, List<Path> structurePaths) {
-        createStructrueParserOptions();
+        createStructureParserOptions();
         multiParser = StructureParser.local()
                                      .paths(structurePaths)
                                      .everything()
                                      .setOptions(structureParserOptions);
         createLeafSubstructureFilter(dataPointReaderConfiguration);
+        labelWhiteList = dataPointReaderConfiguration.getLigandLabelWhitelist();
         logger.info("structure reader initialized with {} structures from paths", multiParser.getNumberOfQueuedStructures());
     }
 
     public DataPointReader(DataPointReaderConfiguration dataPointReaderConfiguration, Path chainListPath) {
-        createStructrueParserOptions();
+        createStructureParserOptions();
 
         if (dataPointReaderConfiguration.getPdbLocation() != null) {
             multiParser = StructureParser.local()
@@ -58,13 +61,19 @@ public class DataPointReader {
                                          .chainList(chainListPath, dataPointReaderConfiguration.getChainListSeparator())
                                          .setOptions(structureParserOptions);
         }
-
         createLeafSubstructureFilter(dataPointReaderConfiguration);
-
+        labelWhiteList = dataPointReaderConfiguration.getLigandLabelWhitelist();
         logger.info("structure reader initialized with {} structures from chain list", multiParser.getNumberOfQueuedStructures());
     }
 
-    private void createStructrueParserOptions() {
+    public static boolean hasValidLabel(LeafSubstructure<?, ?> leafSubstructureToCheck, List<String> labelWhiteList) {
+        if (!(leafSubstructureToCheck instanceof AtomContainer)) {
+            return true;
+        }
+        return labelWhiteList.contains(leafSubstructureToCheck.getFamily().getThreeLetterCode());
+    }
+
+    private void createStructureParserOptions() {
         // create structure parser options
         structureParserOptions = new StructureParserOptions();
         structureParserOptions.retrieveLigandInformation(true);
@@ -77,14 +86,15 @@ public class DataPointReader {
      * @param dataPointReaderConfiguration The {@link DataPointReaderConfiguration} holding the desired filter information.
      */
     private void createLeafSubstructureFilter(DataPointReaderConfiguration dataPointReaderConfiguration) {
+        leafSubstructureFilter = LeafFilter.isAminoAcid();
         if (dataPointReaderConfiguration.isParseNucleotides()) {
-            leafSubstructureFilter = LeafFilter.isAminoAcid().or(LeafFilter.isNucleotide());
+            leafSubstructureFilter = leafSubstructureFilter.or(LeafFilter.isNucleotide());
         }
-        if (dataPointReaderConfiguration.isParseLigands()
-            && dataPointReaderConfiguration.isParseNucleotides()) {
-            leafSubstructureFilter = LeafFilter.isAminoAcid().or(LeafFilter.isNucleotide()).or(LeafFilter.isAtomContainer());
-        } else {
-            leafSubstructureFilter = LeafFilter.isAminoAcid();
+        if (dataPointReaderConfiguration.isParseLigands()) {
+            leafSubstructureFilter = leafSubstructureFilter.or(LeafFilter.isAtomContainer());
+        }
+        if (!dataPointReaderConfiguration.isParseWater()) {
+            leafSubstructureFilter = leafSubstructureFilter.and(leafSubstructure -> !leafSubstructure.getFamily().getThreeLetterCode().equals("HOH"));
         }
     }
 
@@ -120,14 +130,15 @@ public class DataPointReader {
      * @return A new {@link DataPoint}.
      */
     private DataPoint<String> toDataPoint(Structure structure, String pdbIdentifier, String chainIdentifier) {
-        // FIXME only consider first model
+        // only consider first model
         if (structure.getAllModels().size() > 1) {
             logger.info("multi-model structure {} detected, using only first model", structure);
         }
         StructuralModel firstModel = structure.getFirstModel().orElseThrow(() -> new RuntimeException("no model found for structure " + structure));
         List<Item<String>> items = firstModel.getLeafSubstructures().stream()
-                                             // FIXME only amino acids are considered
                                              .filter(leafSubstructureFilter)
+                                             .filter(leafSubstructure -> leafSubstructureFilter.test(leafSubstructure) &&
+                                                                         hasValidLabel(leafSubstructure, labelWhiteList))
                                              .map(this::toItem)
                                              .collect(Collectors.toList());
         DataPointIdentifier dataPointIdentifier = new DataPointIdentifier(pdbIdentifier, chainIdentifier);

@@ -5,7 +5,8 @@ package de.bioforscher.mmm.model.enrichment;
  */
 public enum DataPointEnricherType {
 
-    INTERACTION(InteractionEnricher.class);
+    INTRA_CHAIN_INTERACTION(IntraChainInteractionEnricher.class),
+    LIGAND_INTERACTION(LigandInteractionEnricher.class);
 
     private final Class<?> implementation;
 

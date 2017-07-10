@@ -100,9 +100,19 @@ public class VertexCandidateGenerator<LabelType extends Comparable<LabelType>> {
                                                                                .filter(Optional::isPresent)
                                                                                .map(Optional::get)
                                                                                .collect(Collectors.toList());
+
+                // leaf substructures are sorted based on the natural ordering of their labels
+                TreeMap<LabelType, LeafSubstructure<?, ?>> labelMap = new TreeMap<>();
+                for (int k = 0; k < candidateItems.size(); k++) {
+                    labelMap.put(candidateItems.get(k).getLabel(), leafSubstructures.get(k));
+                }
+                List<LeafSubstructure<?, ?>> orderedLeafSubstructures = labelMap.entrySet().stream()
+                                                                                .map(Map.Entry::getValue)
+                                                                                .collect(Collectors.toList());
                 // sort leaves based on three letter code
-                leafSubstructures.sort(Comparator.comparing(leafSubstructure -> leafSubstructure.getFamily().getThreeLetterCode()));
-                StructuralMotif structuralMotif = StructuralMotif.fromLeaves(leafSubstructures);
+                // FIXME this has to be adapted when mapping rule is used such that sorting is based on mapped labels
+//                leafSubstructures.sort(Comparator.comparing(leafSubstructure -> leafSubstructure.getFamily().getThreeLetterCode()));
+                StructuralMotif structuralMotif = StructuralMotif.fromLeaves(orderedLeafSubstructures);
 
                 Itemset<LabelType> candidate = new Itemset<>(new TreeSet<>(candidateItems), structuralMotif);
                 logger.trace("generated candidate {}", candidate);

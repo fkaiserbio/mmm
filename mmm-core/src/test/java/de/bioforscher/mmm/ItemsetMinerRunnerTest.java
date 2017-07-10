@@ -32,6 +32,6 @@ public class ItemsetMinerRunnerTest {
 
         ItemsetMiner<String> itemsetMiner = itemsetMinerRunner.getItemsetMiner();
 //        ConfidenceAnalyzer<String> confidenceAnalyzer = new ConfidenceAnalyzer<>(itemsetMiner);
-        MutualInformationAnalyzer<String> analyzer = new MutualInformationAnalyzer<>(itemsetMiner, CohesionMetric.class);
+        MutualInformationAnalyzer<String> analyzer = new MutualInformationAnalyzer<>(itemsetMiner, CohesionMetric.class, 0.8);
     }
 }

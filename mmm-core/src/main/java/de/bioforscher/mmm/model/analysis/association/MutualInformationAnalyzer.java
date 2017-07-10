@@ -24,13 +24,17 @@ import java.util.stream.Collectors;
 public class MutualInformationAnalyzer<LabelType extends Comparable<LabelType>> extends AbstractItemsetMinerAnalyzer<LabelType> {
 
     private static final Logger logger = LoggerFactory.getLogger(MutualInformationAnalyzer.class);
-    private static final double MINIMAL_MUTUAL_INFORMATION = 1.2;
+    private static final double DEFAULT_MINIMAL_MUTUAL_INFORMATION = 0.8;
+
     private final Class<? extends DistributionMetric> distributionMetricType;
+
+    private double minimalMutualInformation = DEFAULT_MINIMAL_MUTUAL_INFORMATION;
     private TreeMap<Double, Pair<Itemset<LabelType>>> mutualInformation;
 
-    public MutualInformationAnalyzer(ItemsetMiner<LabelType> itemsetMiner, Class<? extends DistributionMetric> distributionMetricType) {
+    public MutualInformationAnalyzer(ItemsetMiner<LabelType> itemsetMiner, Class<? extends DistributionMetric> distributionMetricType, double minimalMutualInformation) {
         super(itemsetMiner);
         this.distributionMetricType = distributionMetricType;
+        this.minimalMutualInformation = minimalMutualInformation;
         logger.info("calculating mutual information for distribution metric {}", distributionMetricType);
 
         mutualInformation = new TreeMap<>(Collections.reverseOrder());
@@ -39,9 +43,9 @@ public class MutualInformationAnalyzer<LabelType extends Comparable<LabelType>> 
     }
 
     private void createGraph() {
-        logger.info("creating graph of itemset associations for mutual information  > {}", MINIMAL_MUTUAL_INFORMATION);
+        logger.info("creating graph of itemset associations for mutual information  >{}", minimalMutualInformation);
         List<Pair<Itemset<LabelType>>> connectedPairs = mutualInformation.entrySet().stream()
-                                                                         .filter(entry -> entry.getKey() > MINIMAL_MUTUAL_INFORMATION)
+                                                                         .filter(entry -> entry.getKey() > minimalMutualInformation)
                                                                          .map(Map.Entry::getValue)
                                                                          .collect(Collectors.toList());
 
@@ -66,6 +70,10 @@ public class MutualInformationAnalyzer<LabelType extends Comparable<LabelType>> 
             }
 
             itemsetGraph.addEdgeBetween(nodeOne, nodeTwo);
+        }
+
+        for (ItemsetNode<LabelType> labelTypeItemsetNode : itemsetGraph.getNodes()) {
+            logger.info("degree of node {} is {}", labelTypeItemsetNode, labelTypeItemsetNode.getDegree());
         }
 
         GraphDisplayApplication.graph = itemsetGraph;

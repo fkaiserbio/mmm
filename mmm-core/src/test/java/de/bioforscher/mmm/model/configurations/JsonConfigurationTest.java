@@ -32,7 +32,7 @@ public class JsonConfigurationTest {
         ItemsetMinerConfiguration<String> itemsetMinerConfiguration = new ItemsetMinerConfiguration<>();
         itemsetMinerConfiguration.setInputListLocation("PF00127_chains.txt");
         itemsetMinerConfiguration.setItemsetComparatorType(ItemsetComparatorType.CONSENSUS);
-        itemsetMinerConfiguration.setDataPointEnricherType(DataPointEnricherType.INTERACTION);
+        itemsetMinerConfiguration.setDataPointEnricherType(DataPointEnricherType.INTRA_CHAIN_INTERACTION);
         itemsetMinerConfiguration.setOutputLocation("/tmp/itemset-miner");
         itemsetMinerConfiguration.setMaximalEpochs(-1);
 
@@ -40,10 +40,11 @@ public class JsonConfigurationTest {
         dataPointReaderConfiguration.setPdbLocation("/srv/pdb");
         dataPointReaderConfiguration.setParseLigands(false);
         dataPointReaderConfiguration.setParseNucleotides(false);
+        dataPointReaderConfiguration.addToLigandLabelWhiteList("ATP");
         itemsetMinerConfiguration.setDataPointReaderConfiguration(dataPointReaderConfiguration);
 
         // add data point enricher type
-        itemsetMinerConfiguration.setDataPointEnricherType(DataPointEnricherType.INTERACTION);
+        itemsetMinerConfiguration.setDataPointEnricherType(DataPointEnricherType.INTRA_CHAIN_INTERACTION);
 
         // add mapping rule type
         itemsetMinerConfiguration.setMappingRule(new ChemicalGroupsMappingRule());

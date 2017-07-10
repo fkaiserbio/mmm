@@ -12,7 +12,7 @@
     "parse-ligands": false,
     "parse-nucleotides": false
   },
-  /*"data-point-enricher-type" : "INTERACTION",*/
+  /*"data-point-enricher-type" : "INTRA_CHAIN_INTERACTION",*/
   /*"mapping-rule" : {
     "type" : "CHEMICAL_GROUPS"
   },*/

@@ -9,7 +9,7 @@ import de.bioforscher.mmm.model.configurations.metrics.CohesionMetricConfigurati
 import de.bioforscher.mmm.model.configurations.metrics.ConsensusMetricConfiguration;
 import de.bioforscher.mmm.model.configurations.metrics.SeparationMetricConfiguration;
 import de.bioforscher.mmm.model.configurations.metrics.SupportMetricConfiguration;
-import de.bioforscher.mmm.model.enrichment.InteractionEnricher;
+import de.bioforscher.mmm.model.enrichment.IntraChainInteractionEnricher;
 import de.bioforscher.mmm.model.metrics.*;
 import de.bioforscher.singa.chemistry.parser.pdb.structures.StructureParserOptions;
 import de.bioforscher.singa.chemistry.physical.atoms.representations.RepresentationSchemeType;
@@ -59,7 +59,7 @@ public class ItemsetMinerTest {
 //                               .collect(Collectors.toList());
 
         // enrich data points
-        InteractionEnricher interactionEnricher = new InteractionEnricher();
+        IntraChainInteractionEnricher interactionEnricher = new IntraChainInteractionEnricher();
         dataPoints.forEach(interactionEnricher::enrichDataPoint);
 
         // create storage for metrics

@@ -14,11 +14,19 @@
     <artifactId>mmm-core</artifactId>
 
     <dependencies>
-        <!--PLIP REST provider-->
+        <dependency>
+            <groupId>uk.ac.man.cs</groupId>
+            <artifactId>javami</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>${basedir}/lib/JavaMI.jar</systemPath>
+        </dependency>
         <dependency>
             <groupId>de.bioforscher</groupId>
             <artifactId>plip-rest-provider-core</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>0.1.0</version>
+            <scope>system</scope>
+            <systemPath>${basedir}/lib/plip-rest-provider-core-0.1.0.jar</systemPath>
             <exclusions>
                 <exclusion>
                     <groupId>org.apache.logging.log4j</groupId>
@@ -35,16 +43,14 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>uk.ac.man.cs</groupId>
-            <artifactId>javami</artifactId>
-            <version>1.0</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/JavaMI.jar</systemPath>
-        </dependency>
-        <dependency>
             <groupId>de.bioforscher.singa</groupId>
             <artifactId>singa-javafx</artifactId>
-            <version>0.1.0-SNAPSHOT</version>
+            <version>0.1.3</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jsoup</groupId>
+            <artifactId>jsoup</artifactId>
+            <version>1.10.1</version>
         </dependency>
     </dependencies>
 </project>

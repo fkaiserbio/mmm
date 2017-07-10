@@ -14,7 +14,7 @@ public class ItemsetMinerConfigurationTest {
         ItemsetMinerConfiguration<String> itemsetMinerConfiguration = new ItemsetMinerConfiguration<>();
         itemsetMinerConfiguration.setInputListLocation("PF00127_chains.txt");
         itemsetMinerConfiguration.setItemsetComparatorType(ItemsetComparatorType.CONSENSUS);
-        itemsetMinerConfiguration.setDataPointEnricherType(DataPointEnricherType.INTERACTION);
+        itemsetMinerConfiguration.setDataPointEnricherType(DataPointEnricherType.INTRA_CHAIN_INTERACTION);
         itemsetMinerConfiguration.setOutputLocation("/tmp/itemset-miner");
     }
 }

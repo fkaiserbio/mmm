@@ -3,28 +3,32 @@
   "creation-user": "fkaiser",
   "creation-date": "2017-06-06T10:45:14.401",
   "input-list-location": null,
-  "input-directory-location": "/home/fkaiser/Workspace/CloudStation/PhD/Promotion/conferences/3DSIG_2017/poster/figures/PF00089",
+  "input-directory-location": "/tmp/atp_prots/atp/nr",
   "output-location": "/tmp/itemset-miner",
   "data-point-reader-configuration": {
     "type": "DataPointReaderConfiguration",
     "pdb-location": null,
     "chain-list-separator": "\t",
-    "parse-ligands": false,
-    "parse-nucleotides": false
+    "parse-ligands": true,
+    "ligand-label-whitelist": [
+      "ATP"
+    ],
+    "parse-nucleotides": false,
+    "parse-water": false
   },
-  /*"data-point-enricher-type": "INTERACTION",*/
-  /*"mapping-rule": {
-    "type": "CHEMICAL_GROUPS"
-  },*/
+  "data-point-enricher-type": "LIGAND_INTERACTION",
+  "mapping-rule": {
+    "type": "FUNCTIONAL_GROUPS"
+  },
   "simple-metrics": [
     {
       "type": "SUPPORT",
-      "minimal-support": 0.9
+      "minimal-support": 0.6
     }
   ],
   "extraction-metric": {
     "type": "COHESION",
-    "maximal-cohesion": 10.0,
+    "maximal-cohesion": 8.0,
     "vertex-one": false,
     "level-of-parallelism": -1
   },
@@ -39,17 +43,17 @@
     "representation-scheme-type" : null
   },*/
   "extraction-dependent-metric": [
-    {
+    /*{
       "type": "SEPARATION",
       "maximal-separation": 50.0,
       "optimal-separation": 5.0,
       "morse-well-depth": 500.0,
       "morse-shape": 0.2
-    },
+    },*/
     {
       "type": "CONSENSUS",
-      "maximal-consensus": 0.5,
-      "cluster-cutoff-value": 0.5,
+      "maximal-consensus": 1.0,
+      "cluster-cutoff-value": 0.8,
       "level-of-parallelism": -1,
       "atom-filter-type": "ARBITRARY",
       "representation-scheme-type": null,
@@ -57,5 +61,5 @@
     }
   ],
   "itemset-comparator-type": "CONSENSUS",
-  "maximal-epochs": 3
+  "maximal-epochs": -1
 }

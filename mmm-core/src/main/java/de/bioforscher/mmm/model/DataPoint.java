@@ -1,6 +1,12 @@
 package de.bioforscher.mmm.model;
 
+import de.bioforscher.singa.chemistry.parser.pdb.structures.StructureWriter;
+import de.bioforscher.singa.chemistry.physical.leaves.LeafSubstructure;
+
+import java.io.IOException;
+import java.nio.file.Path;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -28,5 +34,16 @@ public class DataPoint<LabelType extends Comparable<LabelType>> {
         return items.stream()
                     .map(Item::toString)
                     .collect(Collectors.joining("-", dataPointIdentifier + "{", "}"));
+    }
+
+    public void writeAsPdb(Path pdbFilePath) throws IOException {
+
+        List<LeafSubstructure<?, ?>> leafSubstructures = items.stream()
+                                                              .map(Item::getLeafSubstructure)
+                                                              .filter(Optional::isPresent)
+                                                              .map(Optional::get)
+                                                              .collect(Collectors.toList());
+
+        StructureWriter.writeLeafSubstructures(leafSubstructures, pdbFilePath);
     }
 }
