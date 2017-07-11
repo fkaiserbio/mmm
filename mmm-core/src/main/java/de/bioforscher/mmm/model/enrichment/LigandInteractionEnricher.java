@@ -43,6 +43,8 @@ public class LigandInteractionEnricher extends AbstractInteractionEnricher {
                 }
             }
 
+            Files.delete(structureFilePath);
+
         } catch (IOException e) {
             logger.warn("failed to annotate ligand interactions for data point {}", dataPoint, e);
         }
