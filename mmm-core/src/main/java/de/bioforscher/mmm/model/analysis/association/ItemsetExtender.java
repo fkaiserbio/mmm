@@ -4,6 +4,8 @@ import de.bioforscher.mmm.ItemsetMiner;
 import de.bioforscher.mmm.model.DataPointIdentifier;
 import de.bioforscher.mmm.model.Item;
 import de.bioforscher.mmm.model.Itemset;
+import de.bioforscher.mmm.model.graphs.ItemsetGraph;
+import de.bioforscher.mmm.model.graphs.ItemsetNode;
 import de.bioforscher.singa.chemistry.algorithms.superimposition.SubStructureSuperimposer;
 import de.bioforscher.singa.chemistry.algorithms.superimposition.SubstructureSuperimposition;
 import de.bioforscher.singa.chemistry.parser.pdb.structures.StructureWriter;

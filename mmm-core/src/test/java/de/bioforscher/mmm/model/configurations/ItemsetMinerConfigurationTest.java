@@ -1,7 +1,7 @@
 package de.bioforscher.mmm.model.configurations;
 
 import de.bioforscher.mmm.model.ItemsetComparatorType;
-import de.bioforscher.mmm.model.enrichment.DataPointEnricherType;
+import de.bioforscher.mmm.model.enrichment.IntraChainInteractionEnricher;
 import org.junit.Test;
 
 /**
@@ -14,7 +14,7 @@ public class ItemsetMinerConfigurationTest {
         ItemsetMinerConfiguration<String> itemsetMinerConfiguration = new ItemsetMinerConfiguration<>();
         itemsetMinerConfiguration.setInputListLocation("PF00127_chains.txt");
         itemsetMinerConfiguration.setItemsetComparatorType(ItemsetComparatorType.CONSENSUS);
-        itemsetMinerConfiguration.setDataPointEnricherType(DataPointEnricherType.INTRA_CHAIN_INTERACTION);
+        itemsetMinerConfiguration.setDataPointEnricher(new IntraChainInteractionEnricher());
         itemsetMinerConfiguration.setOutputLocation("/tmp/itemset-miner");
     }
 }

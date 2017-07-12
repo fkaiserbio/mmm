@@ -1,24 +1,26 @@
 {
-  "type": "ITEMSET-MINER",
+  "type": "ITEMSET_MINER_CONFIGURATION",
   "creation-user": "fkaiser",
   "creation-date": "2017-06-06T10:45:14.401",
-  "input-list-location": "/tmp/EST_list_nr_global",
+  "input-list-location": "/home/fkaiser/Workspace/git/itemset_publication/datasets/PF00089_chains_BLAST_10e80_single_chains",
   "input-directory-location": null,
   "output-location": "/tmp/itemset-miner",
   "data-point-reader-configuration": {
-    "type": "DataPointReaderConfiguration",
+    "type": "DATA_POINT_READER_CONFIGURATION",
     "pdb-location": null,
     "chain-list-separator": "\t",
-    "parse-ligands": true,
-    "ligand-label-whitelist": [
+    "parse-ligands": false,
+    /*"ligand-label-whitelist": [
       "EST"
-    ],
+    ],*/
     "parse-nucleotides": false,
     "parse-water": true
   },
-  "data-point-enricher-type": "LIGAND_INTERACTION",
+  "data-point-enricher": {
+    "type": "INTRA_CHAIN_INTERACTION"
+  },
   "mapping-rule": {
-    "type": "FUNCTIONAL_GROUPS"
+    "type": "CHEMICAL_GROUPS"
   },
   "simple-metrics": [
     {
@@ -33,7 +35,7 @@
     "level-of-parallelism": -1
   },
   /*"extraction-metric" : {
-    "type" : "AdherenceMetricConfiguration",
+    "type" : "ADHERENCE",
     "level-of-parallelism" : 1,
     "desired-extent" : 8.0,
     "desired-extent-delta" : 1.0,
@@ -43,20 +45,20 @@
     "representation-scheme-type" : null
   },*/
   "extraction-dependent-metric": [
-    /*{
+    {
       "type": "SEPARATION",
       "maximal-separation": 50.0,
       "optimal-separation": 5.0,
       "morse-well-depth": 500.0,
       "morse-shape": 0.2
-    },*/
+    },
     {
       "type": "CONSENSUS",
       "maximal-consensus": 1.0,
       "cluster-cutoff-value": 0.8,
       "level-of-parallelism": -1,
       "atom-filter-type": "ARBITRARY",
-      "representation-scheme-type": null,
+      /*"representation-scheme-type": "SIDE_CHAIN_CENTROID",*/
       "align-within-clusters": true
     }
   ],

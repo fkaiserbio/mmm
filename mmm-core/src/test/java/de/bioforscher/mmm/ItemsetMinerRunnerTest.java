@@ -6,7 +6,6 @@ import de.bioforscher.mmm.model.configurations.ItemsetMinerConfiguration;
 import de.bioforscher.mmm.model.metrics.CohesionMetric;
 import de.bioforscher.mmm.model.metrics.DistributionMetric;
 import de.bioforscher.mmm.model.metrics.EvaluationMetric;
-import de.bioforscher.singa.chemistry.physical.families.LigandFamily;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -33,7 +32,7 @@ public class ItemsetMinerRunnerTest {
         }
         ItemsetMiner<String> itemsetMiner = itemsetMinerRunner.getItemsetMiner();
 //        ConfidenceAnalyzer<String> confidenceAnalyzer = new ConfidenceAnalyzer<>(itemsetMiner);
-        MutualInformationAnalyzer<String> analyzer = new MutualInformationAnalyzer<>(itemsetMiner, CohesionMetric.class, 1.5, false);
-        ItemsetExtender<String> extender = new ItemsetExtender<>(itemsetMiner, analyzer.getItemsetGraph(), Paths.get("/tmp/merged_motifs"), new LigandFamily("EST"));
+        MutualInformationAnalyzer<String> analyzer = new MutualInformationAnalyzer<>(itemsetMiner, CohesionMetric.class, 1.8, true);
+        ItemsetExtender<String> extender = new ItemsetExtender<>(itemsetMiner, analyzer.getItemsetGraph(), Paths.get("/tmp/merged_motifs"));
     }
 }

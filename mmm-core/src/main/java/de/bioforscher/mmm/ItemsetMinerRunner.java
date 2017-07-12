@@ -8,9 +8,7 @@ import de.bioforscher.mmm.model.configurations.ItemsetMinerConfiguration;
 import de.bioforscher.mmm.model.configurations.metrics.ExtractionDependentMetricConfiguration;
 import de.bioforscher.mmm.model.configurations.metrics.ExtractionMetricConfiguration;
 import de.bioforscher.mmm.model.configurations.metrics.SimpleMetricConfiguration;
-import de.bioforscher.mmm.model.enrichment.DataPointEnricherType;
-import de.bioforscher.mmm.model.enrichment.IntraChainInteractionEnricher;
-import de.bioforscher.mmm.model.enrichment.LigandInteractionEnricher;
+import de.bioforscher.mmm.model.enrichment.DataPointEnricher;
 import de.bioforscher.mmm.model.mapping.DataPointLabelMapper;
 import de.bioforscher.mmm.model.mapping.MappingRule;
 import de.bioforscher.mmm.model.metrics.EvaluationMetric;
@@ -127,8 +125,8 @@ public class ItemsetMinerRunner {
             logger.info("mapping data points according to {}", mappingRule);
             DataPointLabelMapper<String> dataPointLabelMapper = new DataPointLabelMapper<>(mappingRule);
             dataPoints = dataPoints.stream()
-                                   .map(dataPointLabelMapper::mapDataPoint)
-                                   .collect(Collectors.toList());
+                    .map(dataPointLabelMapper::mapDataPoint)
+                    .collect(Collectors.toList());
         } else {
             logger.info("no mapping rule specified");
         }
@@ -138,21 +136,10 @@ public class ItemsetMinerRunner {
 
         logger.info(">>>STEP 2<<< enriching data points");
 
-        DataPointEnricherType dataPointEnricherType = itemsetMinerConfiguration.getDataPointEnricherType();
-        if (dataPointEnricherType != null) {
-            logger.info("applying data point enricher {}", dataPointEnricherType);
-            switch (dataPointEnricherType) {
-                case INTRA_CHAIN_INTERACTION:
-                    IntraChainInteractionEnricher intraChainInteractionEnricher = new IntraChainInteractionEnricher();
-                    dataPoints.forEach(intraChainInteractionEnricher::enrichDataPoint);
-                    break;
-                case LIGAND_INTERACTION:
-                    LigandInteractionEnricher ligandInteractionEnricher = new LigandInteractionEnricher();
-                    dataPoints.forEach(ligandInteractionEnricher::enrichDataPoint);
-                    break;
-            }
-        } else {
-            logger.info("no data point enricher specified");
+        DataPointEnricher<String> dataPointEnricher = itemsetMinerConfiguration.getDataPointEnricher();
+        if (dataPointEnricher != null) {
+            logger.info("applying data point enricher {}", dataPointEnricher);
+            dataPoints.forEach(dataPointEnricher::enrichDataPoint);
         }
     }
 
@@ -171,14 +158,14 @@ public class ItemsetMinerRunner {
         DataPointReader dataPointReader;
         if (itemsetMinerConfiguration.getInputListLocation() == null) {
             List<Path> structurePaths = Files.list(Paths.get(itemsetMinerConfiguration.getInputDirectoryLocation()))
-                                             .filter(path -> path.toFile().isFile())
-                                             .collect(Collectors.toList());
+                    .filter(path -> path.toFile().isFile())
+                    .collect(Collectors.toList());
             dataPointReader = new DataPointReader(itemsetMinerConfiguration.getDataPointReaderConfiguration(), structurePaths);
 
         } else {
             Path inputListPath;
             URL inputListResourceURL = Thread.currentThread().getContextClassLoader()
-                                             .getResource(inputListLocation);
+                    .getResource(inputListLocation);
             if (inputListResourceURL != null) {
                 inputListPath = Paths.get(inputListResourceURL.toURI());
                 logger.info("found input list in resources");
@@ -204,11 +191,11 @@ public class ItemsetMinerRunner {
                 .append(dataPoints.size())
                 .append("\n")
                 .append(evaluationMetrics.stream()
-                                         .map(EvaluationMetric::toString)
-                                         .collect(Collectors.joining("\n\t\t", "\tevaluation metrics:\n\t\t", "\n")));
+                        .map(EvaluationMetric::toString)
+                        .collect(Collectors.joining("\n\t\t", "\tevaluation metrics:\n\t\t", "\n")));
         report.append("\tsorting by\t\t\t")
-              .append(itemsetMinerConfiguration.getItemsetComparatorType())
-              .append("\n");
+                .append(itemsetMinerConfiguration.getItemsetComparatorType())
+                .append("\n");
 
         report.append("\n====RESULTS==========================================================\n");
         report.append("rank\titemset\n");

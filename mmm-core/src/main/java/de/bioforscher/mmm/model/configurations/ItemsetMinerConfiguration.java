@@ -7,7 +7,7 @@ import de.bioforscher.mmm.model.ItemsetComparatorType;
 import de.bioforscher.mmm.model.configurations.metrics.ExtractionDependentMetricConfiguration;
 import de.bioforscher.mmm.model.configurations.metrics.ExtractionMetricConfiguration;
 import de.bioforscher.mmm.model.configurations.metrics.SimpleMetricConfiguration;
-import de.bioforscher.mmm.model.enrichment.DataPointEnricherType;
+import de.bioforscher.mmm.model.enrichment.DataPointEnricher;
 import de.bioforscher.mmm.model.mapping.MappingRule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 /**
  * @author fk
  */
-@JsonTypeName("ITEMSET-MINER")
+@JsonTypeName("ITEMSET_MINER_CONFIGURATION")
 public class ItemsetMinerConfiguration<LabelType extends Comparable<LabelType>> implements Jsonizable<ItemsetMinerConfiguration> {
 
     private static final Logger logger = LoggerFactory.getLogger(ItemsetMinerConfiguration.class);
@@ -43,8 +43,8 @@ public class ItemsetMinerConfiguration<LabelType extends Comparable<LabelType>> 
     private String outputLocation;
     @JsonProperty("data-point-reader-configuration")
     private DataPointReaderConfiguration dataPointReaderConfiguration;
-    @JsonProperty("data-point-enricher-type")
-    private DataPointEnricherType dataPointEnricherType;
+    @JsonProperty("data-point-enricher")
+    private DataPointEnricher<LabelType> dataPointEnricher;
     @JsonProperty("mapping-rule")
     private MappingRule<LabelType> mappingRule;
     @JsonProperty("simple-metrics")
@@ -57,6 +57,7 @@ public class ItemsetMinerConfiguration<LabelType extends Comparable<LabelType>> 
     private ItemsetComparatorType itemsetComparatorType = DEFAULT_ITEMSET_COMPARATOR;
     @JsonProperty("maximal-epochs")
     private int maximalEpochs;
+
     public ItemsetMinerConfiguration() {
         this.creationUser = System.getProperty("user.name");
         this.creationDate = LocalDateTime.now().toString();
@@ -69,6 +70,14 @@ public class ItemsetMinerConfiguration<LabelType extends Comparable<LabelType>> 
         logger.info("reading configuration from {}", configurationPath);
         String json = Files.lines(configurationPath).collect(Collectors.joining());
         return new ItemsetMinerConfiguration<>().fromJson(json);
+    }
+
+    public DataPointEnricher<LabelType> getDataPointEnricher() {
+        return dataPointEnricher;
+    }
+
+    public void setDataPointEnricher(DataPointEnricher<LabelType> dataPointEnricher) {
+        this.dataPointEnricher = dataPointEnricher;
     }
 
     public String getInputDirectoryLocation() {
@@ -117,14 +126,6 @@ public class ItemsetMinerConfiguration<LabelType extends Comparable<LabelType>> 
 
     public void addSimpleMetricConfiguration(SimpleMetricConfiguration<LabelType> simpleMetricConfiguration) {
         simpleMetricConfigurations.add(simpleMetricConfiguration);
-    }
-
-    public DataPointEnricherType getDataPointEnricherType() {
-        return dataPointEnricherType;
-    }
-
-    public void setDataPointEnricherType(DataPointEnricherType dataPointEnricherType) {
-        this.dataPointEnricherType = dataPointEnricherType;
     }
 
     public String getInputListLocation() {

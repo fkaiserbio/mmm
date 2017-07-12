@@ -1,5 +1,6 @@
 package de.bioforscher.mmm.model.enrichment;
 
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -20,6 +21,7 @@ import java.util.Optional;
 /**
  * @author fk
  */
+@JsonTypeName("INTRA_CHAIN_INTERACTION")
 public class IntraChainInteractionEnricher extends AbstractInteractionEnricher {
 
     private static final Logger logger = LoggerFactory.getLogger(IntraChainInteractionEnricher.class);

@@ -1,4 +1,4 @@
-package de.bioforscher.mmm.model.analysis.association;
+package de.bioforscher.mmm.model.graphs;
 
 import de.bioforscher.mmm.model.Itemset;
 import de.bioforscher.singa.mathematics.geometry.faces.Rectangle;

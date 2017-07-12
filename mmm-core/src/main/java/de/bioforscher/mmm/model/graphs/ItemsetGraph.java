@@ -1,4 +1,4 @@
-package de.bioforscher.mmm.model.analysis.association;
+package de.bioforscher.mmm.model.graphs;
 
 import de.bioforscher.singa.mathematics.graphs.model.AbstractGraph;
 import de.bioforscher.singa.mathematics.vectors.Vector2D;

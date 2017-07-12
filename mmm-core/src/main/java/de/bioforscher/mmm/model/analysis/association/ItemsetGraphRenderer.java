@@ -1,5 +1,8 @@
 package de.bioforscher.mmm.model.analysis.association;
 
+import de.bioforscher.mmm.model.graphs.ItemsetEdge;
+import de.bioforscher.mmm.model.graphs.ItemsetGraph;
+import de.bioforscher.mmm.model.graphs.ItemsetNode;
 import de.bioforscher.singa.javafx.renderer.graphs.GraphRenderer;
 
 /**
