@@ -126,7 +126,9 @@ public class ItemsetMinerRunner {
         if (mappingRule != null) {
             logger.info("mapping data points according to {}", mappingRule);
             DataPointLabelMapper<String> dataPointLabelMapper = new DataPointLabelMapper<>(mappingRule);
-            dataPoints.forEach(dataPointLabelMapper::mapDataPoint);
+            dataPoints = dataPoints.stream()
+                                   .map(dataPointLabelMapper::mapDataPoint)
+                                   .collect(Collectors.toList());
         } else {
             logger.info("no mapping rule specified");
         }

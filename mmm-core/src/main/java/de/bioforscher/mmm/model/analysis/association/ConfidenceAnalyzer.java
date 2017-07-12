@@ -12,11 +12,11 @@ import java.util.*;
 
 /**
  * @author fk
+ * TODO contruct itemset graph
  */
 public class ConfidenceAnalyzer<LabelType extends Comparable<LabelType>> extends AbstractItemsetMinerAnalyzer<LabelType> {
 
-    private static final Logger logger = LoggerFactory.getLogger(AbstractItemsetMinerAnalyzer.class);
-
+    private static final Logger logger = LoggerFactory.getLogger(ConfidenceAnalyzer.class);
     private TreeMap<Double, Pair<Itemset<LabelType>>> confidence;
 
     public ConfidenceAnalyzer(ItemsetMiner<LabelType> itemsetMiner) {

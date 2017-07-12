@@ -29,6 +29,7 @@ public class Itemset<LabelType extends Comparable<LabelType>> implements Compara
     private final Set<Item<LabelType>> items;
     private StructuralMotif structuralMotif;
     private Vector3D position;
+    private DataPointIdentifier originDataPointIdentifier;
     private double support;
     private double cohesion;
     private double adherence;
@@ -40,8 +41,13 @@ public class Itemset<LabelType extends Comparable<LabelType>> implements Compara
     }
 
     public Itemset(Set<Item<LabelType>> items, StructuralMotif structuralMotif) {
-        this.items = items;
+        this(items);
         this.structuralMotif = structuralMotif;
+    }
+
+    public Itemset(Set<Item<LabelType>> items, StructuralMotif structuralMotif, DataPointIdentifier originDataPointIdentifier) {
+        this(items, structuralMotif);
+        this.originDataPointIdentifier = originDataPointIdentifier;
     }
 
     /**
@@ -58,6 +64,10 @@ public class Itemset<LabelType extends Comparable<LabelType>> implements Compara
 
     public static <LabelType extends Comparable<LabelType>> Itemset<LabelType> of(Set<Item<LabelType>> items) {
         return new Itemset<>(new TreeSet<>(items));
+    }
+
+    public Optional<DataPointIdentifier> getOriginDataPointIdentifier() {
+        return Optional.ofNullable(originDataPointIdentifier);
     }
 
     public double getAdherence() {
@@ -122,7 +132,8 @@ public class Itemset<LabelType extends Comparable<LabelType>> implements Compara
         return items;
     }
 
-    @Override public String toString() {
+    @Override
+    public String toString() {
         return items.stream()
                     .map(Item::toString)
                     .collect(Collectors.joining("-", "{", "}"))
@@ -175,7 +186,8 @@ public class Itemset<LabelType extends Comparable<LabelType>> implements Compara
         return Optional.ofNullable(position);
     }
 
-    @Override public boolean equals(Object o) {
+    @Override
+    public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
@@ -184,19 +196,21 @@ public class Itemset<LabelType extends Comparable<LabelType>> implements Compara
         return items.equals(itemset.items);
     }
 
-    @Override public int hashCode() {
+    @Override
+    public int hashCode() {
         return items.hashCode();
     }
 
     public Itemset<LabelType> getCopy() {
-        return new Itemset<>(items.stream().map(Item::getCopy).collect(Collectors.toSet()));
+        return new Itemset<>(items.stream().map(Item::getCopy).collect(Collectors.toCollection(TreeSet::new)));
     }
 
     public Itemset<LabelType> getDeepCopy() {
         return new Itemset<>(items.stream().map(Item::getDeepCopy).collect(Collectors.toSet()), structuralMotif.getCopy());
     }
 
-    @Override public int compareTo(Itemset<LabelType> o) {
+    @Override
+    public int compareTo(Itemset<LabelType> o) {
         return Integer.compare(items.size(), o.getItems().size());
     }
 }

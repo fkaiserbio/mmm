@@ -30,11 +30,14 @@ public class MutualInformationAnalyzer<LabelType extends Comparable<LabelType>> 
 
     private double minimalMutualInformation = DEFAULT_MINIMAL_MUTUAL_INFORMATION;
     private TreeMap<Double, Pair<Itemset<LabelType>>> mutualInformation;
+    private ItemsetGraph<LabelType> itemsetGraph;
+    private boolean visualize;
 
-    public MutualInformationAnalyzer(ItemsetMiner<LabelType> itemsetMiner, Class<? extends DistributionMetric> distributionMetricType, double minimalMutualInformation) {
+    public MutualInformationAnalyzer(ItemsetMiner<LabelType> itemsetMiner, Class<? extends DistributionMetric> distributionMetricType, double minimalMutualInformation, boolean visualize) {
         super(itemsetMiner);
         this.distributionMetricType = distributionMetricType;
         this.minimalMutualInformation = minimalMutualInformation;
+        this.visualize = visualize;
         logger.info("calculating mutual information for distribution metric {}", distributionMetricType);
 
         mutualInformation = new TreeMap<>(Collections.reverseOrder());
@@ -42,14 +45,18 @@ public class MutualInformationAnalyzer<LabelType extends Comparable<LabelType>> 
         createGraph();
     }
 
+    public ItemsetGraph<LabelType> getItemsetGraph() {
+        return itemsetGraph;
+    }
+
     private void createGraph() {
-        logger.info("creating graph of itemset associations for mutual information  >{}", minimalMutualInformation);
+        logger.info("creating graph of itemset associations for mutual information >{}", minimalMutualInformation);
         List<Pair<Itemset<LabelType>>> connectedPairs = mutualInformation.entrySet().stream()
                                                                          .filter(entry -> entry.getKey() > minimalMutualInformation)
                                                                          .map(Map.Entry::getValue)
                                                                          .collect(Collectors.toList());
 
-        ItemsetGraph<LabelType> itemsetGraph = new ItemsetGraph<>();
+        itemsetGraph = new ItemsetGraph<>();
         for (Pair<Itemset<LabelType>> connectedPair : connectedPairs) {
 
             ItemsetNode<LabelType> nodeOne = itemsetGraph.getNodes().stream()
@@ -73,12 +80,14 @@ public class MutualInformationAnalyzer<LabelType extends Comparable<LabelType>> 
         }
 
         for (ItemsetNode<LabelType> labelTypeItemsetNode : itemsetGraph.getNodes()) {
-            logger.info("degree of node {} is {}", labelTypeItemsetNode, labelTypeItemsetNode.getDegree());
+            logger.debug("degree of node {} is {}", labelTypeItemsetNode, labelTypeItemsetNode.getDegree());
         }
 
-        GraphDisplayApplication.graph = itemsetGraph;
-        GraphDisplayApplication.renderer = new ItemsetGraphRenderer<>();
-        Application.launch(GraphDisplayApplication.class);
+        if (visualize) {
+            GraphDisplayApplication.graph = itemsetGraph;
+            GraphDisplayApplication.renderer = new ItemsetGraphRenderer<>();
+            Application.launch(GraphDisplayApplication.class);
+        }
     }
 
     public TreeMap<Double, Pair<Itemset<LabelType>>> getMutualInformation() {

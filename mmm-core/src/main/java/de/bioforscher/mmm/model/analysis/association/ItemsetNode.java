@@ -20,6 +20,12 @@ public class ItemsetNode<LabelType extends Comparable<LabelType>> extends Abstra
         this.itemset = itemset;
     }
 
+    public ItemsetNode(ItemsetNode<LabelType> node) {
+        super(node);
+        // FIXME here we should probably use a copy of the itemset
+        this.itemset = node.getItemset();
+    }
+
     public Itemset<LabelType> getItemset() {
         return itemset;
     }
