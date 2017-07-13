@@ -1,4 +1,4 @@
-package de.bioforscher.mmm.model.analysis.association;
+package de.bioforscher.mmm.model.graphs;
 
 import de.bioforscher.mmm.model.Itemset;
 import de.bioforscher.singa.mathematics.geometry.faces.Rectangle;
@@ -18,6 +18,12 @@ public class ItemsetNode<LabelType extends Comparable<LabelType>> extends Abstra
     public ItemsetNode(int identifier, Itemset<LabelType> itemset) {
         super(identifier, Vectors.generateRandom2DVector(GRAPH_BOUNDING_BOX));
         this.itemset = itemset;
+    }
+
+    public ItemsetNode(ItemsetNode<LabelType> node) {
+        super(node);
+        // FIXME here we should probably use a copy of the itemset
+        this.itemset = node.getItemset();
     }
 
     public Itemset<LabelType> getItemset() {

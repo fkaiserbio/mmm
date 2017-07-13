@@ -10,6 +10,7 @@ import de.bioforscher.singa.mathematics.metrics.model.VectorMetricProvider;
 import de.bioforscher.singa.mathematics.vectors.Vector3D;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -27,5 +28,9 @@ public class Itemsets {
                                                          .findFirst()
                                                          .orElseThrow(() -> new IllegalArgumentException("could not determine extent itemset " + itemset));
         return distanceMatrix.getElement(positionOfMaximalElement.getFirst(), positionOfMaximalElement.getSecond());
+    }
+
+    public static boolean containsSharedItems(Itemset<?> itemsetOne, Itemset<?> itemsetTwo) {
+        return Collections.disjoint(itemsetOne.getItems(), itemsetTwo.getItems());
     }
 }

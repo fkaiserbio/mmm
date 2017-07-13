@@ -1,5 +1,6 @@
 package de.bioforscher.mmm;
 
+import de.bioforscher.mmm.model.analysis.association.ItemsetExtender;
 import de.bioforscher.mmm.model.analysis.association.MutualInformationAnalyzer;
 import de.bioforscher.mmm.model.configurations.ItemsetMinerConfiguration;
 import de.bioforscher.mmm.model.metrics.CohesionMetric;
@@ -29,9 +30,9 @@ public class ItemsetMinerRunnerTest {
                 distributionMetrics.add((DistributionMetric<String>) evaluationMetric);
             }
         }
-
         ItemsetMiner<String> itemsetMiner = itemsetMinerRunner.getItemsetMiner();
 //        ConfidenceAnalyzer<String> confidenceAnalyzer = new ConfidenceAnalyzer<>(itemsetMiner);
-        MutualInformationAnalyzer<String> analyzer = new MutualInformationAnalyzer<>(itemsetMiner, CohesionMetric.class, 0.8);
+        MutualInformationAnalyzer<String> analyzer = new MutualInformationAnalyzer<>(itemsetMiner, CohesionMetric.class, 1.8, true);
+        ItemsetExtender<String> extender = new ItemsetExtender<>(itemsetMiner, analyzer.getItemsetGraph(), Paths.get("/tmp/merged_motifs"));
     }
 }

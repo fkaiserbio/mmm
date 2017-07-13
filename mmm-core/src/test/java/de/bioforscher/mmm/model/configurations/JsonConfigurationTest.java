@@ -6,7 +6,7 @@ import de.bioforscher.mmm.model.configurations.metrics.AdherenceMetricConfigurat
 import de.bioforscher.mmm.model.configurations.metrics.ConsensusMetricConfiguration;
 import de.bioforscher.mmm.model.configurations.metrics.SeparationMetricConfiguration;
 import de.bioforscher.mmm.model.configurations.metrics.SupportMetricConfiguration;
-import de.bioforscher.mmm.model.enrichment.DataPointEnricherType;
+import de.bioforscher.mmm.model.enrichment.IntraChainInteractionEnricher;
 import de.bioforscher.mmm.model.mapping.rules.ChemicalGroupsMappingRule;
 import de.bioforscher.singa.chemistry.physical.atoms.representations.RepresentationSchemeType;
 import org.junit.Assert;
@@ -32,7 +32,7 @@ public class JsonConfigurationTest {
         ItemsetMinerConfiguration<String> itemsetMinerConfiguration = new ItemsetMinerConfiguration<>();
         itemsetMinerConfiguration.setInputListLocation("PF00127_chains.txt");
         itemsetMinerConfiguration.setItemsetComparatorType(ItemsetComparatorType.CONSENSUS);
-        itemsetMinerConfiguration.setDataPointEnricherType(DataPointEnricherType.INTRA_CHAIN_INTERACTION);
+        itemsetMinerConfiguration.setDataPointEnricher(new IntraChainInteractionEnricher());
         itemsetMinerConfiguration.setOutputLocation("/tmp/itemset-miner");
         itemsetMinerConfiguration.setMaximalEpochs(-1);
 
@@ -42,9 +42,6 @@ public class JsonConfigurationTest {
         dataPointReaderConfiguration.setParseNucleotides(false);
         dataPointReaderConfiguration.addToLigandLabelWhiteList("ATP");
         itemsetMinerConfiguration.setDataPointReaderConfiguration(dataPointReaderConfiguration);
-
-        // add data point enricher type
-        itemsetMinerConfiguration.setDataPointEnricherType(DataPointEnricherType.INTRA_CHAIN_INTERACTION);
 
         // add mapping rule type
         itemsetMinerConfiguration.setMappingRule(new ChemicalGroupsMappingRule());

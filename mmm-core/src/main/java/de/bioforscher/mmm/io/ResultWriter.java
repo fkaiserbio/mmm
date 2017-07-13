@@ -9,6 +9,7 @@ import de.bioforscher.singa.chemistry.physical.branches.StructuralMotif;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -30,6 +31,16 @@ public class ResultWriter<LabelType extends Comparable<LabelType>> {
     public ResultWriter(ItemsetMinerConfiguration<LabelType> itemsetMinerConfiguration, ItemsetMiner<LabelType> itemsetMiner) throws IOException {
         this.itemsetMinerConfiguration = itemsetMinerConfiguration;
         outputPath = Paths.get(itemsetMinerConfiguration.getOutputLocation());
+
+        if (outputPath.toFile().exists()) {
+            long outputFolderCount = Files.list(outputPath.getParent())
+                    .filter(path -> path.getFileName().startsWith(outputPath.getFileName()))
+                    .count();
+            File movedFile = outputPath.getParent().resolve(outputPath.getFileName() + "." + outputFolderCount).toFile();
+            logger.info("output folder already present, will be renamed to {}", movedFile);
+            outputPath.toFile().renameTo(movedFile);
+        }
+
         logger.debug("creating path {}", outputPath);
         Files.createDirectories(outputPath);
         this.itemsetMiner = itemsetMiner;
@@ -45,8 +56,8 @@ public class ResultWriter<LabelType extends Comparable<LabelType>> {
 
         // determine count of extracted itemsets
         Optional<Integer> extractedItemsetsCount = itemsetMiner.getTotalExtractedItemsets().values().stream()
-                                                               .map(List::size)
-                                                               .reduce(Integer::sum);
+                .map(List::size)
+                .reduce(Integer::sum);
 
         logger.info("writing {} extracted itemsets", extractedItemsetsCount.orElse(0));
 
@@ -72,8 +83,8 @@ public class ResultWriter<LabelType extends Comparable<LabelType>> {
 
         // determine count of extracted itemsets
         Optional<Integer> extractedItemsetsCount = itemsetMiner.getTotalExtractedItemsets().values().stream()
-                                                               .map(List::size)
-                                                               .reduce(Integer::sum);
+                .map(List::size)
+                .reduce(Integer::sum);
 
         logger.info("writing {} clustered itemsets with {} observations in total", itemsetMiner.getTotalClusteredItemsets().size(), extractedItemsetsCount.orElse(0));
 

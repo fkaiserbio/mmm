@@ -1,11 +1,15 @@
 package de.bioforscher.mmm.model;
 
+import java.util.Comparator;
 import java.util.regex.Pattern;
 
 /**
  * @author fk
  */
 public class DataPointIdentifier {
+
+    public static final Comparator<DataPointIdentifier> DATA_POINT_IDENTIFIER_COMPARATOR = Comparator.comparing(DataPointIdentifier::getPdbIdentifier)
+                                                                                                     .thenComparing(DataPointIdentifier::getChainIdentifier);
 
     public static final Pattern PDBID_PATTERN = Pattern.compile("[1-9][A-Za-z0-9]{3}");
     private final String pdbIdentifier;

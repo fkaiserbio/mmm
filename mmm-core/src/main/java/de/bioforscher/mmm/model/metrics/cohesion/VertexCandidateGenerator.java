@@ -114,7 +114,7 @@ public class VertexCandidateGenerator<LabelType extends Comparable<LabelType>> {
 //                leafSubstructures.sort(Comparator.comparing(leafSubstructure -> leafSubstructure.getFamily().getThreeLetterCode()));
                 StructuralMotif structuralMotif = StructuralMotif.fromLeaves(orderedLeafSubstructures);
 
-                Itemset<LabelType> candidate = new Itemset<>(new TreeSet<>(candidateItems), structuralMotif);
+                Itemset<LabelType> candidate = new Itemset<>(new TreeSet<>(candidateItems), structuralMotif, dataPoint.getDataPointIdentifier());
                 logger.trace("generated candidate {}", candidate);
 
                 if (!isRedundant(candidate, candidates)) {

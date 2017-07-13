@@ -23,7 +23,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
- * A reader for {@link DataPoint}s from PDB files. One needs to supply a list of PDB-IDs and chain IDs in the format [PDB-ID]_[chain-ID] separated by line breaks.
+ * A reader for {@link DataPoint}s from PDB files. One needs to supply a {@link DataPointReaderConfiguration} object that specifies all configurations.
  * <p>
  *
  * @author fk
@@ -67,10 +67,7 @@ public class DataPointReader {
     }
 
     public static boolean hasValidLabel(LeafSubstructure<?, ?> leafSubstructureToCheck, List<String> labelWhiteList) {
-        if (!(leafSubstructureToCheck instanceof AtomContainer)) {
-            return true;
-        }
-        return labelWhiteList.contains(leafSubstructureToCheck.getFamily().getThreeLetterCode());
+        return !(leafSubstructureToCheck instanceof AtomContainer) || labelWhiteList.contains(leafSubstructureToCheck.getFamily().getThreeLetterCode());
     }
 
     private void createStructureParserOptions() {

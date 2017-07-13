@@ -1,6 +1,7 @@
 package de.bioforscher.mmm.io;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import de.bioforscher.mmm.model.configurations.Jsonizable;
 
 import java.util.ArrayList;
@@ -9,6 +10,7 @@ import java.util.List;
 /**
  * @author fk
  */
+@JsonTypeName("DATA_POINT_READER_CONFIGURATION")
 public class DataPointReaderConfiguration implements Jsonizable<DataPointReaderConfiguration> {
 
     private static final String DEFAULT_CHAIN_LIST_SEPARATOR = "\t";

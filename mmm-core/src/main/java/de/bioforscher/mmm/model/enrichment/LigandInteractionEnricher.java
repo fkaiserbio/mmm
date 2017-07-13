@@ -1,5 +1,6 @@
 package de.bioforscher.mmm.model.enrichment;
 
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import de.bioforscher.mmm.model.DataPoint;
 import de.bioforscher.pliprestprovider.model.InteractionType;
 import de.bioforscher.pliprestprovider.model.PlipInteraction;
@@ -17,6 +18,7 @@ import java.util.Map;
 /**
  * @author fk
  */
+@JsonTypeName("LIGAND_INTERACTION")
 public class LigandInteractionEnricher extends AbstractInteractionEnricher {
 
     private static final Logger logger = LoggerFactory.getLogger(LigandInteractionEnricher.class);

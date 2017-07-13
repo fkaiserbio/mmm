@@ -65,6 +65,7 @@ public abstract class AbstractInteractionEnricher implements DataPointEnricher<S
         ACTIVE_INTERACTIONS.add(InteractionType.PI_CATION);
         ACTIVE_INTERACTIONS.add(InteractionType.PI_STACKING);
         ACTIVE_INTERACTIONS.add(InteractionType.SALT_BRIDGE);
+//        ACTIVE_INTERACTIONS.add(InteractionType.WATER_BRIDGE);
     }
 
     protected void addInteractionItem(PlipInteraction interaction, DataPoint<String> dataPoint) {
