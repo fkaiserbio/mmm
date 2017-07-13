@@ -8,6 +8,8 @@ import java.util.Set;
 import java.util.function.Predicate;
 
 /**
+ * An {@link EvaluationMetric} capable of extracting {@link Itemset} observations from the data.
+ *
  * @author fk
  */
 public interface ExtractionMetric<LabelType extends Comparable<LabelType>> extends EvaluationMetric<LabelType> {

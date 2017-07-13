@@ -14,6 +14,8 @@ import java.util.Collections;
 import java.util.List;
 
 /**
+ * Utility methods for {@link Itemset}s.
+ *
  * @author fk
  */
 public class Itemsets {

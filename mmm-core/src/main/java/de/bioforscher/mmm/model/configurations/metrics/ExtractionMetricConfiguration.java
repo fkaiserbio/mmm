@@ -9,9 +9,10 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 /**
+ * An interface implemented by configurations for {@link de.bioforscher.mmm.model.metrics.ExtractionMetric}s.
+ *
  * @author fk
  */
-
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
 @JsonSubTypes({@JsonSubTypes.Type(value = CohesionMetricConfiguration.class),
                @JsonSubTypes.Type(value = AdherenceMetricConfiguration.class)})

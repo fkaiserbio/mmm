@@ -1,6 +1,8 @@
 package de.bioforscher.mmm;
 
 /**
+ * An exception that should be used when the mining fails.
+ *
  * @author fk
  */
 public class ItemsetMinerException extends RuntimeException {

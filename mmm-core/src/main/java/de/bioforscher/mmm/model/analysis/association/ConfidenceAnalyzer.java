@@ -11,8 +11,10 @@ import org.slf4j.LoggerFactory;
 import java.util.*;
 
 /**
+ * Calculates and stores the confidence between {@link Itemset}s.
+ * <b>NOTE: Confidence is not transitive.</b>
+ *
  * @author fk
- * TODO contruct itemset graph
  */
 public class ConfidenceAnalyzer<LabelType extends Comparable<LabelType>> extends AbstractItemsetMinerAnalyzer<LabelType> {
 

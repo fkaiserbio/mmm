@@ -7,6 +7,8 @@ import de.bioforscher.singa.mathematics.vectors.Vector2D;
 import de.bioforscher.singa.mathematics.vectors.Vectors;
 
 /**
+ * A {@link de.bioforscher.singa.mathematics.graphs.model.Node} for an {@link ItemsetGraph}.
+ *
  * @author fk
  */
 public class ItemsetNode<LabelType extends Comparable<LabelType>> extends AbstractNode<ItemsetNode<LabelType>, Vector2D> {
@@ -22,7 +24,7 @@ public class ItemsetNode<LabelType extends Comparable<LabelType>> extends Abstra
 
     public ItemsetNode(ItemsetNode<LabelType> node) {
         super(node);
-        // FIXME here we should probably use a copy of the itemset
+        // FIXME here we should probably use a copy of the itemset, however this breaks equal check for unknown reasons
         this.itemset = node.getItemset();
     }
 

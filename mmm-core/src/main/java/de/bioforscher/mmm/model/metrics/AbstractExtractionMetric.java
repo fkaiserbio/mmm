@@ -16,6 +16,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * Abstract {@link ExtractionDependentMetric} that provides common functionality for {@link ExtractionMetric}s.
+ *
  * @author fk
  */
 public abstract class AbstractExtractionMetric<LabelType extends Comparable<LabelType>> implements ExtractionMetric<LabelType> {

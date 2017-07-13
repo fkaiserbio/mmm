@@ -11,12 +11,14 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
+ * A {@link SimpleEvaluationMetric} that evaluates {@link Itemset} candidates by their support (relative occurrence in the data).
+ *
  * @author fk
  */
 public class SupportMetric<LabelType extends Comparable<LabelType>> implements SimpleEvaluationMetric<LabelType> {
 
     public static final Comparator<Itemset<?>> COMPARATOR = Comparator.comparing((Function<Itemset<?>, Double>) Itemset::getSupport)
-                                                                                     .reversed();
+                                                                      .reversed();
 
     private final List<DataPoint<LabelType>> dataPoints;
     private final double minimalSupport;

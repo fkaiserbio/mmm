@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * An {@link EvaluationMetric} that supports multi-processor calculation.
+ *
  * @author fk
  */
 public interface ParallelizableMetric<LabelType extends Comparable<LabelType>> extends EvaluationMetric<LabelType> {

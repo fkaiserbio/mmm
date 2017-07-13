@@ -6,6 +6,8 @@ import de.bioforscher.mmm.model.Itemset;
 import java.util.Map;
 
 /**
+ * An {@link EvaluationMetric} that allows sampling of a distribution for each {@link Itemset}, e.g. cohesion.
+ *
  * @author fk
  */
 public interface DistributionMetric<LabelType extends Comparable<LabelType>> extends EvaluationMetric<LabelType> {

@@ -7,6 +7,8 @@ import de.bioforscher.mmm.model.configurations.Jsonizable;
 import de.bioforscher.singa.chemistry.physical.atoms.representations.RepresentationSchemeType;
 
 /**
+ * The {@link Jsonizable} configuration of the {@link de.bioforscher.mmm.model.metrics.AdherenceMetric}.
+ *
  * @author fk
  */
 @JsonTypeName("ADHERENCE")
@@ -40,7 +42,7 @@ public class AdherenceMetricConfiguration<LabelType extends Comparable<LabelType
     /**
      * the default level of parallelism
      */
-    private static final int DEFAULT_LEVEL_OF_PARALLELISM = -1;
+    public static final int DEFAULT_LEVEL_OF_PARALLELISM = -1;
 
     @JsonProperty("level-of-parallelism")
     private int levelOfParallelism = DEFAULT_LEVEL_OF_PARALLELISM;

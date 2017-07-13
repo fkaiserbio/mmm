@@ -10,6 +10,8 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import java.io.IOException;
 
 /**
+ * An interface providing the default methods for serialization and deserialization from Json.
+ *
  * @author fk
  */
 public interface Jsonizable<ConfigurationType extends JsonConfiguration> extends JsonConfiguration {

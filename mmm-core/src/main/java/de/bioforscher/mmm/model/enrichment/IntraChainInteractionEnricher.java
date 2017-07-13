@@ -19,6 +19,9 @@ import java.util.Map;
 import java.util.Optional;
 
 /**
+ * Enriches {@link DataPoint}s with inter-chain interaction information predicted by the Protein-Ligand Interaction Profiler (PLIP). Interactions are abstracted as pseudoatoms defined as the
+ * midpoint between interacting atoms.
+ *
  * @author fk
  */
 @JsonTypeName("INTRA_CHAIN_INTERACTION")
@@ -52,6 +55,13 @@ public class IntraChainInteractionEnricher extends AbstractInteractionEnricher {
         return "IntraChainInteractionEnricher{}";
     }
 
+    /**
+     * Queries the PLIP REST server for interactions for a given PDB chain.
+     *
+     * @param pdbIdentifier   The PDB-ID of the query.
+     * @param chainIdentifier The chain ID of the query.
+     * @return Map of interactions or {@link Optional#empty()} if no interactions were found or the query failed.
+     */
     private Optional<Map<InteractionType, List<PlipInteraction>>> queryInteractions(String pdbIdentifier, String chainIdentifier) {
         try {
             // connect to the PLIP REST API and obtain interaction data

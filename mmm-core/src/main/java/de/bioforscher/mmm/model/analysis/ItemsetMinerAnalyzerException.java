@@ -1,6 +1,8 @@
 package de.bioforscher.mmm.model.analysis;
 
 /**
+ * An exception that should be used when developing {@link ItemsetMinerAnalyzer} modules.
+ *
  * @author fk
  */
 public class ItemsetMinerAnalyzerException extends RuntimeException {

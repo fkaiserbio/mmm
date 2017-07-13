@@ -17,6 +17,8 @@ import java.util.List;
 import java.util.Optional;
 
 /**
+ * Writes all relevant results of an {@link ItemsetMiner} run based on the configuration made in {@link ItemsetMinerConfiguration}.
+ *
  * @author fk
  */
 public class ResultWriter<LabelType extends Comparable<LabelType>> {
@@ -46,17 +48,27 @@ public class ResultWriter<LabelType extends Comparable<LabelType>> {
         logger.info("results will be written to {}", itemsetMinerConfiguration.getOutputLocation());
     }
 
+    /**
+     * Writes the {@link ItemsetMinerConfiguration} that was used.
+     *
+     * @throws IOException
+     */
     public void writeItemsetMinerConfiguration() throws IOException {
         Files.write(outputPath.resolve("itemset-miner_config.json"), itemsetMinerConfiguration.toJson().getBytes());
         logger.info("itemset miner configuration saved to {}", itemsetMinerConfiguration.getOutputLocation());
     }
 
+    /**
+     * Writes all extracted {@link Itemset}s (only available if {@link de.bioforscher.mmm.model.metrics.ExtractionMetric} was used).
+     *
+     * @throws IOException
+     */
     public void writeExtractedItemsets() throws IOException {
 
         // determine count of extracted itemsets
         Optional<Integer> extractedItemsetsCount = itemsetMiner.getTotalExtractedItemsets().values().stream()
-                .map(List::size)
-                .reduce(Integer::sum);
+                                                               .map(List::size)
+                                                               .reduce(Integer::sum);
 
         logger.info("writing {} extracted itemsets", extractedItemsetsCount.orElse(0));
 
@@ -78,12 +90,17 @@ public class ResultWriter<LabelType extends Comparable<LabelType>> {
         }
     }
 
+    /**
+     * Writes all clustered {@link Itemset}s (only avaliliable if {@link de.bioforscher.mmm.model.metrics.ConsensusMetric} was used).
+     *
+     * @throws IOException
+     */
     public void writeClusteredItemsets() throws IOException {
 
         // determine count of extracted itemsets
         Optional<Integer> extractedItemsetsCount = itemsetMiner.getTotalExtractedItemsets().values().stream()
-                .map(List::size)
-                .reduce(Integer::sum);
+                                                               .map(List::size)
+                                                               .reduce(Integer::sum);
 
         logger.info("writing {} clustered itemsets with {} observations in total", itemsetMiner.getTotalClusteredItemsets().size(), extractedItemsetsCount.orElse(0));
 

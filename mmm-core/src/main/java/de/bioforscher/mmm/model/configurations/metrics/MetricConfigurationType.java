@@ -5,7 +5,7 @@ import de.bioforscher.mmm.model.metrics.*;
 import java.util.stream.Stream;
 
 /**
- * An {@link Enum} o connect {@link MetricConfiguration}s with their associated metric via reflection.
+ * An {@link Enum} to connect {@link MetricConfiguration}s with their associated metric via reflection.
  *
  * @author fk
  */
@@ -26,12 +26,18 @@ public enum MetricConfigurationType {
         this.associatedMetric = associatedMetric;
     }
 
+    /**
+     * Returns the metric for a given {@link MetricConfiguration} class.
+     *
+     * @param metricConfiguration The {@link MetricConfiguration} class for which a corresponding {@link EvaluationMetric} class should be retrieved.
+     * @return
+     */
     public static Class<? extends EvaluationMetric> getMetric(Class<? extends MetricConfiguration> metricConfiguration) {
         return Stream.of(values())
-                .filter(metricConfigurationType -> metricConfigurationType.getMetricConfiguration().equals(metricConfiguration))
-                .findFirst()
-                .map(MetricConfigurationType::getAssociatedMetric)
-                .orElseThrow(() -> new IllegalArgumentException("no compatible metric for this configuration found"));
+                     .filter(metricConfigurationType -> metricConfigurationType.getMetricConfiguration().equals(metricConfiguration))
+                     .findFirst()
+                     .map(MetricConfigurationType::getAssociatedMetric)
+                     .orElseThrow(() -> new IllegalArgumentException("no compatible metric for this configuration found"));
     }
 
     public Class<? extends MetricConfiguration> getMetricConfiguration() {

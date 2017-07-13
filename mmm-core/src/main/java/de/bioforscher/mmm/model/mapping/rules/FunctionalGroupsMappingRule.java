@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.Optional;
 
 /**
- * The following types are grouped according to functional chemical groups:
+ * A {@link MappingRule} for functional groups of amino acids. The following types are grouped according to functional chemical groups:
  * <p>
  * <pre>
  *      aromatic (aro)              F,Y,W

@@ -10,6 +10,8 @@ import de.bioforscher.singa.mathematics.vectors.Vector3D;
 import java.util.Optional;
 
 /**
+ * Implementation of an item. {@link Item}s are equal iff their label is equal.
+ *
  * @author fk
  */
 public class Item<LabelType extends Comparable<LabelType>> implements Comparable<Item<LabelType>> {

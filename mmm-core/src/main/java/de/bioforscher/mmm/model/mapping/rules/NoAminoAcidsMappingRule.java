@@ -8,6 +8,8 @@ import de.bioforscher.singa.chemistry.physical.leaves.AminoAcid;
 import java.util.Optional;
 
 /**
+ * A {@link MappingRule} that allows no amino acids, i.e. they {@link Item}s conatining {@link AminoAcid}s are removed.
+ *
  * @author fk
  */
 @JsonTypeName("NO_AMINO_ACIDS")

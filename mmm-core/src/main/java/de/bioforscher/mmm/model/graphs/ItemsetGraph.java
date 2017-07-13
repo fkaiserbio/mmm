@@ -4,6 +4,8 @@ import de.bioforscher.singa.mathematics.graphs.model.AbstractGraph;
 import de.bioforscher.singa.mathematics.vectors.Vector2D;
 
 /**
+ * A {@link de.bioforscher.singa.mathematics.graphs.model.Graph} for {@link de.bioforscher.mmm.model.Itemset}s.
+ *
  * @author fk
  */
 public class ItemsetGraph<LabelType extends Comparable<LabelType>> extends AbstractGraph<ItemsetNode<LabelType>, ItemsetEdge<LabelType>, Vector2D> {

@@ -21,6 +21,8 @@ import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 /**
+ * Analzes the mutual information between {@link de.bioforscher.mmm.model.Itemset}s based on the specified {@link DistributionMetric}.
+ *
  * @author fk
  */
 public class MutualInformationAnalyzer<LabelType extends Comparable<LabelType>> extends AbstractItemsetMinerAnalyzer<LabelType> {
@@ -51,6 +53,9 @@ public class MutualInformationAnalyzer<LabelType extends Comparable<LabelType>> 
         return itemsetGraph;
     }
 
+    /**
+     * Creates an {@link ItemsetGraph} containing connections between {@link Itemset}s that exceed the minimal mutual information cutoff.
+     */
     private void createGraph() {
         logger.info("creating graph of itemset associations for mutual information >{}", minimalMutualInformation);
         List<Pair<Itemset<LabelType>>> connectedPairs = mutualInformation.entrySet().stream()
@@ -96,6 +101,9 @@ public class MutualInformationAnalyzer<LabelType extends Comparable<LabelType>> 
         return mutualInformation;
     }
 
+    /**
+     * Calculates the mutual information based on the given {@link DistributionMetric}.
+     */
     private void calculateMutualInformation() {
         DistributionMetric<LabelType> distributionMetric = itemsetMiner.getEvaluationMetrics().stream()
                                                                        .filter(distributionMetricType::isInstance)

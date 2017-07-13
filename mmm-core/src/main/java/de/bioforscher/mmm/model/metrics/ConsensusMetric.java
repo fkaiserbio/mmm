@@ -20,6 +20,10 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
+ * An {@link ExtractionMetric} that extracts {@link Itemset}s based on the adherence of their items. For further reference see
+ * <p/>
+ * Kaiser, F. & Labudde, D. IEEE/ACM Trans. Comput. Biol. Bioinform. (under review)
+ *
  * @author fk
  */
 public class ConsensusMetric<LabelType extends Comparable<LabelType>> extends AbstractExtractionDependentMetric<LabelType> implements ParallelizableMetric<LabelType>, DistributionMetric<LabelType> {

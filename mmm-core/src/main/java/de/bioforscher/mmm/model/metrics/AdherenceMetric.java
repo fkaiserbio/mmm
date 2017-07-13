@@ -20,10 +20,15 @@ import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
 /**
+ * An {@link ExtractionMetric} that extracts {@link Itemset}s based on the adherence of their items. For further reference see
+ * <p/>
+ * Kaiser, F. & Labudde, D. IEEE/ACM Trans. Comput. Biol. Bioinform. (under review)
+ *
  * @author fk
  */
 public class AdherenceMetric<LabelType extends Comparable<LabelType>> extends AbstractExtractionMetric<LabelType> implements ParallelizableMetric<LabelType> {
 
+    public static final Comparator<Itemset<?>> COMPARATOR = Comparator.comparing(Itemset::getAdherence);
     private static final Logger logger = LoggerFactory.getLogger(AdherenceMetric.class);
 
     private final double maximalAdherence;

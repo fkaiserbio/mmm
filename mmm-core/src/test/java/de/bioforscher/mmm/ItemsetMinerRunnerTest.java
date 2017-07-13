@@ -35,7 +35,7 @@ public class ItemsetMinerRunnerTest {
         }
         ItemsetMiner<String> itemsetMiner = itemsetMinerRunner.getItemsetMiner();
 //        ConfidenceAnalyzer<String> confidenceAnalyzer = new ConfidenceAnalyzer<>(itemsetMiner);
-        MutualInformationAnalyzer<String> analyzer = new MutualInformationAnalyzer<>(itemsetMiner, CohesionMetric.class, 1.2, false);
+        MutualInformationAnalyzer<String> analyzer = new MutualInformationAnalyzer<>(itemsetMiner, CohesionMetric.class, 1.2, true);
         ItemsetExtender<String> extender = new ItemsetExtender<>(itemsetMiner, analyzer.getItemsetGraph(), Paths.get("/tmp/merged_motifs"), new LigandFamily("?", "EST"));
     }
 }

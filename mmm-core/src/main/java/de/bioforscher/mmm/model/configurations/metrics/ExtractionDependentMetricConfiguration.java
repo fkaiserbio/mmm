@@ -7,6 +7,8 @@ import de.bioforscher.mmm.model.metrics.EvaluationMetric;
 import java.lang.reflect.InvocationTargetException;
 
 /**
+ * An interface implemented by configurations for {@link de.bioforscher.mmm.model.metrics.ExtractionDependentMetric}s.
+ *
  * @author fk
  */
 

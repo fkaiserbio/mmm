@@ -7,15 +7,32 @@ import de.bioforscher.singa.chemistry.physical.atoms.representations.Representat
 import de.bioforscher.singa.chemistry.physical.model.StructuralEntityFilter.AtomFilterType;
 
 /**
+ * The {@link Jsonizable} configuration of the {@link de.bioforscher.mmm.model.metrics.ConsensusMetric}.
+ *
  * @author fk
  */
 @JsonTypeName("CONSENSUS")
 public class ConsensusMetricConfiguration<LabelType extends Comparable<LabelType>> implements ExtractionDependentMetricConfiguration<LabelType>, Jsonizable<ConsensusMetricConfiguration> {
 
-    private static final double DEFAULT_MAXIMAL_CONSENSUS = 0.5;
-    private static final double DEFAULT_CLUSTER_CUTOFF_VALUE = 0.5;
-    private static final int DEFAULT_LEVEL_OF_PARALLELISM = -1;
-    private static final AtomFilterType DEFAULT_ATOM_FILTER_TYPE = AtomFilterType.ARBITRARY;
+    /**
+     * the default maximal consensus score allowed
+     */
+    public static final double DEFAULT_MAXIMAL_CONSENSUS = 0.5;
+
+    /**
+     * the default cutoff value for clusters
+     */
+    public static final double DEFAULT_CLUSTER_CUTOFF_VALUE = 0.5;
+
+    /**
+     * the default level of parallelism
+     */
+    public static final int DEFAULT_LEVEL_OF_PARALLELISM = -1;
+
+    /**
+     * the default {@link AtomFilterType} that will be used
+     */
+    public static final AtomFilterType DEFAULT_ATOM_FILTER_TYPE = AtomFilterType.ARBITRARY;
 
     @JsonProperty("maximal-consensus")
     private double maximalConsensus = DEFAULT_MAXIMAL_CONSENSUS;

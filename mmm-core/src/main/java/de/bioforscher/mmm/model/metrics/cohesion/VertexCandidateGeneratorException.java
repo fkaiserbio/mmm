@@ -1,6 +1,8 @@
 package de.bioforscher.mmm.model.metrics.cohesion;
 
 /**
+ * * An exception if something goes wrong during the generation of candidates with the {@link VertexCandidateGenerator}.
+ *
  * @author fk
  */
 public class VertexCandidateGeneratorException extends RuntimeException {

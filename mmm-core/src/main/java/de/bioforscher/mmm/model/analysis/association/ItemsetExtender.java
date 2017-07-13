@@ -23,6 +23,8 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
+ * Naiive implementation of {@link Itemset} extension based on a given {@link ItemsetGraph}.
+ *
  * @author fk
  */
 public class ItemsetExtender<LabelType extends Comparable<LabelType>> {
@@ -41,7 +43,7 @@ public class ItemsetExtender<LabelType extends Comparable<LabelType>> {
         this.itemsetMiner = itemsetMiner;
         this.itemsetGraph = itemsetGraph;
         this.outputPath = outputPath;
-        mergedMotifs = new TreeMap<>(DataPointIdentifier.DATA_POINT_IDENTIFIER_COMPARATOR);
+        mergedMotifs = new TreeMap<>(DataPointIdentifier.COMPARATOR);
         findDisconnectedSubgraphs();
     }
 
@@ -54,7 +56,7 @@ public class ItemsetExtender<LabelType extends Comparable<LabelType>> {
             alignmentReferenceFilter = leafSubstructure -> leafSubstructure.getFamily().equals(referenceLigandFamily);
         }
 
-        mergedMotifs = new TreeMap<>(DataPointIdentifier.DATA_POINT_IDENTIFIER_COMPARATOR);
+        mergedMotifs = new TreeMap<>(DataPointIdentifier.COMPARATOR);
         findDisconnectedSubgraphs();
     }
 
@@ -63,6 +65,9 @@ public class ItemsetExtender<LabelType extends Comparable<LabelType>> {
         return mergedMotifs;
     }
 
+    /**
+     * Finds disconnected subgraphs in the given {@link ItemsetGraph}.
+     */
     private void findDisconnectedSubgraphs() {
 
         List<ItemsetGraph<LabelType>> subgraphs = DisconnectedSubgraphFinder.findDisconnectedSubgraphs(itemsetGraph);
@@ -94,6 +99,11 @@ public class ItemsetExtender<LabelType extends Comparable<LabelType>> {
         }
     }
 
+    /**
+     * Aligns all members of the subgraph in the specified ligand.
+     *
+     * @param subgraph The subgraph of which all members should be aligned in the ligand.
+     */
     private void alignInLigand(ItemsetGraph<LabelType> subgraph) {
 
         // pick first a first reference leaf substructure from the current subgraph
@@ -129,6 +139,12 @@ public class ItemsetExtender<LabelType extends Comparable<LabelType>> {
         }
     }
 
+    /**
+     * Writes all merged {@link StructuralMotif}s of the given subgraph.
+     *
+     * @param subgraph The subgraph of which all {@link StructuralMotif}s should be written.
+     * @throws IOException
+     */
     private void writeMergedMotifs(ItemsetGraph<LabelType> subgraph) throws IOException {
 
         logger.info("writing {} merged motifs", mergedMotifs.size());
@@ -150,10 +166,15 @@ public class ItemsetExtender<LabelType extends Comparable<LabelType>> {
         }
     }
 
+    /**
+     * Merges the given extracted {@link Itemset}s for each {@link de.bioforscher.mmm.model.DataPoint}.
+     *
+     * @param extractedItemsets The extracted {@link Itemset}s to be merged.
+     */
     private void mergeItemsets(List<Itemset<LabelType>> extractedItemsets) {
 
         // group itemsets by their data point
-        Map<DataPointIdentifier, List<Itemset<LabelType>>> itemsetsOfDataPoints = new TreeMap<>(DataPointIdentifier.DATA_POINT_IDENTIFIER_COMPARATOR);
+        Map<DataPointIdentifier, List<Itemset<LabelType>>> itemsetsOfDataPoints = new TreeMap<>(DataPointIdentifier.COMPARATOR);
 
         for (Itemset<LabelType> extractedItemset : extractedItemsets) {
             if (extractedItemset.getOriginDataPointIdentifier().isPresent()) {

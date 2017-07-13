@@ -10,9 +10,12 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
+ * A representation of one data point, i.e. macromolecular structure.
+ *
  * @author fk
  */
 public class DataPoint<LabelType extends Comparable<LabelType>> {
+
     private final DataPointIdentifier dataPointIdentifier;
     private List<Item<LabelType>> items;
 
@@ -36,6 +39,12 @@ public class DataPoint<LabelType extends Comparable<LabelType>> {
                     .collect(Collectors.joining("-", dataPointIdentifier + "{", "}"));
     }
 
+    /**
+     * Writes the {@link DataPoint} to the given {@link Path} in PDB format.
+     *
+     * @param pdbFilePath The target {@link Path} of the PDB file.
+     * @throws IOException
+     */
     public void writeAsPdb(Path pdbFilePath) throws IOException {
 
         List<LeafSubstructure<?, ?>> leafSubstructures = items.stream()

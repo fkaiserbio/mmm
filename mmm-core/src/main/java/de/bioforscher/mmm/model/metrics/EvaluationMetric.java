@@ -1,6 +1,8 @@
 package de.bioforscher.mmm.model.metrics;
 
 /**
+ * A metric used to evaluate candidates during {@link de.bioforscher.mmm.model.Itemset} mining. Each metric specifies a minimal {@link de.bioforscher.mmm.model.Itemset} size to be applied.
+ *
  * @author fk
  */
 public interface EvaluationMetric<LabelType extends Comparable<LabelType>> {

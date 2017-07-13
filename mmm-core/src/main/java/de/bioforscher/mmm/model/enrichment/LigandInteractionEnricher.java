@@ -16,6 +16,9 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * Enriches {@link DataPoint}s that contain ligands with interaction information predicted by the Protein-Ligand Interaction Profiler (PLIP). Interactions are abstracted as pseudoatoms defined as the
+ * midpoint between interacting atoms.
+ *
  * @author fk
  */
 @JsonTypeName("LIGAND_INTERACTION")
@@ -49,7 +52,7 @@ public class LigandInteractionEnricher extends AbstractInteractionEnricher {
                     interactions.get(activeInteraction).forEach(interaction -> addInteractionItem(interaction, dataPoint));
                 }
             }
-
+            // delete temporary structure
             Files.delete(structureFilePath);
 
         } catch (IOException e) {

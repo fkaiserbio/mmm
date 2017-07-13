@@ -4,6 +4,7 @@ import de.bioforscher.mmm.model.Item;
 import de.bioforscher.mmm.model.Itemset;
 import de.bioforscher.mmm.model.configurations.metrics.SeparationMetricConfiguration;
 import de.bioforscher.singa.chemistry.physical.leaves.AminoAcid;
+import de.bioforscher.singa.chemistry.physical.leaves.Nucleotide;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,17 +12,20 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
+ * An {@link ExtractionMetric} that forces {@link Itemset}s to have a minimal sequence separation. For further reference see
+ * <p/>
+ * Kaiser, F. & Labudde, D. IEEE/ACM Trans. Comput. Biol. Bioinform. (under review)
+ *
  * @author fk
  */
 public class SeparationMetric<LabelType extends Comparable<LabelType>> extends AbstractExtractionDependentMetric<LabelType> {
 
+    public static final Comparator<Itemset<?>> COMPARATOR = Comparator.comparing(Itemset::getSeparation);
     private static final Logger logger = LoggerFactory.getLogger(SeparationMetric.class);
-
     /**
      * the range for which discrete values of Morse potential function should be calculated
      */
     private static final int MORSE_POTENTIAL_DISCRETE_RANGE = 10000;
-
     private final HashMap<Integer, Double> morsePotentialDiscrete;
 
     private final double maximalSeparation;
@@ -75,8 +79,9 @@ public class SeparationMetric<LabelType extends Comparable<LabelType>> extends A
 
                 // sort items according to their ascending position and exclude interaction items
                 List<Item<LabelType>> sortedItems = itemsetObservation.getItems().stream()
-                                                                      // only consider amino acids for the separation calculation
-                                                                      .filter(item -> item.getLeafSubstructure().isPresent() && item.getLeafSubstructure().get() instanceof AminoAcid)
+                                                                      // only consider amino acids or nucleotides for the separation calculation
+                                                                      .filter(item -> item.getLeafSubstructure().isPresent() &&
+                                                                                      (item.getLeafSubstructure().get() instanceof AminoAcid || item.getLeafSubstructure().get() instanceof Nucleotide))
                                                                       .sorted(Comparator.comparingInt(Item::getSequencePosition))
                                                                       .collect(Collectors.toList());
 

@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 import de.bioforscher.mmm.model.configurations.Jsonizable;
 
 /**
+ * The {@link Jsonizable} configuration of the {@link de.bioforscher.mmm.model.metrics.SupportMetric}.
+ *
  * @author fk
  */
 @JsonTypeName("SUPPORT")

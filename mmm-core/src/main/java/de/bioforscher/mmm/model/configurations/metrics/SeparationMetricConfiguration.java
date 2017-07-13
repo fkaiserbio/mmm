@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 import de.bioforscher.mmm.model.configurations.Jsonizable;
 
 /**
+ * The {@link Jsonizable} configuration of the {@link de.bioforscher.mmm.model.metrics.SeparationMetric}.
+ *
  * @author fk
  */
 @JsonTypeName("SEPARATION")
@@ -26,6 +28,7 @@ public class SeparationMetricConfiguration<LabelType extends Comparable<LabelTyp
      * the default optimal sequence separation (location of the Morse potential function minimum)
      */
     public static final double DEFAULT_OPTIMAL_SEPARATION = 5.0;
+
     @JsonProperty("maximal-separation")
     private double maximalSeparation = DEFAULT_MAXIMAL_SEPARATION;
     @JsonProperty("optimal-separation")

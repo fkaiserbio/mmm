@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * An object that stores values observed by {@link DistributionMetric}s during mining.
+ *
  * @author fk
  */
 public class Distribution {

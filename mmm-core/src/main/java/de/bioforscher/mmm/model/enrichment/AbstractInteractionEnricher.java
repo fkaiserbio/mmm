@@ -27,13 +27,17 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
+ * An abstract class for interaction information {@link DataPointEnricher}s.
+ *
  * @author fk
  */
 public abstract class AbstractInteractionEnricher implements DataPointEnricher<String> {
 
     public static final Map<InteractionType, String> INTERACTION_LABEL_MAP;
     public static final List<InteractionType> ACTIVE_INTERACTIONS;
+
     private static final Logger logger = LoggerFactory.getLogger(AbstractInteractionEnricher.class);
+
     protected static String PLIP_REST_PROVIDER_CREDENTIALS;
 
     static {
@@ -68,6 +72,12 @@ public abstract class AbstractInteractionEnricher implements DataPointEnricher<S
 //        ACTIVE_INTERACTIONS.add(InteractionType.WATER_BRIDGE);
     }
 
+    /**
+     * Adds the given {@link PlipInteraction} to the specified {@link DataPoint}.
+     *
+     * @param interaction The {@link PlipInteraction} to be added.
+     * @param dataPoint   The {@link DataPoint} to which the {@link PlipInteraction} should be added.
+     */
     protected void addInteractionItem(PlipInteraction interaction, DataPoint<String> dataPoint) {
 
         // determine next identifiers

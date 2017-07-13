@@ -8,6 +8,26 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+/**
+ * A {@link MappingRule} for polar and charged amino acids according to
+ * <p/>
+ * Gutteridge, A. & Thornton, J. M. Understanding
+ * nature's catalytic toolkit Trends in biochemical sciences, Elsevier, 2005, 30, 622-629
+ * <p/>
+ * chemical groups are:
+ * <pre>
+ *     imidazole (imi)    H
+ *     guanidinium (gua)  R
+ *     amine (amn)        K
+ *     carboxylate (car)  D,E
+ *     amide (amd)        N,Q
+ *     hydroxyl (hyd)     S,T,Y
+ *     thiol (thi)        C
+ * </pre>
+ * remaining amino acids are classified as "other (oth)".
+ *
+ * @author fk
+ **/
 @JsonTypeName("CHEMICAL_GROUPS")
 public class ChemicalGroupsMappingRule implements MappingRule<String> {
 

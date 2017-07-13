@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import de.bioforscher.mmm.model.DataPoint;
 
 /**
+ * An interface implemented to enrich {@link DataPoint}s.
+ *
  * @author fk
  */
 

@@ -6,13 +6,22 @@ import de.bioforscher.mmm.model.configurations.Jsonizable;
 import de.bioforscher.singa.chemistry.physical.atoms.representations.RepresentationSchemeType;
 
 /**
+ * The {@link Jsonizable} configuration of the {@link de.bioforscher.mmm.model.metrics.CohesionMetric}.
+ *
  * @author fk
  */
 @JsonTypeName("COHESION")
 public class CohesionMetricConfiguration<LabelType extends Comparable<LabelType>> implements ExtractionMetricConfiguration<LabelType>, Jsonizable<CohesionMetricConfiguration> {
 
-    private static final double DEFAULT_MAXIMAL_COHESION = 10.0;
-    private static final int DEFAULT_LEVEL_OF_PARALLELISM = -1;
+    /**
+     * the default maximal cohesion allowed
+     */
+    public static final double DEFAULT_MAXIMAL_COHESION = 10.0;
+
+    /**
+     * the default level of parallelism
+     */
+    public static final int DEFAULT_LEVEL_OF_PARALLELISM = -1;
 
     @JsonProperty("maximal-cohesion")
     private double maximalCohesion = DEFAULT_MAXIMAL_COHESION;

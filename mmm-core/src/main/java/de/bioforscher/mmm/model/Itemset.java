@@ -13,6 +13,8 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
+ * Implementation of an itemset consisting of {@link Item}s. {@link Itemset}s are equal if all their labels are, independent of their order.
+ *
  * @author fk
  */
 public class Itemset<LabelType extends Comparable<LabelType>> implements Comparable<Itemset<LabelType>> {
@@ -105,24 +107,6 @@ public class Itemset<LabelType extends Comparable<LabelType>> implements Compara
     public double getSupport() {
         return support;
     }
-
-//    @SafeVarargs
-//    public static <LabelType extends Comparable<LabelType>> Itemset<LabelType> of(Item<LabelType>...items){
-//        TreeSet<Item<LabelType>> itemList = Stream.of(items).collect(Collectors.toCollection(TreeSet::new));
-//        for (Item<LabelType> item : itemList) {
-//            item.setPosition(null);
-//            item.setLeafSubstructure(null);
-//        }
-//        return new Itemset<>(itemList);
-//    }
-//
-//    public static <LabelType extends Comparable<LabelType>> Itemset<LabelType> of(Set<Item<LabelType>> items){
-//        for (Item<LabelType> item : items) {
-//            item.setPosition(null);
-//            item.setLeafSubstructure(null);
-//        }
-//        return new Itemset<>(new TreeSet<>(items));
-//    }
 
     public void setSupport(double support) {
         this.support = support;

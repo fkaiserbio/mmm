@@ -18,6 +18,14 @@ import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
 /**
+ * An heuristic implementation of the cohesion measurement for {@link Itemset}s. Adapted from:
+ * <p/>
+ * C. Zhou, P. Meysman, B.
+ * Cule, K. Laukens and B. Goethals, "Discovery of Spatially Cohesive Itemsets in Three-Dimensional Protein
+ * Structures," in IEEE/ACM Transactions on Computational Biology and Bioinformatics, vol. 11, no. 5, pp. 814-825,
+ * Sept-Oct. 2014.
+ * doi: 10.1109/TCBB.2014.2311795
+ *
  * @author fk
  */
 public class CohesionMetric<LabelType extends Comparable<LabelType>> extends AbstractExtractionMetric<LabelType> implements ParallelizableMetric<LabelType>, DistributionMetric<LabelType> {

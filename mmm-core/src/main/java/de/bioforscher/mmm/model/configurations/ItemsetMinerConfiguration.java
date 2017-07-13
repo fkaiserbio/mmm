@@ -21,6 +21,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
+ * The {@link Jsonizable} configuration of the {@link de.bioforscher.mmm.ItemsetMiner}. This is the global configuration object that sho
+ *
  * @author fk
  */
 @JsonTypeName("ITEMSET_MINER_CONFIGURATION")

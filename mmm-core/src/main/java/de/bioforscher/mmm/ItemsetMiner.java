@@ -15,6 +15,8 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
+ * Implementation of the Aprioiri algorithm to generate frequent {@link Itemset}s. This uses {@link EvaluationMetric}s to evaluate candidates during generation.
+ *
  * @author fk
  */
 public class ItemsetMiner<LabelType extends Comparable<LabelType>> {

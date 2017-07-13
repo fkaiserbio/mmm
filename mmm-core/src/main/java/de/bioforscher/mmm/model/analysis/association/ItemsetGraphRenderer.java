@@ -6,6 +6,8 @@ import de.bioforscher.mmm.model.graphs.ItemsetNode;
 import de.bioforscher.singa.javafx.renderer.graphs.GraphRenderer;
 
 /**
+ * A customized {@link GraphRenderer} to display {@link ItemsetGraph}s.
+ *
  * @author fk
  */
 public class ItemsetGraphRenderer<LabelType extends Comparable<LabelType>> extends GraphRenderer<ItemsetNode<LabelType>, ItemsetEdge<LabelType>, ItemsetGraph<LabelType>> {

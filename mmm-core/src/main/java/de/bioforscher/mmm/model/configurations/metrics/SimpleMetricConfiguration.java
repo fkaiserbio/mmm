@@ -9,9 +9,10 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 /**
+ * An interface implemented by configurations for {@link de.bioforscher.mmm.model.metrics.SeparationMetric}s.
+ *
  * @author fk
  */
-
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
 @JsonSubTypes({@JsonSubTypes.Type(value = SupportMetricConfiguration.class)})
 public interface SimpleMetricConfiguration<LabelType extends Comparable<LabelType>> extends MetricConfiguration<LabelType> {
