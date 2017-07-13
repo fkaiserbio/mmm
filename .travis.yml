@@ -1,4 +1,7 @@
 language: java
 before_install:
 - git clone https://github.com/cleberecht/singa.git
+- cd singa/singa-all
 - mvn clean install
+- cd  ../../mmm-all
+install: mvn clean install
