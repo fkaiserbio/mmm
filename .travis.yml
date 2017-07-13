@@ -1,7 +1,15 @@
 language: java
+jdk: oraclejdk8
+dist: trusty
+addons:
+  apt:
+    packages:
+      - oracle-java8-installer
+
 before_install:
-- git clone https://github.com/cleberecht/singa.git
-- cd singa/singa-all
-- mvn clean install
-- cd  ../../mmm-all
+  - git clone https://github.com/cleberecht/singa.git
+  - cd singa/singa-all
+  - mvn clean install
+  - cd  ../../mmm-all
+
 install: mvn clean install
