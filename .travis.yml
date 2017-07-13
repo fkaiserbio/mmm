@@ -9,7 +9,7 @@ addons:
 before_install:
   - git clone -b alignment-algorithms https://github.com/cleberecht/singa.git
   - cd singa/singa-all
-  - mvn clean install
+  - mvn clean install -DskipTests=true
   - cd  ../../mmm-all
 
-install: mvn clean install
+install: mvn clean install -DskipTests=true
