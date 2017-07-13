@@ -7,6 +7,7 @@ import de.bioforscher.mmm.model.Item;
 import de.bioforscher.singa.chemistry.parser.pdb.structures.StructureParser;
 import de.bioforscher.singa.chemistry.parser.pdb.structures.StructureParser.MultiParser;
 import de.bioforscher.singa.chemistry.parser.pdb.structures.StructureParserOptions;
+import de.bioforscher.singa.chemistry.parser.pdb.structures.StructureParserOptions.Setting;
 import de.bioforscher.singa.chemistry.physical.branches.StructuralModel;
 import de.bioforscher.singa.chemistry.physical.leaves.AtomContainer;
 import de.bioforscher.singa.chemistry.physical.leaves.LeafSubstructure;
@@ -66,15 +67,22 @@ public class DataPointReader {
         logger.info("structure reader initialized with {} structures from chain list", multiParser.getNumberOfQueuedStructures());
     }
 
-    public static boolean hasValidLabel(LeafSubstructure<?, ?> leafSubstructureToCheck, List<String> labelWhiteList) {
+    /**
+     * Checks whether the label of the given {@link LeafSubstructure} is contained in the given white list for labels.
+     *
+     * @param leafSubstructureToCheck The {@link LeafSubstructure} to check.
+     * @param labelWhiteList          The label white list.
+     * @return True if label is whitelisted.
+     */
+    private static boolean hasValidLabel(LeafSubstructure<?, ?> leafSubstructureToCheck, List<String> labelWhiteList) {
         return !(leafSubstructureToCheck instanceof AtomContainer) || labelWhiteList.contains(leafSubstructureToCheck.getFamily().getThreeLetterCode());
     }
 
+    /**
+     * Creates the {@link StructureParserOptions} to be used for the {@link StructureParser}.
+     */
     private void createStructureParserOptions() {
-        // create structure parser options
-        structureParserOptions = new StructureParserOptions();
-        structureParserOptions.retrieveLigandInformation(true);
-        structureParserOptions.omitHydrogens(true);
+        structureParserOptions = StructureParserOptions.withSettings(Setting.GET_LIGAND_INFORMATION, Setting.OMIT_HYDROGENS);
     }
 
     /**
@@ -142,6 +150,12 @@ public class DataPointReader {
         return new DataPoint<>(items, dataPointIdentifier);
     }
 
+    /**
+     * Converts the given {@link LeafSubstructure} to an {@link Item}.
+     *
+     * @param leafSubstructure The {@link LeafSubstructure} to be converted.
+     * @return The converted {@link Item}.
+     */
     private Item<String> toItem(LeafSubstructure<?, ?> leafSubstructure) {
         return new Item<>(leafSubstructure.getFamily().getThreeLetterCode(), leafSubstructure);
     }

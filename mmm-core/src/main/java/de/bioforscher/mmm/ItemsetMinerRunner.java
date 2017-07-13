@@ -50,8 +50,8 @@ public class ItemsetMinerRunner {
         mapDataPoints();
         createMetrics();
         mineDataPoints();
-        printReport();
         outputResults();
+        printReport();
     }
 
     public static void main(String[] args) throws IOException, URISyntaxException {

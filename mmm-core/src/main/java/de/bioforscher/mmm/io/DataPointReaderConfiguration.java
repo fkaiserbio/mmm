@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * The {@link Jsonizable} configuration of the {@link DataPointReader}.
+ *
  * @author fk
  */
 @JsonTypeName("DATA_POINT_READER_CONFIGURATION")
@@ -36,6 +38,11 @@ public class DataPointReaderConfiguration implements Jsonizable<DataPointReaderC
         this.ligandLabelWhitelist = ligandLabelWhitelist;
     }
 
+    /**
+     * Adds the specified label to the allowed labels for ligands.
+     *
+     * @param ligandLabel The label (three-letter code).
+     */
     public void addToLigandLabelWhiteList(String ligandLabel) {
         ligandLabelWhitelist.add(ligandLabel);
     }
