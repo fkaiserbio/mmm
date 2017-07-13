@@ -54,4 +54,13 @@ public class CohesionMetricConfiguration<LabelType extends Comparable<LabelType>
     public void setMaximalCohesion(double maximalCohesion) {
         this.maximalCohesion = maximalCohesion;
     }
+
+    @Override public String toString() {
+        return "CohesionMetricConfiguration{" +
+               "maximalCohesion=" + maximalCohesion +
+               ", vertexOne=" + vertexOne +
+               ", levelOfParallelism=" + levelOfParallelism +
+               ", representationSchemeType=" + representationSchemeType +
+               '}';
+    }
 }

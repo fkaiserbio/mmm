@@ -2,6 +2,7 @@ package de.bioforscher.mmm.model.configurations;
 
 import de.bioforscher.mmm.model.ItemsetComparatorType;
 import de.bioforscher.mmm.model.enrichment.IntraChainInteractionEnricher;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -10,6 +11,7 @@ import org.junit.Test;
 public class ItemsetMinerConfigurationTest {
 
     @Test
+    @Ignore
     public void shouldSerialize(){
         ItemsetMinerConfiguration<String> itemsetMinerConfiguration = new ItemsetMinerConfiguration<>();
         itemsetMinerConfiguration.setInputListLocation("PF00127_chains.txt");

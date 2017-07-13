@@ -30,7 +30,7 @@ public class IntraChainInteractionEnricher extends AbstractInteractionEnricher {
     @Override
     public void enrichDataPoint(DataPoint<String> dataPoint) {
 
-        logger.info("enriching data point {} with interaction information", dataPoint);
+        logger.debug("enriching data point {} with interaction information", dataPoint);
 
         String pdbIdentifier = dataPoint.getDataPointIdentifier().getPdbIdentifier();
         String chainIdentifier = dataPoint.getDataPointIdentifier().getChainIdentifier();
@@ -48,11 +48,15 @@ public class IntraChainInteractionEnricher extends AbstractInteractionEnricher {
         }
     }
 
+    @Override public String toString() {
+        return "IntraChainInteractionEnricher{}";
+    }
+
     private Optional<Map<InteractionType, List<PlipInteraction>>> queryInteractions(String pdbIdentifier, String chainIdentifier) {
         try {
             // connect to the PLIP REST API and obtain interaction data
             URL url = new URL(PLIP_REST_PROVIDER_URL + pdbIdentifier + "/" + chainIdentifier);
-            logger.info("querying PLIP REST service: {}", url);
+            logger.debug("querying PLIP REST service: {}", url);
             String encoding = new sun.misc.BASE64Encoder().encode(PLIP_REST_PROVIDER_CREDENTIALS.getBytes());
             URLConnection connection = url.openConnection();
             connection.setRequestProperty("Authorization", "Basic " + encoding);

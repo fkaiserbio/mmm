@@ -38,7 +38,7 @@ public class ResultWriter<LabelType extends Comparable<LabelType>> {
                     .count();
             File movedFile = outputPath.getParent().resolve(outputPath.getFileName() + "." + outputFolderCount).toFile();
             logger.info("output folder already present, will be renamed to {}", movedFile);
-            outputPath.toFile().renameTo(movedFile);
+            new File(outputPath.toUri()).renameTo(movedFile);
         }
 
         logger.debug("creating path {}", outputPath);

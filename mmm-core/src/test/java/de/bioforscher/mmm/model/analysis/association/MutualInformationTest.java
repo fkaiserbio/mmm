@@ -1,6 +1,7 @@
 package de.bioforscher.mmm.model.analysis.association;
 
 import de.bioforscher.mmm.model.Itemset;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -9,6 +10,7 @@ import org.junit.Test;
 public class MutualInformationTest {
 
     @Test
+    @Ignore
     public void shouldComputeMutualInformation() {
         Itemset<String> itemsetOne = new Itemset<>(null);
         Itemset<String> itemsetTwo = new Itemset<>(null);

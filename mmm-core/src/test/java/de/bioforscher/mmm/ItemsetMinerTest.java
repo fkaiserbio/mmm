@@ -13,6 +13,7 @@ import de.bioforscher.mmm.model.enrichment.IntraChainInteractionEnricher;
 import de.bioforscher.mmm.model.metrics.*;
 import de.bioforscher.singa.chemistry.parser.pdb.structures.StructureParserOptions;
 import de.bioforscher.singa.chemistry.physical.atoms.representations.RepresentationSchemeType;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.nio.file.Path;
@@ -29,6 +30,7 @@ public class ItemsetMinerTest {
     }
 
     @Test
+    @Ignore
     public void shouldCorrectlyCreateCandidates() throws Exception {
 
         Path inputListPath = Paths.get(Thread.currentThread().getContextClassLoader()

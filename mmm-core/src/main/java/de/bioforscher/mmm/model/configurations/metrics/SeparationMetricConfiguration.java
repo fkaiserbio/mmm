@@ -66,4 +66,13 @@ public class SeparationMetricConfiguration<LabelType extends Comparable<LabelTyp
     public void setMorseShape(double morseShape) {
         this.morseShape = morseShape;
     }
+
+    @Override public String toString() {
+        return "SeparationMetricConfiguration{" +
+               "maximalSeparation=" + maximalSeparation +
+               ", optimalSeparation=" + optimalSeparation +
+               ", morseWellDepth=" + morseWellDepth +
+               ", morseShape=" + morseShape +
+               '}';
+    }
 }

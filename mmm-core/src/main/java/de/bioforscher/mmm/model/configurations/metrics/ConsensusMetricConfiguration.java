@@ -77,4 +77,15 @@ public class ConsensusMetricConfiguration<LabelType extends Comparable<LabelType
     public void setAlignWithinClusters(boolean alignWithinClusters) {
         this.alignWithinClusters = alignWithinClusters;
     }
+
+    @Override public String toString() {
+        return "ConsensusMetricConfiguration{" +
+               "maximalConsensus=" + maximalConsensus +
+               ", clusterCutoffValue=" + clusterCutoffValue +
+               ", levelOfParallelism=" + levelOfParallelism +
+               ", atomFilterType=" + atomFilterType +
+               ", representationSchemeType=" + representationSchemeType +
+               ", alignWithinClusters=" + alignWithinClusters +
+               '}';
+    }
 }

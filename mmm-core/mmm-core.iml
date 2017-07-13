@@ -22,9 +22,9 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library">
-      <library name="Maven: de.bioforscher:plip-rest-provider-core:0.1.0">
+      <library name="Maven: de.bioforscher:plip-rest-provider-core:0.1.1">
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/lib/plip-rest-provider-core-0.1.0.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/plip-rest-provider-core-0.1.1.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />

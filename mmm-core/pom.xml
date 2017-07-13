@@ -7,7 +7,7 @@
     <parent>
         <artifactId>mmm-all</artifactId>
         <groupId>de.bioforscher.mmm</groupId>
-        <version>1.0-SNAPSHOT</version>
+        <version>0.1.0</version>
         <relativePath>../mmm-all/pom.xml</relativePath>
     </parent>
 
@@ -24,9 +24,9 @@
         <dependency>
             <groupId>de.bioforscher</groupId>
             <artifactId>plip-rest-provider-core</artifactId>
-            <version>0.1.0</version>
+            <version>0.1.1</version>
             <scope>system</scope>
-            <systemPath>${basedir}/lib/plip-rest-provider-core-0.1.0.jar</systemPath>
+            <systemPath>${basedir}/lib/plip-rest-provider-core-0.1.1.jar</systemPath>
             <exclusions>
                 <exclusion>
                     <groupId>org.apache.logging.log4j</groupId>

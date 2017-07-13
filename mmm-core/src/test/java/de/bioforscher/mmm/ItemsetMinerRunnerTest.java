@@ -6,6 +6,8 @@ import de.bioforscher.mmm.model.configurations.ItemsetMinerConfiguration;
 import de.bioforscher.mmm.model.metrics.CohesionMetric;
 import de.bioforscher.mmm.model.metrics.DistributionMetric;
 import de.bioforscher.mmm.model.metrics.EvaluationMetric;
+import de.bioforscher.singa.chemistry.physical.families.LigandFamily;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -20,6 +22,7 @@ import java.util.List;
 public class ItemsetMinerRunnerTest {
 
     @Test
+    @Ignore
     public void shouldRunItemsetMiner() throws IOException, URISyntaxException {
         ItemsetMinerConfiguration<String> itemsetMinerConfiguration =
                 ItemsetMinerConfiguration.from(Paths.get("/home/fkaiser/Workspace/IdeaProjects/mmm/mmm-core/src/test/resources/itemset-miner_config.json"));
@@ -32,7 +35,7 @@ public class ItemsetMinerRunnerTest {
         }
         ItemsetMiner<String> itemsetMiner = itemsetMinerRunner.getItemsetMiner();
 //        ConfidenceAnalyzer<String> confidenceAnalyzer = new ConfidenceAnalyzer<>(itemsetMiner);
-        MutualInformationAnalyzer<String> analyzer = new MutualInformationAnalyzer<>(itemsetMiner, CohesionMetric.class, 1.8, true);
-        ItemsetExtender<String> extender = new ItemsetExtender<>(itemsetMiner, analyzer.getItemsetGraph(), Paths.get("/tmp/merged_motifs"));
+        MutualInformationAnalyzer<String> analyzer = new MutualInformationAnalyzer<>(itemsetMiner, CohesionMetric.class, 1.2, false);
+        ItemsetExtender<String> extender = new ItemsetExtender<>(itemsetMiner, analyzer.getItemsetGraph(), Paths.get("/tmp/merged_motifs"), new LigandFamily("EST"));
     }
 }

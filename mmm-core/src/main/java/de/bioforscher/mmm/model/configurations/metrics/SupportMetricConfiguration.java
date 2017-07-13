@@ -25,4 +25,10 @@ public class SupportMetricConfiguration<LabelType extends Comparable<LabelType>>
     public void setMinimalSupport(double minimalSupport) {
         this.minimalSupport = minimalSupport;
     }
+
+    @Override public String toString() {
+        return "SupportMetricConfiguration{" +
+               "minimalSupport=" + minimalSupport +
+               '}';
+    }
 }

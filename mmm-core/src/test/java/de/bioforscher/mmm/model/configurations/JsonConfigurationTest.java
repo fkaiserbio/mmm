@@ -10,6 +10,7 @@ import de.bioforscher.mmm.model.enrichment.IntraChainInteractionEnricher;
 import de.bioforscher.mmm.model.mapping.rules.ChemicalGroupsMappingRule;
 import de.bioforscher.singa.chemistry.physical.atoms.representations.RepresentationSchemeType;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -27,6 +28,7 @@ public class JsonConfigurationTest {
     public TemporaryFolder folder = new TemporaryFolder();
 
     @Test
+    @Ignore
     public void shouldSerializeAndDeserializeItemsetMinerConfiguration() throws IOException {
 
         ItemsetMinerConfiguration<String> itemsetMinerConfiguration = new ItemsetMinerConfiguration<>();

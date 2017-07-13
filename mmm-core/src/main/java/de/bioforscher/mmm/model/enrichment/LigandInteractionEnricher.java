@@ -22,11 +22,16 @@ import java.util.Map;
 public class LigandInteractionEnricher extends AbstractInteractionEnricher {
 
     private static final Logger logger = LoggerFactory.getLogger(LigandInteractionEnricher.class);
-    private static final String PLIP_REST_PROVIDER_URL = "https://biosciences.hs-mittweida.de/plip/interaction/calculate";
+    private static final String PLIP_REST_PROVIDER_URL = "https://biosciences.hs-mittweida.de/plip/interaction/calculate/nucleotide";
+
+    @Override
+    public String toString() {
+        return "LigandInteractionEnricher{}";
+    }
 
     @Override
     public void enrichDataPoint(DataPoint<String> dataPoint) {
-        logger.info("enriching data point {} with ligand interaction information", dataPoint);
+        logger.debug("enriching data point {} with ligand interaction information", dataPoint);
 
         try {
             // write PDB structure of data point to temporary file
