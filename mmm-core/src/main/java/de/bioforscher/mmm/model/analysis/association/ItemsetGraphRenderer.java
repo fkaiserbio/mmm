@@ -10,7 +10,7 @@ import de.bioforscher.singa.javafx.renderer.graphs.GraphRenderer;
  *
  * @author fk
  */
-public class ItemsetGraphRenderer<LabelType extends Comparable<LabelType>> extends GraphRenderer<ItemsetNode<LabelType>, ItemsetEdge<LabelType>, ItemsetGraph<LabelType>> {
+public class ItemsetGraphRenderer<LabelType extends Comparable<LabelType>> extends GraphRenderer<ItemsetNode<LabelType>, ItemsetEdge<LabelType>, Integer, ItemsetGraph<LabelType>> {
 
     @Override
     protected void drawNode(ItemsetNode<LabelType> node) {

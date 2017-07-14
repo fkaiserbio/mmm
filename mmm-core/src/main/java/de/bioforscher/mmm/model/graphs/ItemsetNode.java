@@ -11,7 +11,7 @@ import de.bioforscher.singa.mathematics.vectors.Vectors;
  *
  * @author fk
  */
-public class ItemsetNode<LabelType extends Comparable<LabelType>> extends AbstractNode<ItemsetNode<LabelType>, Vector2D> {
+public class ItemsetNode<LabelType extends Comparable<LabelType>> extends AbstractNode<ItemsetNode<LabelType>, Vector2D, Integer> {
 
     public static final Rectangle GRAPH_BOUNDING_BOX = new Rectangle(100, 100);
 

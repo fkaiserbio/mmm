@@ -85,7 +85,7 @@ public abstract class AbstractInteractionEnricher implements DataPointEnricher<S
                                           .map(Item::getLeafSubstructure)
                                           .filter(Optional::isPresent)
                                           .map(Optional::get)
-                                          .mapToInt(leafSubstructure -> leafSubstructure.getLeafIdentifier().getIdentifier())
+                                          .mapToInt(leafSubstructure -> leafSubstructure.getIdentifier().getSerial())
                                           .max()
                                           .orElseThrow(() -> new RuntimeException("failed to determine next leaf identifer")) + 1;
         int nextAtomIdentifier = dataPoint.getItems().stream()

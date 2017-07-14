@@ -197,7 +197,7 @@ public class ItemsetExtender<LabelType extends Comparable<LabelType>> {
                                                                      .map(Optional::get)
                                                                      .map(StructuralMotif::getLeafSubstructures)
                                                                      .flatMap(Collection::stream)
-                                                                     .sorted(Comparator.comparing(LeafSubstructure::getLeafIdentifier))
+                                                                     .sorted(Comparator.comparing(LeafSubstructure::getIdentifier))
                                                                      .distinct()
                                                                      .collect(Collectors.toList());
             // convert to structural motif

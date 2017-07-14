@@ -196,7 +196,7 @@ public class FingerprintMiner {
         for (LeafSubstructure<?, ?> leafSubstructure : consensusMotif.getLeafSubstructures()) {
             Optional<AminoAcidFamily> aminoAcidFamily = AminoAcidFamily.getAminoAcidTypeByOneLetterCode(leafSubstructure.getFamily().getOneLetterCode());
             if (aminoAcidFamily.isPresent()) {
-                AminoAcid aminoAcid = new AminoAcid(leafSubstructure.getLeafIdentifier(), aminoAcidFamily.get());
+                AminoAcid aminoAcid = new AminoAcid(leafSubstructure.getIdentifier(), aminoAcidFamily.get());
                 leafSubstructure.getAllAtoms().stream()
                                 .map(Atom::getCopy)
                                 .forEach(aminoAcid::addNode);

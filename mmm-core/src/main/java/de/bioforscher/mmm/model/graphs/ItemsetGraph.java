@@ -8,11 +8,18 @@ import de.bioforscher.singa.mathematics.vectors.Vector2D;
  *
  * @author fk
  */
-public class ItemsetGraph<LabelType extends Comparable<LabelType>> extends AbstractGraph<ItemsetNode<LabelType>, ItemsetEdge<LabelType>, Vector2D> {
+public class ItemsetGraph<LabelType extends Comparable<LabelType>> extends AbstractGraph<ItemsetNode<LabelType>, ItemsetEdge<LabelType>, Vector2D, Integer> {
+
+    private int nextNodeIdentifier;
 
     @Override
     public int addEdgeBetween(int identifier, ItemsetNode<LabelType> source, ItemsetNode<LabelType> target) {
         return addEdgeBetween(new ItemsetEdge<>(identifier), source, target);
+    }
+
+    @Override
+    public Integer nextNodeIdentifier() {
+        return nextNodeIdentifier++;
     }
 
     @Override

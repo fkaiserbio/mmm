@@ -2,8 +2,8 @@
   "type": "ITEMSET_MINER_CONFIGURATION",
   "creation-user": "fkaiser",
   "creation-date": "2017-06-06T10:45:14.401",
-  "input-list-location": "/home/fkaiser/Workspace/git/itemset_publication/datasets/PF00089_chains_BLAST_10e80_single_chains",
-  /*"input-directory-location": "/tmp/mds",*/
+  /*"input-list-location": "/home/fkaiser/Workspace/git/itemset_publication/datasets/PF00089_chains_BLAST_10e80_single_chains",*/
+  "input-directory-location": "/tmp/mds",
   "output-location": "/tmp/itemset-miner",
   "data-point-reader-configuration": {
     "type": "DATA_POINT_READER_CONFIGURATION",
@@ -16,12 +16,12 @@
     "parse-nucleotides": true,
     "parse-water": false
   },
-  /*"data-point-enricher": {
+  "data-point-enricher": {
     "type": "LIGAND_INTERACTION"
-  },*/
-  "mapping-rule": {
-    "type": "CHEMICAL_GROUPS"
   },
+  /*"mapping-rule": {
+    "type": "CHEMICAL_GROUPS"
+  },*/
   "simple-metrics": [
     {
       "type": "SUPPORT",

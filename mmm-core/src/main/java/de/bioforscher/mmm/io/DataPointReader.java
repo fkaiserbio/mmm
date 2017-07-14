@@ -117,7 +117,7 @@ public class DataPointReader {
                 logger.warn("detected alpha carbon/backbone only structure, skipping {}", structure);
                 continue;
             }
-            dataPoints.add(toDataPoint(structure, structure.getPdbIdentifier(), structure.getFirstModel().get().getFirstChain().get().getChainIdentifier()));
+            dataPoints.add(toDataPoint(structure, structure.getPdbIdentifier(), structure.getFirstModel().get().getFirstChain().get().getIdentifier()));
             int remainingStructures = multiParser.getNumberOfRemainingStructures();
             if (remainingStructures % 10 == 0) {
                 logger.info("read {} out of {} structures", queuedStructures - remainingStructures, queuedStructures);
