@@ -122,10 +122,10 @@ public class ItemsetMinerRunner {
 
         logger.info(">>>STEP 3<<< mapping data points");
 
-        MappingRule<String> mappingRule = itemsetMinerConfiguration.getMappingRule();
-        if (mappingRule != null) {
-            logger.info("mapping data points according to {}", mappingRule);
-            DataPointLabelMapper<String> dataPointLabelMapper = new DataPointLabelMapper<>(mappingRule);
+        List<MappingRule<String>> mappingRules = itemsetMinerConfiguration.getMappingRules();
+        if (mappingRules != null && !mappingRules.isEmpty()) {
+            logger.info("mapping data points according to mapping rules {}", mappingRules);
+            DataPointLabelMapper<String> dataPointLabelMapper = new DataPointLabelMapper<>(mappingRules);
             dataPoints = dataPoints.stream()
                                    .map(dataPointLabelMapper::mapDataPoint)
                                    .collect(Collectors.toList());

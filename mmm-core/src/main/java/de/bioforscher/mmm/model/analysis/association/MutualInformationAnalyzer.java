@@ -6,6 +6,7 @@ import de.bioforscher.mmm.model.Itemset;
 import de.bioforscher.mmm.model.analysis.AbstractItemsetMinerAnalyzer;
 import de.bioforscher.mmm.model.analysis.ItemsetMinerAnalyzerException;
 import de.bioforscher.mmm.model.graphs.ItemsetGraph;
+import de.bioforscher.mmm.model.graphs.ItemsetGraphRenderer;
 import de.bioforscher.mmm.model.graphs.ItemsetNode;
 import de.bioforscher.mmm.model.metrics.DistributionMetric;
 import de.bioforscher.singa.core.utility.Pair;

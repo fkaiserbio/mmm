@@ -79,7 +79,7 @@ public class IntraChainInteractionEnricher extends AbstractInteractionEnricher {
                 return Optional.of(mapper.readValue(inputStream, typeReference));
             }
         } catch (IOException e) {
-            logger.warn("failed to obtain PLIP results from server for {}_{}", pdbIdentifier, chainIdentifier, e);
+            logger.warn("failed to obtain PLIP results from server {} for {}_{}", PLIP_REST_PROVIDER_URL, pdbIdentifier, chainIdentifier, e);
         }
         return Optional.empty();
     }

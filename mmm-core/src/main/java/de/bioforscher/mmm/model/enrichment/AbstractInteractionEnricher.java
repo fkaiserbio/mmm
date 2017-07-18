@@ -38,7 +38,7 @@ public abstract class AbstractInteractionEnricher implements DataPointEnricher<S
 
     private static final Logger logger = LoggerFactory.getLogger(AbstractInteractionEnricher.class);
 
-    protected static String PLIP_REST_PROVIDER_CREDENTIALS;
+    static String PLIP_REST_PROVIDER_CREDENTIALS;
 
     static {
 
@@ -78,7 +78,7 @@ public abstract class AbstractInteractionEnricher implements DataPointEnricher<S
      * @param interaction The {@link PlipInteraction} to be added.
      * @param dataPoint   The {@link DataPoint} to which the {@link PlipInteraction} should be added.
      */
-    protected void addInteractionItem(PlipInteraction interaction, DataPoint<String> dataPoint) {
+    void addInteractionItem(PlipInteraction interaction, DataPoint<String> dataPoint) {
 
         // determine next identifiers
         int nextLeafIdentifier = dataPoint.getItems().stream()

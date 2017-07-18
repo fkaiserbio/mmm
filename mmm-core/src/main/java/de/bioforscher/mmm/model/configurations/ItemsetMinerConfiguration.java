@@ -47,8 +47,8 @@ public class ItemsetMinerConfiguration<LabelType extends Comparable<LabelType>> 
     private DataPointReaderConfiguration dataPointReaderConfiguration;
     @JsonProperty("data-point-enricher")
     private DataPointEnricher<LabelType> dataPointEnricher;
-    @JsonProperty("mapping-rule")
-    private MappingRule<LabelType> mappingRule;
+    @JsonProperty("mapping-rules")
+    private List<MappingRule<LabelType>> mappingRules;
     @JsonProperty("simple-metrics")
     private List<SimpleMetricConfiguration<LabelType>> simpleMetricConfigurations;
     @JsonProperty("extraction-metric")
@@ -65,6 +65,7 @@ public class ItemsetMinerConfiguration<LabelType extends Comparable<LabelType>> 
         this.creationDate = LocalDateTime.now().toString();
         this.simpleMetricConfigurations = new ArrayList<>();
         this.extractionDependentMetricConfigurations = new ArrayList<>();
+        this.mappingRules = new ArrayList<>();
     }
 
     @SuppressWarnings("unchecked")
@@ -114,14 +115,6 @@ public class ItemsetMinerConfiguration<LabelType extends Comparable<LabelType>> 
         this.maximalEpochs = maximalEpochs;
     }
 
-    public MappingRule<LabelType> getMappingRule() {
-        return mappingRule;
-    }
-
-    public void setMappingRule(MappingRule<LabelType> mappingRule) {
-        this.mappingRule = mappingRule;
-    }
-
     public List<SimpleMetricConfiguration<LabelType>> getSimpleMetricConfigurations() {
         return simpleMetricConfigurations;
     }
@@ -168,5 +161,17 @@ public class ItemsetMinerConfiguration<LabelType extends Comparable<LabelType>> 
 
     public void addExtractionDependentMetricConfiguration(ExtractionDependentMetricConfiguration<LabelType> extractionDependentMetricConfiguration) {
         extractionDependentMetricConfigurations.add(extractionDependentMetricConfiguration);
+    }
+
+    public List<MappingRule<LabelType>> getMappingRules() {
+        return mappingRules;
+    }
+
+    public void setMappingRules(List<MappingRule<LabelType>> mappingRules) {
+        this.mappingRules = mappingRules;
+    }
+
+    public void addMappingRule(MappingRule<LabelType> mappingRule) {
+        mappingRules.add(mappingRule);
     }
 }
