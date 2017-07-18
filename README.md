@@ -24,4 +24,4 @@ If you use this software in your project, please cite:
 
 >Kaiser, F. & Labudde, D.
 >Unsupervised Discovery of Geometrically Conserved Structural Motifs and Long-Range Contacts in Proteins 
->_IEEE/ACM Trans Comput Biol Bioinform_, under review`
+>_IEEE/ACM Trans Comput Biol Bioinform_, under review

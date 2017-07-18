@@ -7,6 +7,7 @@
       <module fileurl="file://$PROJECT_DIR$/mmm-benchmark/mmm-benchmark.iml" filepath="$PROJECT_DIR$/mmm-benchmark/mmm-benchmark.iml" />
       <module fileurl="file://$PROJECT_DIR$/mmm-classify/mmm-classify.iml" filepath="$PROJECT_DIR$/mmm-classify/mmm-classify.iml" />
       <module fileurl="file://$PROJECT_DIR$/mmm-core/mmm-core.iml" filepath="$PROJECT_DIR$/mmm-core/mmm-core.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mmm-web/mmm-web.iml" filepath="$PROJECT_DIR$/mmm-web/mmm-web.iml" />
     </modules>
   </component>
 </project>

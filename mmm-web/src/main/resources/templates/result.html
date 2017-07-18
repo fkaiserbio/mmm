@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<!--/*@thymesVar id="configuration" type="de.bioforscher.mmm.model.configurations.ItemsetMinerConfiguration"*/-->
+<head>
+    <title>Getting Started: Handling Form Submission</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link th:fragment="bootstrap" rel="stylesheet" type="text/css" href="webjars/bootstrap/3.3.7/css/bootstrap.min.css"/>
+    <link th:fragment="css" rel="stylesheet" href="css/main.css"/>
+</head>
+<body>
+<div th:replace="fragments/header :: header"></div>
+<h1>Result</h1>
+<p th:text="${configuration.creationUser}"></p>
+<p th:text="${configuration.creationDate}"></p>
+<p th:text="${configuration.inputListLocation}"></p>
+<p th:text="${configuration.itemsetComparatorType}"></p>
+<p th:text="${configuration.extractionMetricConfiguration}"></p>
+<a href="/configuration">Submit another message</a>
+</body>
+</html>

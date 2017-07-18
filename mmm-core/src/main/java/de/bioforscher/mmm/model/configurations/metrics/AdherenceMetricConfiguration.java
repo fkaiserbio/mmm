@@ -114,4 +114,16 @@ public class AdherenceMetricConfiguration<LabelType extends Comparable<LabelType
     public void setVertexOne(boolean vertexOne) {
         this.vertexOne = vertexOne;
     }
+
+    @Override public String toString() {
+        return "AdherenceMetricConfiguration{" +
+               "levelOfParallelism=" + levelOfParallelism +
+               ", desiredExtent=" + desiredExtent +
+               ", desiredExtentDelta=" + desiredExtentDelta +
+               ", maximalAdherence=" + maximalAdherence +
+               ", minimalObservations=" + minimalObservations +
+               ", vertexOne=" + vertexOne +
+               ", representationSchemeType=" + representationSchemeType +
+               '}';
+    }
 }

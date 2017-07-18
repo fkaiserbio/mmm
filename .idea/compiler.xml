@@ -9,6 +9,7 @@
         <module name="mmm-benchmark" />
         <module name="mmm-classify" />
         <module name="mmm-core" />
+        <module name="mmm-web" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
@@ -16,6 +17,7 @@
       <module name="mmm-benchmark" target="1.8" />
       <module name="mmm-classify" target="1.8" />
       <module name="mmm-core" target="1.8" />
+      <module name="mmm-web" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>
