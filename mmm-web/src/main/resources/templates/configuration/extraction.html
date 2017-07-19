@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Getting Started: Handling Form Submission</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <div th:replace="fragments/header :: header-css"></div>
+</head>
+<body>
+<div th:replace="fragments/header :: header"></div>
+
+<div class="container">
+    <div class="row" style="margin-top:20px">
+        <div class="col-xs-12 col-sm-8 col-md-6 col-sm-offset-2 col-md-offset-3">
+            <h1>Extraction</h1>
+            <!--/*@thymesVar id="job" type="de.bioforscher.mmm.web.model.MmmJob"*/-->
+            <form action="#" th:action="@{/configuration/extraction}" th:object="${job}" method="post">
+                <p>Description: <input th:field="*{configuration.description}"/></p>
+                <p>Email: <input th:field="*{email}"/></p>
+                <p>Email: <input th:disabled="*{configuration.itemsetComparatorType == 'SUPPORT'}" th:field="*{configuration.itemsetComparatorType}"/></p>
+                <td th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Email Error</td>
+                <!--<p>Message: <input type="text" th:field="*{creationDate}"/></p>-->
+                <!--<p>Message: <input type="text" th:field="*{inputListLocation}"/></p>-->
+                <select th:field="*{configuration.itemsetComparatorType}">
+                    <!--/*@thymesVar id="itemsetComparatorTypes" type="de.bioforscher.mmm.web.controller.ConfigurationController"*/-->
+                    <option th:each="type : ${itemsetComparatorTypes}"
+                            th:value="${type}"
+                            th:text="#{${type}}">
+                    </option>
+                </select>
+                <!--<p>Message: <input type="text" th:field="*{configuration.extractionMetricConfiguration}"/></p>-->
+                <!--<select th:field="*{configuration.extractionMetricConfiguration}">-->
+                <!--&lt;!&ndash;/*@thymesVar id="extractionMetricConfigurations" type="de.bioforscher.mmm.web.controller.ConfigurationController"*/&ndash;&gt;-->
+                <!--<option th:each="type : ${extractionMetricConfigurations}"-->
+                <!--th:value="${type}"-->
+                <!--th:text="#{${type}}">-->
+                <!--</option>-->
+                <!--</select>-->
+                <p><input th:disabled="*{configuration.itemsetComparatorType.name() == 'SUPPORT'}" class="btn btn-lg btn-primary btn-block" type="submit" value="Submit"/>
+                    <input class="btn btn-lg btn-danger btn-block" type="reset" value="Reset"/></p>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

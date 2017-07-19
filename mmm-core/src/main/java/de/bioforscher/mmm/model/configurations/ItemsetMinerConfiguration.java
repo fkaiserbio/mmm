@@ -36,6 +36,8 @@ public class ItemsetMinerConfiguration<LabelType extends Comparable<LabelType>> 
     private String creationUser;
     @JsonProperty("creation-date")
     private String creationDate;
+    @JsonProperty("description")
+    private String description;
     @JsonProperty("input-list-location")
     private String inputListLocation;
     @JsonProperty("input-directory-location")
@@ -71,6 +73,14 @@ public class ItemsetMinerConfiguration<LabelType extends Comparable<LabelType>> 
         logger.info("reading configuration from {}", configurationPath);
         String json = Files.lines(configurationPath).collect(Collectors.joining());
         return new ItemsetMinerConfiguration<>().fromJson(json);
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     @Override public String toString() {

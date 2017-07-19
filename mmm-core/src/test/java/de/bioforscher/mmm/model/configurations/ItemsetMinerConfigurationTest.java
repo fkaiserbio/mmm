@@ -26,6 +26,7 @@ public class ItemsetMinerConfigurationTest {
         itemsetMinerConfiguration.setItemsetComparatorType(ItemsetComparatorType.CONSENSUS);
         itemsetMinerConfiguration.setOutputLocation("/tmp/itemset-miner");
         itemsetMinerConfiguration.setMaximalEpochs(-1);
+        System.out.println(itemsetMinerConfiguration.toJson());
         Path configurationPath = folder.getRoot().toPath().resolve("itemset-miner-configuration.json");
         Files.write(configurationPath, itemsetMinerConfiguration.toJson().getBytes());
         ItemsetMinerConfiguration<?> deserializedConfiguration = ItemsetMinerConfiguration.from(configurationPath);

@@ -12,7 +12,7 @@ import de.bioforscher.singa.chemistry.physical.atoms.representations.Representat
  * @author fk
  */
 @JsonTypeName("ADHERENCE")
-public class AdherenceMetricConfiguration<LabelType extends Comparable<LabelType>> implements ExtractionMetricConfiguration<LabelType>, Jsonizable<CohesionMetricConfiguration> {
+public class AdherenceMetricConfiguration<LabelType extends Comparable<LabelType>> implements ExtractionMetricConfiguration<LabelType>, Jsonizable<AdherenceMetricConfiguration> {
 
     /**
      * the default desired extent
@@ -115,7 +115,8 @@ public class AdherenceMetricConfiguration<LabelType extends Comparable<LabelType
         this.vertexOne = vertexOne;
     }
 
-    @Override public String toString() {
+    @Override
+    public String toString() {
         return "AdherenceMetricConfiguration{" +
                "levelOfParallelism=" + levelOfParallelism +
                ", desiredExtent=" + desiredExtent +
