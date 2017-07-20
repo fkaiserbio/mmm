@@ -11,19 +11,31 @@
 
 <body ng-app="app" ng-controller="ResultController">
 
-<h1>Result</h1>
+
+<div class="container">
+    <div class="row" style="margin-top:20px">
+        <div class="col-xs-12 col-sm-8 col-md-6 col-sm-offset-2 col-md-offset-3">
+            <h1>You are viewing job results for job {{job.jobId}}.</h1>
+            <div>
+                Status of the job is {{job.status}}.
+            </div>
+            <div>
+                <a href="/submit">Submit another job.</a>
+            </div>
+        </div>
+    </div>
+</div>
 <!--/*@thymesVar id="job" type="de.bioforscher.mmm.web.model.MmmJob"*/-->
 <!--<p th:text="${job.jobId}"></p>-->
 <!--<p th:text="${job.configuration.description}"></p>-->
 <!--<p th:text="${job.configuration.description}"></p>-->
 <!--<p th:text="${job.configuration.itemsetComparatorType}"></p>-->
-<a href="/submit">Submit another message</a>
 </body>
-<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.js">
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.js">
 </script>
-<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.0/angular-messages.js">
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular-messages.js">
 </script>
-<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.0/angular-route.js">
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular-route.js">
 </script>
 <script src="js/app.js"></script>
 </html>

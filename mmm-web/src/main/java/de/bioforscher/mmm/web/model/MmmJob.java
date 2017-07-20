@@ -7,22 +7,31 @@ import org.springframework.data.annotation.Id;
 /**
  * @author fk
  */
-public class MmmJob {
+public class MmmJob implements Runnable {
 
     @Id
     private String id;
+
     private String jobId;
+    private MmmJobStatus status;
     private String resultDirectory;
     private String address;
     @Email
     private String email;
     private ItemsetMinerConfiguration<String> configuration;
 
-    @Override
-    public String toString() {
+    public MmmJobStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(MmmJobStatus status) {
+        this.status = status;
+    }
+
+    @Override public String toString() {
         return "MmmJob{" +
                "jobId='" + jobId + '\'' +
-               ", configuration=" + configuration +
+               ", status=" + status +
                '}';
     }
 
@@ -64,5 +73,20 @@ public class MmmJob {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    @Override
+    public void run() {
+        System.out.println("started job" +
+                           "");
+        try {
+            Thread.sleep(10000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        System.out.println("job finished");
+        status = MmmJobStatus.FINISHED;
+        System.out.println(this);
+//        ItemsetMinerRunner itemsetMinerRunner = new ItemsetMinerRunner(configuration);
     }
 }

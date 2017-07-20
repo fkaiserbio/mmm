@@ -6,10 +6,10 @@ app.config(['$locationProvider', '$routeProvider', function ($locationProvider, 
         enabled: true
     });
 
-    $routeProvider.when('/result/:jobId', {
-        templateUrl: '/result/',
-        controller: 'ResultController'
-    });
+    // $routeProvider.when('/result/:jobId', {
+    //     templateUrl: '/result/',
+    //     controller: 'ResultController'
+    // });
 }]);
 
 app.service('JobService', ['$http', function ($http) {
@@ -93,14 +93,21 @@ app.controller('SubmitController', ['$scope', '$window', 'JobService', function 
     $scope.createJob();
 }]);
 
-app.controller('ResultController', ['$scope', '$routeParams', 'JobService', function ($scope, $routeParams, JobService) {
+app.controller('ResultController', ['$scope', '$location', '$interval', 'JobService', function ($scope, $location, $interval, JobService) {
     $scope.getJob = function () {
-        console.log("route params are ");
-        console.log($routeParams.jobId);
-        JobService.getJob($routeParams.jobId).then(function (data) {
-            $scope.job = data;
+        var jobId = $location.path().split("/")[2];
+        console.info("splitted jobId " + jobId);
+        JobService.getJob(jobId).then(function (response) {
+            $scope.job = response.data;
+            console.log("job is " + response.data.jobId);
         });
     };
 
+    var updateStatus = function () {
+        console.info("updating result page...")
+        $scope.getJob();
+    };
+
     $scope.getJob();
+    $interval(updateStatus, 1000);
 }]);
