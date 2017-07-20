@@ -3,13 +3,27 @@
 <head>
     <title>Getting Started: Handling Form Submission</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <base href="/"/>
 </head>
-<body>
+
+<div th:replace="fragments/header :: header-css"></div>
+<div th:replace="fragments/header :: header"></div>
+
+<body ng-app="app" ng-controller="ResultController">
+
 <h1>Result</h1>
 <!--/*@thymesVar id="job" type="de.bioforscher.mmm.web.model.MmmJob"*/-->
-<p th:text="${job.jobId}"></p>
-<p th:text="${job.configuration.description}"></p>
-<p th:text="${job.configuration.itemsetComparatorType}"></p>
-<a href="/configuration">Submit another message</a>
+<!--<p th:text="${job.jobId}"></p>-->
+<!--<p th:text="${job.configuration.description}"></p>-->
+<!--<p th:text="${job.configuration.description}"></p>-->
+<!--<p th:text="${job.configuration.itemsetComparatorType}"></p>-->
+<a href="/submit">Submit another message</a>
 </body>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.js">
+</script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.0/angular-messages.js">
+</script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.0/angular-route.js">
+</script>
+<script src="js/app.js"></script>
 </html>

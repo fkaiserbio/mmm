@@ -1,0 +1,27 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Spring Boot Thymeleaf + Spring Security</title>
+    <base href="/"/>
+</head>
+
+<div th:replace="fragments/header :: header-css"></div>
+<div th:replace="fragments/header :: header"></div>
+
+<body ng-app="app" ng-controller="SubmitController">
+<label class="form-label">Email:</label>
+<form name="submitForm" method="POST" ng-submit="submitJob(job)">
+    Email: <input type="email" name="email" ng-model="job.email" class="form-input"/>
+    <p/>
+    Description: <input type="text" name="description" ng-model="job.configuration.description" class="form-input"/>
+    <button type="submit" class="btn btn-lg btn-primary btn-block">Save</button>
+</form>
+</body>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.js">
+</script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.0/angular-messages.js">
+</script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.0/angular-route.js">
+</script>
+<script src="js/app.js"></script>
+</html>

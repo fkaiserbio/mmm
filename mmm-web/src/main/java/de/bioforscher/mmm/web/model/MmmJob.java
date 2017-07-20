@@ -1,10 +1,8 @@
 package de.bioforscher.mmm.web.model;
 
 import de.bioforscher.mmm.model.configurations.ItemsetMinerConfiguration;
+import org.hibernate.validator.constraints.Email;
 import org.springframework.data.annotation.Id;
-
-import javax.validation.constraints.Size;
-import java.util.UUID;
 
 /**
  * @author fk
@@ -16,18 +14,12 @@ public class MmmJob {
     private String jobId;
     private String resultDirectory;
     private String address;
-
-    @Size(min = 2, max = 30)
+    @Email
     private String email;
-
     private ItemsetMinerConfiguration<String> configuration;
 
-    public MmmJob() {
-        jobId = UUID.randomUUID().toString();
-    }
-
-
-    @Override public String toString() {
+    @Override
+    public String toString() {
         return "MmmJob{" +
                "jobId='" + jobId + '\'' +
                ", configuration=" + configuration +
@@ -44,6 +36,10 @@ public class MmmJob {
 
     public String getJobId() {
         return jobId;
+    }
+
+    public void setJobId(String jobId) {
+        this.jobId = jobId;
     }
 
     public String getResultDirectory() {

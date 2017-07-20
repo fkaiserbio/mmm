@@ -19,7 +19,7 @@
                 <td th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Email Error</td>
                 <p>Epochs: <input type="number" th:field="*{configuration.maximalEpochs}"/></p>
                 <select th:field="*{configuration.itemsetComparatorType}">
-                    <!--/*@thymesVar id="itemsetComparatorTypes" type="de.bioforscher.mmm.web.controller.ConfigurationController"*/-->
+                    <!--/*@thymesVar id="itemsetComparatorTypes" type="de.bioforscher.mmm.web.controller.JobController"*/-->
                     <option th:each="type : ${itemsetComparatorTypes}"
                             th:value="${type}"
                             th:text="#{${type}}">
@@ -28,7 +28,7 @@
                 <input type="file" name="file"/>
                 <!--<p>Message: <input type="text" th:field="*{configuration.extractionMetricConfiguration}"/></p>-->
                 <!--<select th:field="*{configuration.extractionMetricConfiguration}">-->
-                <!--&lt;!&ndash;/*@thymesVar id="extractionMetricConfigurations" type="de.bioforscher.mmm.web.controller.ConfigurationController"*/&ndash;&gt;-->
+                <!--&lt;!&ndash;/*@thymesVar id="extractionMetricConfigurations" type="de.bioforscher.mmm.web.controller.JobController"*/&ndash;&gt;-->
                 <!--<option th:each="type : ${extractionMetricConfigurations}"-->
                 <!--th:value="${type}"-->
                 <!--th:text="#{${type}}">-->
