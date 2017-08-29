@@ -30,7 +30,7 @@ public class ExcludeFamilyMappingRuleTest {
 
         DataPointReaderConfiguration dataPointReaderConfiguration = new DataPointReaderConfiguration();
 
-        String interfaceStructuresPath = Resources.getResourceAsFilepath("interface_structures");
+        String interfaceStructuresPath = Resources.getResourceAsFileLocation("interface_structures");
         List<Path> interfaceStructures = Files.list(Paths.get(interfaceStructuresPath)).collect(Collectors.toList());
         DataPointReader dataPointReader = new DataPointReader(dataPointReaderConfiguration, interfaceStructures);
         List<DataPoint<String>> dataPoints = dataPointReader.readDataPoints();

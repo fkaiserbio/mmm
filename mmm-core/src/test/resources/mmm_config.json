@@ -3,22 +3,23 @@
   "creation-user": "fkaiser",
   "creation-date": "2017-06-06T10:45:14.401",
   "description": "dssd",
-  "input-list-location": "input_list.txt",
+  "input-list-location": "/home/fkaiser/Workspace/CloudStation/PhD/Promotion/datasets/ligand_bound/2017-08-29_THM_representatives95.txt",
   /*"input-directory-location": "input_structures/",*/
-  "output-location": "/tmp/itemset-miner",
+  "output-location": "/tmp/mmm",
   "data-point-reader-configuration": {
     "type": "DATA_POINT_READER_CONFIGURATION",
     "pdb-location": null,
     "chain-list-separator": "\t",
     "parse-ligands": true,
     "ligand-label-whitelist": [
-      "ATP"
+      "THM"
     ],
-    "parse-nucleotides": true,
+    "parse-nucleotides": false,
     "parse-water": false
   },
-  /*"data-point-enricher": {
-    "type": "LIGAND_INTERACTION"
+  /*
+  "data-point-enricher": {
+    "type": "INTRA_CHAIN_INTERACTION"
   },*/
   "mapping-rules": [
     {
@@ -28,8 +29,12 @@
         "UNKNOWN"
       ]
     },
-    {
+    /*{
       "type": "FUNCTIONAL_GROUPS"
+    },*/
+    {
+      "type": "INTERACTION_SHELL",
+      "ligand-label": "THM"
     }
   ],
   "simple-metrics": [

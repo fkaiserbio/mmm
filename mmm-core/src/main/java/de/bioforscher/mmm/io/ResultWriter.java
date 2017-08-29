@@ -91,7 +91,7 @@ public class ResultWriter<LabelType extends Comparable<LabelType>> {
     }
 
     /**
-     * Writes all clustered {@link Itemset}s (only avaliliable if {@link de.bioforscher.mmm.model.metrics.ConsensusMetric} was used).
+     * Writes all clustered {@link Itemset}s (only available if {@link de.bioforscher.mmm.model.metrics.ConsensusMetric} was used).
      *
      * @throws IOException
      */

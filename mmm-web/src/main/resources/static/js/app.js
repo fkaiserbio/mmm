@@ -104,7 +104,7 @@ app.controller('ResultController', ['$scope', '$location', '$interval', 'JobServ
     };
 
     var updateStatus = function () {
-        console.info("updating result page...")
+        console.info("updating result page...");
         $scope.getJob();
     };
 

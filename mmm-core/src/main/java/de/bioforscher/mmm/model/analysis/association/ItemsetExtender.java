@@ -6,7 +6,7 @@ import de.bioforscher.mmm.model.Item;
 import de.bioforscher.mmm.model.Itemset;
 import de.bioforscher.mmm.model.graphs.ItemsetGraph;
 import de.bioforscher.mmm.model.graphs.ItemsetNode;
-import de.bioforscher.singa.chemistry.algorithms.superimposition.SubStructureSuperimposer;
+import de.bioforscher.singa.chemistry.algorithms.superimposition.SubstructureSuperimposer;
 import de.bioforscher.singa.chemistry.algorithms.superimposition.SubstructureSuperimposition;
 import de.bioforscher.singa.chemistry.parser.pdb.structures.StructureWriter;
 import de.bioforscher.singa.chemistry.physical.branches.StructuralMotif;
@@ -127,7 +127,7 @@ public class ItemsetExtender<LabelType extends Comparable<LabelType>> {
                     candidate.add(candidateLeafSubstructure.get());
                     List<LeafSubstructure<?, ?>> reference = new ArrayList<>();
                     reference.add(referenceLeafSubstructure.get());
-                    SubstructureSuperimposition superimposition = SubStructureSuperimposer.calculateSubstructureSuperimposition(reference, candidate);
+                    SubstructureSuperimposition superimposition = SubstructureSuperimposer.calculateSubstructureSuperimposition(reference, candidate);
                     StructuralMotif mappedStructuralMotif = StructuralMotif.fromLeaves(superimposition.applyTo(entry.getValue().getLeafSubstructures()));
                     entry.setValue(mappedStructuralMotif);
                 } else {
