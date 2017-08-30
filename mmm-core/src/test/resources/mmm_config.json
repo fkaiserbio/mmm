@@ -17,10 +17,9 @@
     "parse-nucleotides": false,
     "parse-water": false
   },
-  /*
   "data-point-enricher": {
     "type": "INTRA_CHAIN_INTERACTION"
-  },*/
+  },
   "mapping-rules": [
     {
       "type": "EXCLUDE_FAMILY",

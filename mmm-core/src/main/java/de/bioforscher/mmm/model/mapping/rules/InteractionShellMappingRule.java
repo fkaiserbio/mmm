@@ -21,9 +21,9 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 
 /**
  * @author fk
@@ -39,7 +39,7 @@ public class InteractionShellMappingRule implements MappingRule<String> {
     @JsonProperty("ligand-label")
     private String ligandLabel;
     @JsonProperty("current-interaction-shells")
-    private Map<InteractionShell, Set<LeafSubstructure<?, ?>>> currentInteractionShells;
+    private Map<InteractionShell, List<LeafSubstructure<?, ?>>> currentInteractionShells;
 
     public InteractionShellMappingRule(String ligandLabel) {
         this.ligandLabel = ligandLabel;
@@ -48,7 +48,7 @@ public class InteractionShellMappingRule implements MappingRule<String> {
     public InteractionShellMappingRule() {
     }
 
-    public Map<InteractionShell, Set<LeafSubstructure<?, ?>>> getCurrentInteractionShells() {
+    public Map<InteractionShell, List<LeafSubstructure<?, ?>>> getCurrentInteractionShells() {
         return currentInteractionShells;
     }
 
@@ -95,7 +95,7 @@ public class InteractionShellMappingRule implements MappingRule<String> {
         LeafSubstructure<?, ?> leafSubstructure = item.getLeafSubstructure()
                                                       .orElseThrow(() -> new UnsupportedOperationException("interaction shells can only be computed for structure-derived items"));
         if (currentInteractionShells != null) {
-            for (Map.Entry<InteractionShell, Set<LeafSubstructure<?, ?>>> interactionShellEntry : currentInteractionShells.entrySet()) {
+            for (Map.Entry<InteractionShell, List<LeafSubstructure<?, ?>>> interactionShellEntry : currentInteractionShells.entrySet()) {
                 if (interactionShellEntry.getValue().contains(leafSubstructure)) {
                     InteractionShell interactionShell = interactionShellEntry.getKey();
                     logger.info("item {} is shell {}", item, interactionShell);
