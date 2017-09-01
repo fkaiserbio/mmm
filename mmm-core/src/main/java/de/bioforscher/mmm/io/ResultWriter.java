@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Optional;
 
@@ -104,12 +105,15 @@ public class ResultWriter<LabelType extends Comparable<LabelType>> {
 
         logger.info("writing {} clustered itemsets with {} observations in total", itemsetMiner.getTotalClusteredItemsets().size(), extractedItemsetsCount.orElse(0));
 
+        DecimalFormat rankFormatter = new DecimalFormat("000000");
+
         // write clusters
         List<Itemset<LabelType>> totalItemsets = itemsetMiner.getTotalItemsets();
         for (int i = 0; i < totalItemsets.size(); i++) {
             Itemset<LabelType> itemset = totalItemsets.get(i);
             int rank = i + 1;
-            Path itemsetPath = outputPath.resolve("clustered_itemsets").resolve(rank + "_" + itemset.toSimpleString());
+            String rankString = rankFormatter.format(rank);
+            Path itemsetPath = outputPath.resolve("clustered_itemsets").resolve(rankString + "_" + itemset.toSimpleString());
             ConsensusAlignment consensusAlignment = itemsetMiner.getTotalClusteredItemsets().get(itemset);
             consensusAlignment.writeClusters(itemsetPath);
         }

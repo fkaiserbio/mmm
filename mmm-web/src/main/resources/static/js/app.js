@@ -79,7 +79,7 @@ app.controller('SubmitController', ['$scope', '$window', 'JobService', function 
                     // $scope.submitted = false;
                 },
                 function error(response) {
-                    if (response.status == 409) {
+                    if (response.status === 409) {
                         $scope.errorMessage = response.data.message;
                     }
                     else {

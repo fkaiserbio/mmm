@@ -54,7 +54,6 @@ public class DataPoint<LabelType extends Comparable<LabelType>> {
                                                               .filter(Optional::isPresent)
                                                               .map(Optional::get)
                                                               // ignore interaction representations when writing data points
-                                                              // TODO deuglify
                                                               .filter(leafSubstructure -> Arrays.stream(InteractionType.values())
                                                                                                 .noneMatch(interactionType -> interactionType.getThreeLetterCode()
                                                                                                                                              .equalsIgnoreCase(leafSubstructure.getFamily()
