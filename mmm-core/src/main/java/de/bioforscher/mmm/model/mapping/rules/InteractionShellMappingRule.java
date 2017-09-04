@@ -78,6 +78,9 @@ public class InteractionShellMappingRule implements MappingRule<String> {
                 logger.warn("failed to calculate interaction shells for data point {}", currentDataPoint);
                 currentInteractionShells = null;
             }
+
+            // delete temporary structure
+            Files.delete(structureFilePath);
         } else {
             logger.warn("failed to calculate interaction shells for data point {}, no matching ligand with label {} found", currentDataPoint, ligandLabel);
             currentInteractionShells = null;

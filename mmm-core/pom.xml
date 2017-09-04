@@ -22,27 +22,6 @@
             <systemPath>${basedir}/lib/JavaMI.jar</systemPath>
         </dependency>
         <dependency>
-            <groupId>de.bioforscher</groupId>
-            <artifactId>plip-rest-provider-core</artifactId>
-            <version>0.1.1</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/plip-rest-provider-core-0.1.1.jar</systemPath>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.apache.logging.log4j</groupId>
-                    <artifactId>log4j-slf4j-impl</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.apache.logging.log4j</groupId>
-                    <artifactId>log4j-api</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.apache.logging.log4j</groupId>
-                    <artifactId>log4j-core</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
             <groupId>de.bioforscher.singa</groupId>
             <artifactId>singa-javafx</artifactId>
             <version>0.2.1</version>
