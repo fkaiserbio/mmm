@@ -3,8 +3,8 @@
   "creation-user": "fkaiser",
   "creation-date": "2017-06-06T10:45:14.401",
   "description": "Mining of class II aaRS structures from mesophilic organisms with intra chain interactions and amino acids mapped according to Gutteridge.",
-  "input-list-location": "/home/fkaiser/Workspace/CloudStation/PhD/Promotion/datasets/aars/aars_C2_catalytic_chains_mesophile.txt",
-  /*"input-directory-location": "input_structures/",*/
+  /*"input-list-location": "/home/fkaiser/Workspace/CloudStation/PhD/Promotion/datasets/craven2016_WSXWS_motif.txt",*/
+  "input-directory-location": "/home/fkaiser/Workspace/CloudStation/PhD/Promotion/datasets/craven2016_WSXWS_motif/structures",
   "output-location": "/tmp/mmm_aars_C2_catalytic_chains_mesophile",
   "data-point-reader-configuration": {
     "type": "DATA_POINT_READER_CONFIGURATION",

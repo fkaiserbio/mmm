@@ -92,15 +92,6 @@
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="module-library">
-      <library name="Maven: de.bioforscher:plip-rest-provider-core:0.1.1">
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/../mmm-core/lib/plip-rest-provider-core-0.1.1.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
     <orderEntry type="library" name="Maven: de.bioforscher.singa:singa-javafx:0.2.1" level="project" />
     <orderEntry type="library" name="Maven: org.jsoup:jsoup:1.10.1" level="project" />
     <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.7.25" level="project" />

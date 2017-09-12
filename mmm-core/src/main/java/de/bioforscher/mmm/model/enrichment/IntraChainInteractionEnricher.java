@@ -3,8 +3,10 @@ package de.bioforscher.mmm.model.enrichment;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import de.bioforscher.mmm.model.DataPoint;
 import de.bioforscher.mmm.model.plip.PlipGetRequest;
+import de.bioforscher.singa.chemistry.parser.pdb.structures.StructureParser;
 import de.bioforscher.singa.chemistry.parser.plip.InteractionContainer;
 import de.bioforscher.singa.chemistry.parser.plip.InteractionType;
+import de.bioforscher.singa.chemistry.physical.model.Structure;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,6 +24,14 @@ public class IntraChainInteractionEnricher extends AbstractInteractionEnricher {
     private static final Logger logger = LoggerFactory.getLogger(IntraChainInteractionEnricher.class);
     private static final String PLIP_REST_PROVIDER_URL = "https://biosciences.hs-mittweida.de/plip/interaction/plain";
 
+    private static void validateInteractions(InteractionContainer interactions, DataPoint<String> dataPoint) {
+        // TODO avoid fetching of structure every time
+        Structure structure = StructureParser.online()
+                                             .pdbIdentifier(dataPoint.getDataPointIdentifier().getPdbIdentifier())
+                                             .parse();
+        interactions.validateWithStructure(structure);
+    }
+
     @Override
     public void enrichDataPoint(DataPoint<String> dataPoint) {
 
@@ -38,6 +48,8 @@ public class IntraChainInteractionEnricher extends AbstractInteractionEnricher {
             InteractionContainer interactions = optionalInteractions.get();
             for (InteractionType activeInteraction : ACTIVE_INTERACTIONS) {
                 logger.debug("enriching data point {} with interactions of type {}", dataPoint, activeInteraction);
+                // validate interactions (necessary for intra-chain interactions)
+                validateInteractions(interactions, dataPoint);
                 interactions.getInteractions().stream()
                             .filter(interaction -> activeInteraction.getInteractionClass().equals(interaction.getClass()))
                             .forEach(interaction -> addInteractionItem(interaction, dataPoint));
