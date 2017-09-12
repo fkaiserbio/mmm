@@ -149,7 +149,7 @@ public class Itemset<LabelType extends Comparable<LabelType>> implements Compara
             // FIXME adapt sorting from VCG
             leafSubstructures.sort(Comparator.comparing(leafSubstructure -> leafSubstructure.getFamily().getThreeLetterCode()));
             if (!leafSubstructures.isEmpty()) {
-                structuralMotif = StructuralMotif.fromLeaves(leafSubstructures);
+                structuralMotif = StructuralMotif.fromLeafSubstructures(leafSubstructures);
             }
         }
         return Optional.ofNullable(structuralMotif);

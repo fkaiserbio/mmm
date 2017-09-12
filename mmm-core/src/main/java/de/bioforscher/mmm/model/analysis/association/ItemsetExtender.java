@@ -128,7 +128,7 @@ public class ItemsetExtender<LabelType extends Comparable<LabelType>> {
                     List<LeafSubstructure<?, ?>> reference = new ArrayList<>();
                     reference.add(referenceLeafSubstructure.get());
                     SubstructureSuperimposition superimposition = SubstructureSuperimposer.calculateSubstructureSuperimposition(reference, candidate);
-                    StructuralMotif mappedStructuralMotif = StructuralMotif.fromLeaves(superimposition.applyTo(entry.getValue().getLeafSubstructures()));
+                    StructuralMotif mappedStructuralMotif = StructuralMotif.fromLeafSubstructures(superimposition.applyTo(entry.getValue().getLeafSubstructures()));
                     entry.setValue(mappedStructuralMotif);
                 } else {
                     logger.warn("no ligand found to be aligned for structure {}", entry.getKey());
@@ -201,7 +201,7 @@ public class ItemsetExtender<LabelType extends Comparable<LabelType>> {
                                                                      .distinct()
                                                                      .collect(Collectors.toList());
             // convert to structural motif
-            StructuralMotif mergedMotif = StructuralMotif.fromLeaves(allLeafSubStructures);
+            StructuralMotif mergedMotif = StructuralMotif.fromLeafSubstructures(allLeafSubStructures);
 
             mergedMotifs.put(entry.getKey(), mergedMotif);
         }

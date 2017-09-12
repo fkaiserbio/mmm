@@ -116,7 +116,7 @@ public class VertexCandidateGenerator<LabelType extends Comparable<LabelType>> {
                 // sort leaves based on three letter code
                 // FIXME this has to be adapted when mapping rule is used such that sorting is based on mapped labels
 //                leafSubstructures.sort(Comparator.comparing(leafSubstructure -> leafSubstructure.getFamily().getThreeLetterCode()));
-                StructuralMotif structuralMotif = StructuralMotif.fromLeaves(orderedLeafSubstructures);
+                StructuralMotif structuralMotif = StructuralMotif.fromLeafSubstructures(orderedLeafSubstructures);
 
                 Itemset<LabelType> candidate = new Itemset<>(new TreeSet<>(candidateItems), structuralMotif, dataPoint.getDataPointIdentifier());
                 logger.trace("generated candidate {}", candidate);

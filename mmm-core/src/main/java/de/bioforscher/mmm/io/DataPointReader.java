@@ -117,7 +117,7 @@ public class DataPointReader {
                 logger.warn("detected alpha carbon/backbone only structure, skipping {}", structure);
                 continue;
             }
-            dataPoints.add(toDataPoint(structure, structure.getPdbIdentifier(), structure.getFirstModel().get().getFirstChain().get().getIdentifier()));
+            dataPoints.add(toDataPoint(structure, structure.getPdbIdentifier(), structure.getFirstModel().getFirstChain().getIdentifier()));
             int remainingStructures = multiParser.getNumberOfRemainingStructures();
             if (remainingStructures % 10 == 0) {
                 logger.info("read {} out of {} structures", queuedStructures - remainingStructures, queuedStructures);
@@ -139,7 +139,7 @@ public class DataPointReader {
         if (structure.getAllModels().size() > 1) {
             logger.info("multi-model structure {} detected, using only first model", structure);
         }
-        StructuralModel firstModel = structure.getFirstModel().orElseThrow(() -> new RuntimeException("no model found for structure " + structure));
+        StructuralModel firstModel = structure.getFirstModel();
         List<Item<String>> items = firstModel.getLeafSubstructures().stream()
                                              .filter(leafSubstructureFilter)
                                              .filter(leafSubstructure -> leafSubstructureFilter.test(leafSubstructure) &&

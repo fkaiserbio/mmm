@@ -93,7 +93,7 @@ public class FingerprintMiner {
             Path decoyOutputPath = Paths.get(itemsetMinerConfiguration.getOutputLocation()).getParent().resolve(topScoringItemset.toSimpleString()).resolve("decoy");
             Files.createDirectories(decoyOutputPath);
             for (List<LeafSubstructure<?, ?>> leafSubstructures : decoyDatasets.get(topScoringItemset)) {
-                StructuralMotif decoyMotif = StructuralMotif.fromLeaves(leafSubstructures);
+                StructuralMotif decoyMotif = StructuralMotif.fromLeafSubstructures(leafSubstructures);
                 StructureWriter.writeBranchSubstructure(decoyMotif, decoyOutputPath.resolve(decoyMotif.toString() + ".pdb"));
             }
             Path fingerprintOutputPath = Paths.get(itemsetMinerConfiguration.getOutputLocation()).getParent().resolve(topScoringItemset.toSimpleString()).resolve("fingerprint");
@@ -102,7 +102,7 @@ public class FingerprintMiner {
                                                                         .map(BinaryTreeNode::getData)
                                                                         .map(ConsensusContainer::getSuperimposition)
                                                                         .map(SubstructureSuperimposition::getMappedFullCandidate)
-                                                                        .map(StructuralMotif::fromLeaves)
+                    .map(StructuralMotif::fromLeafSubstructures)
                                                                         .collect(Collectors.toList());
             for (StructuralMotif fingerprintMotif : fingerprintMotifs) {
                 StructureWriter.writeBranchSubstructure(fingerprintMotif, fingerprintOutputPath.resolve(fingerprintMotif.toString() + ".pdb"));
@@ -203,7 +203,7 @@ public class FingerprintMiner {
                 aminoAcids.add(aminoAcid);
             }
         }
-        return StructuralMotif.fromLeaves(aminoAcids);
+        return StructuralMotif.fromLeafSubstructures(aminoAcids);
     }
 
     private void mineFamily() throws IOException, URISyntaxException {

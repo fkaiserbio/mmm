@@ -60,7 +60,7 @@ public class InteractionShellMappingRule implements MappingRule<String> {
         Structure structure = StructureParser.online()
                                              .pdbIdentifier(pdbIdentifier)
                                              .parse();
-        Chain chain = structure.getFirstChain().orElseThrow(() -> new RuntimeException("parent structure does not contain any chains"));
+        Chain chain = structure.getFirstChain();
         Optional<LeafSubstructure<?, ?>> optionalLigand = selectLigand(chain);
 
         if (optionalLigand.isPresent()) {

@@ -21,7 +21,8 @@ public class MmmWebApplication implements CommandLineRunner {
     }
 
 
-    @Override public void run(String... strings) throws Exception {
+    @Override
+    public void run(String... strings) throws Exception {
 
         jobRepository.deleteAll();
 
