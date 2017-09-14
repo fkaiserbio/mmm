@@ -44,7 +44,9 @@ public abstract class AbstractInteractionEnricher implements DataPointEnricher<S
         ACTIVE_INTERACTIONS.add(InteractionType.PI_CATION_INTERACTION);
         ACTIVE_INTERACTIONS.add(InteractionType.PI_STACKING);
         ACTIVE_INTERACTIONS.add(InteractionType.SALT_BRIDGE);
-//        ACTIVE_INTERACTIONS.add(InteractionType.WATER_BRIDGE);
+        ACTIVE_INTERACTIONS.add(InteractionType.HYDROPHOBIC_INTERACTION);
+        ACTIVE_INTERACTIONS.add(InteractionType.HALOGEN_BOND);
+        ACTIVE_INTERACTIONS.add(InteractionType.WATER_BRIDGE);
     }
 
     /**

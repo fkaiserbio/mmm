@@ -22,11 +22,13 @@ import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
 /**
+ * Represents a library of {@link Itemset}s, either by the largest cluster consensus observation or for all observations.
+ *
  * @author fk
  */
 public class ItemsetLibrary {
 
-    public static final TypeReference<ItemsetLibrary> TYPE_REFERENCE = new TypeReference<ItemsetLibrary>() {
+    private static final TypeReference<ItemsetLibrary> TYPE_REFERENCE = new TypeReference<ItemsetLibrary>() {
     };
     private static final Logger logger = LoggerFactory.getLogger(ItemsetLibrary.class);
     private List<ItemsetLibraryEntry> entries;
@@ -38,7 +40,15 @@ public class ItemsetLibrary {
         this.entries = entries;
     }
 
+    /**
+     * Creates a {@link ItemsetLibrary} out of clustered {@link Itemset} observations. The largest cluster is determined by their consensus observation.
+     *
+     * @param clusteredItemsets  The clustered {@link Itemset}s for which an {@link ItemsetLibrary} should be created.
+     * @param minimalClusterSize The minimal size of which a cluster must exist for the consensus {@link Itemset} to be included in the library.
+     * @return A new {@link ItemsetLibrary}.
+     */
     public static ItemsetLibrary of(Map<Itemset<String>, ConsensusAlignment> clusteredItemsets, int minimalClusterSize) {
+        logger.info("creating library for {} itemsets", clusteredItemsets.size());
         List<ItemsetLibraryEntry> entries = new ArrayList<>();
         for (Map.Entry<Itemset<String>, ConsensusAlignment> entry : clusteredItemsets.entrySet()) {
             Itemset<String> itemset = entry.getKey();
@@ -51,19 +61,25 @@ public class ItemsetLibrary {
                 continue;
             }
             StructuralMotif structuralMotif = clusters.last().getRoot().getData().getStructuralMotif();
-            String pdbLines = StructureRepresentation.composePdbRepresentation(structuralMotif.getLeafSubstructures());
+            String pdbLines = StructureRepresentation.composePdbRepresentation(structuralMotif.getOrderedLeafSubstructures());
             ItemsetLibraryEntry libraryEntry = new ItemsetLibraryEntry(entry.getKey().toSimpleString(), pdbLines);
             entries.add(libraryEntry);
         }
         return new ItemsetLibrary(entries);
     }
 
+    /**
+     * Creates a {@link ItemsetLibrary} out of clustered {@link Itemset} observations. The largest cluster is determined by their consensus observation.
+     *
+     * @param itemsets The extracted {@link Itemset}s for which an {@link ItemsetLibrary} should be created.
+     * @return A new {@link ItemsetLibrary}.
+     */
     public static ItemsetLibrary of(List<Itemset<String>> itemsets) {
         List<ItemsetLibraryEntry> entries = new ArrayList<>();
         for (Itemset<String> itemset : itemsets) {
             // TODO implement proper exception
-            StructuralMotif structuralMotif =
-                    itemset.getStructuralMotif().orElseThrow(() -> new UnsupportedOperationException("itemset libraries can only be constructed out of itemset observations"));
+            StructuralMotif structuralMotif = itemset.getStructuralMotif()
+                                                     .orElseThrow(() -> new UnsupportedOperationException("itemset libraries can only be constructed out of itemset observations"));
             String pdbLines = StructureRepresentation.composePdbRepresentation(structuralMotif.getLeafSubstructures());
             ItemsetLibraryEntry entry = new ItemsetLibraryEntry(itemset.toSimpleString(), pdbLines);
             entries.add(entry);
@@ -71,6 +87,13 @@ public class ItemsetLibrary {
         return new ItemsetLibrary(entries);
     }
 
+    /**
+     * Reads an {@link ItemsetLibrary} from the given path.
+     *
+     * @param libraryPath The {@link Path} of the {@link ItemsetLibrary}.
+     * @return The {@link ItemsetLibrary}
+     * @throws IOException
+     */
     public static ItemsetLibrary readFromPath(Path libraryPath) throws IOException {
         try (GZIPInputStream zip = new GZIPInputStream(new FileInputStream(libraryPath.toFile()));
              BufferedReader reader = new BufferedReader(new InputStreamReader(zip, "UTF-8"))) {
@@ -80,27 +103,50 @@ public class ItemsetLibrary {
         }
     }
 
+    /**
+     * Reads an {@link ItemsetLibrary} from the given Json representation.
+     *
+     * @param json The Json representation of the {@link ItemsetLibrary}.
+     * @return The {@link ItemsetLibrary}.
+     * @throws IOException
+     */
     public static ItemsetLibrary fromJson(String json) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         mapper.enable(JsonParser.Feature.ALLOW_COMMENTS);
         return mapper.readValue(json, TYPE_REFERENCE);
     }
 
-    public List<ItemsetLibraryEntry> getEntries() {
-        return entries;
-    }
-
+    /**
+     * Writes the {@link ItemsetLibrary} to the given path.
+     *
+     * @param libraryPath The {@link Path} to which the {@link ItemsetLibrary} should be written.
+     * @throws IOException
+     */
     public void writeToPath(Path libraryPath) throws IOException {
         try (GZIPOutputStream zip = new GZIPOutputStream(new FileOutputStream(libraryPath.toFile()));
              BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(zip, "UTF-8"))) {
-            writer.append(toJson());
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.enable(SerializationFeature.INDENT_OUTPUT);
+            mapper.setPropertyNamingStrategy(PropertyNamingStrategy.KEBAB_CASE);
+            mapper.writeValue(writer, this);
         }
     }
 
+    /**
+     * Converts this {@link ItemsetLibrary} into a Json representation.
+     *
+     * @return The Json representation.
+     * @throws JsonProcessingException
+     */
     public String toJson() throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
         mapper.enable(SerializationFeature.INDENT_OUTPUT);
         mapper.setPropertyNamingStrategy(PropertyNamingStrategy.KEBAB_CASE);
         return mapper.writeValueAsString(this);
     }
+
+    public List<ItemsetLibraryEntry> getEntries() {
+        return entries;
+    }
+
 }

@@ -12,6 +12,11 @@
     </content>
     <orderEntry type="jdk" jdkName="1.8" jdkType="JavaSDK" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="Maven: de.bioforscher.singa:singa-javafx:0.2.2" level="project" />
+    <orderEntry type="library" name="Maven: de.bioforscher.singa:singa-core:0.2.2" level="project" />
+    <orderEntry type="library" name="Maven: de.bioforscher.singa:singa-mathematics:0.2.2" level="project" />
+    <orderEntry type="library" name="Maven: de.bioforscher.singa:singa-chemistry:0.2.2" level="project" />
+    <orderEntry type="library" name="Maven: de.bioforscher.singa:singa-features:0.2.2" level="project" />
     <orderEntry type="module-library">
       <library name="Maven: uk.ac.man.cs:javami:1.0">
         <CLASSES>
