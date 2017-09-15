@@ -47,11 +47,14 @@ public class ItemsetLibrary {
      * @param minimalClusterSize The minimal size of which a cluster must exist for the consensus {@link Itemset} to be included in the library.
      * @return A new {@link ItemsetLibrary}.
      */
-    public static ItemsetLibrary of(Map<Itemset<String>, ConsensusAlignment> clusteredItemsets, int minimalClusterSize) {
+    public static ItemsetLibrary of(Map<Itemset<String>, ConsensusAlignment> clusteredItemsets, int minimalItemsetSize, int minimalClusterSize) {
         logger.info("creating library for {} itemsets", clusteredItemsets.size());
         List<ItemsetLibraryEntry> entries = new ArrayList<>();
         for (Map.Entry<Itemset<String>, ConsensusAlignment> entry : clusteredItemsets.entrySet()) {
             Itemset<String> itemset = entry.getKey();
+            if (itemset.getItems().size() < minimalItemsetSize) {
+                continue;
+            }
             // determine largest cluster
             TreeSet<BinaryTree<ConsensusContainer>> clusters = new TreeSet<>(Comparator.comparing(BinaryTree::size));
             clusters.addAll(entry.getValue().getClusters());
@@ -62,7 +65,7 @@ public class ItemsetLibrary {
             }
             StructuralMotif structuralMotif = clusters.last().getRoot().getData().getStructuralMotif();
             String pdbLines = StructureRepresentation.composePdbRepresentation(structuralMotif.getOrderedLeafSubstructures());
-            ItemsetLibraryEntry libraryEntry = new ItemsetLibraryEntry(entry.getKey().toSimpleString(), pdbLines);
+            ItemsetLibraryEntry libraryEntry = new ItemsetLibraryEntry(entry.getKey(), pdbLines);
             entries.add(libraryEntry);
         }
         return new ItemsetLibrary(entries);
@@ -74,14 +77,17 @@ public class ItemsetLibrary {
      * @param itemsets The extracted {@link Itemset}s for which an {@link ItemsetLibrary} should be created.
      * @return A new {@link ItemsetLibrary}.
      */
-    public static ItemsetLibrary of(List<Itemset<String>> itemsets) {
+    public static ItemsetLibrary of(List<Itemset<String>> itemsets, int minimalItemsetSize) {
         List<ItemsetLibraryEntry> entries = new ArrayList<>();
         for (Itemset<String> itemset : itemsets) {
+            if (itemset.getItems().size() < minimalItemsetSize) {
+                continue;
+            }
             // TODO implement proper exception
             StructuralMotif structuralMotif = itemset.getStructuralMotif()
                                                      .orElseThrow(() -> new UnsupportedOperationException("itemset libraries can only be constructed out of itemset observations"));
             String pdbLines = StructureRepresentation.composePdbRepresentation(structuralMotif.getLeafSubstructures());
-            ItemsetLibraryEntry entry = new ItemsetLibraryEntry(itemset.toSimpleString(), pdbLines);
+            ItemsetLibraryEntry entry = new ItemsetLibraryEntry(itemset, pdbLines);
             entries.add(entry);
         }
         return new ItemsetLibrary(entries);
