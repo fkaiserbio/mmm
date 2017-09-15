@@ -208,7 +208,12 @@ public class ItemsetMinerRunner {
             StringJoiner stringJoiner = new StringJoiner("\t", "", "\n");
             stringJoiner.add(rank + "/" + totalItemsets.size());
             stringJoiner.add(itemset.toString());
-            stringJoiner.add("(" + itemsetMiner.getTotalExtractedItemsets().get(itemset).size() + " observations)");
+            if (itemsetMiner.getTotalExtractedItemsets() != null && !itemsetMiner.getTotalExtractedItemsets().isEmpty()) {
+                stringJoiner.add("(" + itemsetMiner.getTotalExtractedItemsets().get(itemset).size() + " observations)");
+            }
+            if (itemsetMiner.getTotalClusteredItemsets() != null && !itemsetMiner.getTotalClusteredItemsets().isEmpty()) {
+                stringJoiner.add("(" + itemsetMiner.getTotalClusteredItemsets().get(itemset).getClusters().size() + " clusters)");
+            }
             report.append(stringJoiner.toString());
         }
 
