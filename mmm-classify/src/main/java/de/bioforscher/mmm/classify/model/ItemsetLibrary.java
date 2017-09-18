@@ -43,11 +43,11 @@ public class ItemsetLibrary {
     /**
      * Creates a {@link ItemsetLibrary} out of clustered {@link Itemset} observations. The largest cluster is determined by their consensus observation.
      *
-     * @param clusteredItemsets  The clustered {@link Itemset}s for which an {@link ItemsetLibrary} should be created.
-     * @param minimalClusterSize The minimal size of which a cluster must exist for the consensus {@link Itemset} to be included in the library.
+     * @param clusteredItemsets   The clustered {@link Itemset}s for which an {@link ItemsetLibrary} should be created.
+     * @param minimalClusterRatio The minimal ratio of which a cluster must exist for the consensus {@link Itemset} to be included in the library.
      * @return A new {@link ItemsetLibrary}.
      */
-    public static ItemsetLibrary of(Map<Itemset<String>, ConsensusAlignment> clusteredItemsets, int minimalItemsetSize, int minimalClusterSize) {
+    public static ItemsetLibrary of(Map<Itemset<String>, ConsensusAlignment> clusteredItemsets, int minimalItemsetSize, double minimalClusterRatio) {
         logger.info("creating library for {} itemsets", clusteredItemsets.size());
         List<ItemsetLibraryEntry> entries = new ArrayList<>();
         for (Map.Entry<Itemset<String>, ConsensusAlignment> entry : clusteredItemsets.entrySet()) {
@@ -57,11 +57,17 @@ public class ItemsetLibrary {
             }
             // determine largest cluster
             TreeSet<BinaryTree<ConsensusContainer>> clusters = new TreeSet<>(Comparator.comparing(BinaryTree::size));
-            clusters.addAll(entry.getValue().getClusters());
+            ConsensusAlignment consensusAlignment = entry.getValue();
+            clusters.addAll(consensusAlignment.getClusters());
+            // determine total observation count
+            int observationCount = consensusAlignment.getTopConsensusTree().getLeafNodes().size();
             BinaryTree<ConsensusContainer> largestCluster = clusters.last();
-            if (largestCluster.size() < minimalClusterSize) {
-                logger.info("itemset {} not added to the library, largest cluster size not sufficient", itemset);
+            int largestClusterCount = largestCluster.getLeafNodes().size();
+            if ((largestClusterCount / (double) observationCount) < minimalClusterRatio) {
+                logger.info("itemset {} not added to the library, largest cluster of size {} not sufficient", itemset, largestClusterCount);
                 continue;
+            } else {
+                logger.info("itemset {} added to the library, largest cluster has size {}", itemset, largestClusterCount);
             }
             StructuralMotif structuralMotif = clusters.last().getRoot().getData().getStructuralMotif();
             String pdbLines = StructureRepresentation.composePdbRepresentation(structuralMotif.getOrderedLeafSubstructures());

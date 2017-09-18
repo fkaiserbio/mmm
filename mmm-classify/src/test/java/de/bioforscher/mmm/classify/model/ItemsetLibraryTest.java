@@ -29,7 +29,7 @@ public class ItemsetLibraryTest {
 //                                                           .flatMap(Collection::stream)
 //                                                           .collect(Collectors.toList());
 
-        ItemsetLibrary itemsetLibrary = ItemsetLibrary.of(itemsetMinerRunner.getItemsetMiner().getTotalClusteredItemsets(), 3, 10);
+        ItemsetLibrary itemsetLibrary = ItemsetLibrary.of(itemsetMinerRunner.getItemsetMiner().getTotalClusteredItemsets(), 3, 0.8);
 
         for (ItemsetLibraryEntry entry : itemsetLibrary.getEntries()) {
 
