@@ -3,11 +3,9 @@ package de.bioforscher.mmm.model.metrics;
 import de.bioforscher.mmm.Itemsets;
 import de.bioforscher.mmm.model.DataPoint;
 import de.bioforscher.mmm.model.Distribution;
-import de.bioforscher.mmm.model.Item;
 import de.bioforscher.mmm.model.Itemset;
 import de.bioforscher.mmm.model.configurations.metrics.AdherenceMetricConfiguration;
 import de.bioforscher.mmm.model.metrics.cohesion.VertexCandidateGenerator;
-import de.bioforscher.singa.mathematics.matrices.LabeledSymmetricMatrix;
 import de.bioforscher.singa.mathematics.vectors.RegularVector;
 import de.bioforscher.singa.mathematics.vectors.Vectors;
 import org.slf4j.Logger;
@@ -33,7 +31,6 @@ public class AdherenceMetric<LabelType extends Comparable<LabelType>> extends Ab
     private static final Logger logger = LoggerFactory.getLogger(AdherenceMetric.class);
 
     private final double maximalAdherence;
-    private final Map<DataPoint<LabelType>, LabeledSymmetricMatrix<Item<LabelType>>> squaredDistanceMatrices;
     private final double desiredSquaredExtent;
     private final double squaredExtentDelta;
     private final boolean vertexOne;
@@ -50,8 +47,6 @@ public class AdherenceMetric<LabelType extends Comparable<LabelType>> extends Ab
         vertexOne = adherenceMetricConfiguration.isVertexOne();
         levelOfParallelism = adherenceMetricConfiguration.getLevelOfParallelism();
         executorService = (levelOfParallelism == -1) ? Executors.newWorkStealingPool() : Executors.newWorkStealingPool(levelOfParallelism);
-        // initialize cache for distance matrices
-        squaredDistanceMatrices = new HashMap<>();
     }
 
     @Override

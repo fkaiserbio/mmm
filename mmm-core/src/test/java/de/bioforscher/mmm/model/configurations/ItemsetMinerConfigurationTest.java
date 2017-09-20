@@ -1,6 +1,7 @@
 package de.bioforscher.mmm.model.configurations;
 
 import de.bioforscher.mmm.model.ItemsetComparatorType;
+import de.bioforscher.mmm.model.configurations.analysis.statistics.SignificanceEstimatorConfiguration;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -26,6 +27,7 @@ public class ItemsetMinerConfigurationTest {
         itemsetMinerConfiguration.setItemsetComparatorType(ItemsetComparatorType.CONSENSUS);
         itemsetMinerConfiguration.setOutputLocation("/tmp/itemset-miner");
         itemsetMinerConfiguration.setMaximalEpochs(-1);
+        itemsetMinerConfiguration.setSignificanceEstimatorConfiguration(new SignificanceEstimatorConfiguration());
         System.out.println(itemsetMinerConfiguration.toJson());
         Path configurationPath = folder.getRoot().toPath().resolve("itemset-miner-configuration.json");
         Files.write(configurationPath, itemsetMinerConfiguration.toJson().getBytes());

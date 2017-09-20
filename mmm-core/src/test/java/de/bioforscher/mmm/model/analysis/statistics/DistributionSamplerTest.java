@@ -4,16 +4,14 @@ import de.bioforscher.mmm.ItemsetMinerRunner;
 import de.bioforscher.mmm.model.Distribution;
 import de.bioforscher.mmm.model.Itemset;
 import de.bioforscher.mmm.model.configurations.ItemsetMinerConfiguration;
-import de.bioforscher.mmm.model.metrics.CohesionMetric;
-import org.apache.commons.math3.distribution.NormalDistribution;
-import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
-import org.apache.commons.math3.stat.inference.TestUtils;
+import de.bioforscher.mmm.model.configurations.analysis.statistics.SignificanceEstimatorConfiguration;
 import org.junit.Test;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Map;
 import java.util.StringJoiner;
 
 /**
@@ -27,32 +25,32 @@ public class DistributionSamplerTest {
         ItemsetMinerConfiguration<String> configuration = ItemsetMinerConfiguration.from(Paths.get("/home/fkaiser/Workspace/IdeaProjects/mmm/mmm-core/src/test/resources/mmm_config.json"));
 
         ItemsetMinerRunner itemsetMinerRunner = new ItemsetMinerRunner(configuration);
-        DistributionSampler<String> distributionSampler = new DistributionSampler<>(itemsetMinerRunner.getItemsetMiner(), CohesionMetric.class);
-
-        Files.createDirectories(Paths.get("/tmp/background_distributions/"));
-
-        for (Itemset<String> itemset : itemsetMinerRunner.getItemsetMiner().getTotalClusteredItemsets().keySet()) {
-            Distribution originalDistribution = distributionSampler.getOriginalDistributions().get(itemset);
-            Distribution backgroundDistribution = distributionSampler.getBackgroundDistributions().get(itemset);
-            System.out.println(originalDistribution);
-            System.out.println(backgroundDistribution);
-            double[] originalDistributionValues = originalDistribution.getObservations().stream()
-                                                                      .mapToDouble(Double::doubleValue).toArray();
-            double[] backgroundDistributionValues = backgroundDistribution.getObservations().stream()
-                                                                          .mapToDouble(Double::doubleValue).toArray();
-
-
-            writeDistribution(itemset, backgroundDistribution);
-
-            DescriptiveStatistics descriptiveStatistics = new DescriptiveStatistics(backgroundDistributionValues);
-            double mean = descriptiveStatistics.getMean();
-            double standardDeviation = descriptiveStatistics.getStandardDeviation();
-            NormalDistribution normalDistribution = new NormalDistribution(mean, standardDeviation);
-
-            double pValue = TestUtils.kolmogorovSmirnovTest(normalDistribution, backgroundDistributionValues, false);
-            System.out.println("KGS: " + pValue);
-            System.out.println(itemset + " " + normalDistribution.probability(itemset.getCohesion()));
+        SignificanceEstimatorConfiguration significanceEstimatorConfiguration = new SignificanceEstimatorConfiguration();
+        significanceEstimatorConfiguration.setSignificanceType(SignificanceEstimatorType.COHESION);
+        significanceEstimatorConfiguration.setKsCutoff(0.1);
+        SignificanceEstimator<String> significanceEstimator = new SignificanceEstimator<>(itemsetMinerRunner.getItemsetMiner(), significanceEstimatorConfiguration);
+        for (Map.Entry<SignificanceEstimator<String>.Significance, Itemset<String>> significanceItemsetEntry : significanceEstimator.getSignificantItemsets().entrySet()) {
+            System.out.println(significanceItemsetEntry.getKey().getpValue() + " " + significanceItemsetEntry.getKey().getKs() + " " + significanceItemsetEntry.getValue());
         }
+        System.out.println(significanceEstimator);
+
+//        Files.createDirectories(Paths.get("/tmp/background_distributions/"));
+//
+//        for (Itemset<String> itemset : itemsetMinerRunner.getItemsetMiner().getTotalClusteredItemsets().keySet()) {
+//            Distribution backgroundDistribution = distributionSampler.getBackgroundDistributions().get(itemset);
+//            double[] backgroundDistributionValues = backgroundDistribution.getObservations().stream()
+//                                                                          .mapToDouble(Double::doubleValue).toArray();
+//            writeDistribution(itemset, backgroundDistribution);
+//
+//            DescriptiveStatistics descriptiveStatistics = new DescriptiveStatistics(backgroundDistributionValues);
+//            double mean = descriptiveStatistics.getMean();
+//            double standardDeviation = descriptiveStatistics.getStandardDeviation();
+//            NormalDistribution normalDistribution = new NormalDistribution(mean, standardDeviation);
+//
+//            double pValue = TestUtils.kolmogorovSmirnovTest(normalDistribution, backgroundDistributionValues, false);
+//            System.out.println("KGS: " + pValue);
+//            System.out.println(itemset + " " + normalDistribution.cumulativeProbability(itemset.getConsensus()));
+//        }
 
 //        Itemset<String> bestItemset = itemsetMinerRunner.getItemsetMiner().getTotalClusteredItemsets().firstKey();
 //

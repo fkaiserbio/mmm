@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import de.bioforscher.mmm.io.DataPointReaderConfiguration;
 import de.bioforscher.mmm.model.ItemsetComparatorType;
+import de.bioforscher.mmm.model.configurations.analysis.statistics.SignificanceEstimatorConfiguration;
 import de.bioforscher.mmm.model.configurations.metrics.ExtractionDependentMetricConfiguration;
 import de.bioforscher.mmm.model.configurations.metrics.ExtractionMetricConfiguration;
 import de.bioforscher.mmm.model.configurations.metrics.SimpleMetricConfiguration;
@@ -60,6 +61,9 @@ public class ItemsetMinerConfiguration<LabelType extends Comparable<LabelType>> 
     private ItemsetComparatorType itemsetComparatorType = DEFAULT_ITEMSET_COMPARATOR;
     @JsonProperty("maximal-epochs")
     private int maximalEpochs;
+    @JsonProperty("significance-estimator-configuration")
+    private SignificanceEstimatorConfiguration significanceEstimatorConfiguration;
+
     public ItemsetMinerConfiguration() {
         this.creationUser = System.getProperty("user.name");
         this.creationDate = LocalDateTime.now().toString();
@@ -188,5 +192,13 @@ public class ItemsetMinerConfiguration<LabelType extends Comparable<LabelType>> 
 
     public void addMappingRule(MappingRule<LabelType> mappingRule) {
         mappingRules.add(mappingRule);
+    }
+
+    public SignificanceEstimatorConfiguration getSignificanceEstimatorConfiguration() {
+        return significanceEstimatorConfiguration;
+    }
+
+    public void setSignificanceEstimatorConfiguration(SignificanceEstimatorConfiguration significanceEstimatorConfiguration) {
+        this.significanceEstimatorConfiguration = significanceEstimatorConfiguration;
     }
 }
