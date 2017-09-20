@@ -22,28 +22,33 @@ import java.util.stream.Stream;
 public class ItemsetMiner<LabelType extends Comparable<LabelType>> {
 
     private static final Logger logger = LoggerFactory.getLogger(ItemsetMiner.class);
-
     private final List<DataPoint<LabelType>> dataPoints;
     private final List<EvaluationMetric<LabelType>> evaluationMetrics;
     private final int maximalEpochs;
     private final Comparator<Itemset<?>> itemsetComparator;
-    private Map<Itemset<LabelType>, ConsensusAlignment> totalClusteredItemsets;
+    private final ItemsetMinerConfiguration<LabelType> itemsetMinerConfiguration;
+    private Set<Itemset<LabelType>> candidates;
     private Set<Itemset<LabelType>> previousCandidates;
     private Set<Itemset<LabelType>> removedPreviousCandidates;
-    private Set<Itemset<LabelType>> candidates;
-    private int previousItemsetSize;
     private List<Itemset<LabelType>> totalItemsets;
-    private Map<Itemset<LabelType>, List<Itemset<LabelType>>> totalExtractedItemsets;
+    private TreeMap<Itemset<LabelType>, List<Itemset<LabelType>>> totalExtractedItemsets;
+    private TreeMap<Itemset<LabelType>, ConsensusAlignment> totalClusteredItemsets;
+    private int previousItemsetSize;
 
     public ItemsetMiner(List<DataPoint<LabelType>> dataPoints, List<EvaluationMetric<LabelType>> evaluationMetrics, ItemsetMinerConfiguration<LabelType> itemsetMinerConfiguration) {
         this.dataPoints = dataPoints;
         this.evaluationMetrics = evaluationMetrics;
+        this.itemsetMinerConfiguration = itemsetMinerConfiguration;
 
         maximalEpochs = itemsetMinerConfiguration.getMaximalEpochs();
         itemsetComparator = itemsetMinerConfiguration.getItemsetComparatorType().getComparator();
 
         logger.info("initialized with {} data points", dataPoints.size());
         initialize();
+    }
+
+    public List<DataPoint<LabelType>> getDataPoints() {
+        return dataPoints;
     }
 
     public List<EvaluationMetric<LabelType>> getEvaluationMetrics() {
@@ -54,11 +59,11 @@ public class ItemsetMiner<LabelType extends Comparable<LabelType>> {
         return totalItemsets;
     }
 
-    public Map<Itemset<LabelType>, List<Itemset<LabelType>>> getTotalExtractedItemsets() {
+    public TreeMap<Itemset<LabelType>, List<Itemset<LabelType>>> getTotalExtractedItemsets() {
         return totalExtractedItemsets;
     }
 
-    public Map<Itemset<LabelType>, ConsensusAlignment> getTotalClusteredItemsets() {
+    public TreeMap<Itemset<LabelType>, ConsensusAlignment> getTotalClusteredItemsets() {
         return totalClusteredItemsets;
     }
 
@@ -254,5 +259,9 @@ public class ItemsetMiner<LabelType extends Comparable<LabelType>> {
             }
         }
         logger.info("new candidates are (size: {})\n\t{}", candidates.size(), candidates);
+    }
+
+    public ItemsetMinerConfiguration<LabelType> getItemsetMinerConfiguration() {
+        return itemsetMinerConfiguration;
     }
 }

@@ -20,9 +20,16 @@ import java.util.List;
  */
 public class Itemsets {
     public static double calculateMaximalSquaredExtent(Itemset<?> itemset) {
+
         List<Vector3D> itemPositions = new ArrayList<>();
         for (Item<?> item : itemset.getItems()) {
             item.getPosition().ifPresent(itemPositions::add);
+            // TODO representation scheme should be used if specified
+//            if (representationSchemeType != null) {
+//                item.getPosition(representationSchemeType).ifPresent(itemPositions::add);
+//            } else {
+//                item.getPosition().ifPresent(itemPositions::add);
+//            }
         }
         double[][] distanceValues = VectorMetricProvider.SQUARED_EUCLIDEAN_METRIC.calculateDistancesPairwise(itemPositions).getElements();
         Matrix distanceMatrix = new SymmetricMatrix(distanceValues);

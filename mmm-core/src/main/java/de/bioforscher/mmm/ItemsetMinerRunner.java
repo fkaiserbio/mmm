@@ -56,6 +56,17 @@ public class ItemsetMinerRunner {
         printReport();
     }
 
+    public ItemsetMinerRunner(ItemsetMinerConfiguration<String> itemsetMinerConfiguration, List<DataPoint<String>> dataPoints) throws IOException {
+        this.itemsetMinerConfiguration = itemsetMinerConfiguration;
+        logger.info("configuration created on {} by {}", itemsetMinerConfiguration.getCreationDate(), itemsetMinerConfiguration.getCreationUser());
+        logger.info("data points of size {} already provided", dataPoints.size());
+        this.dataPoints = dataPoints;
+        createMetrics();
+        mineDataPoints();
+        outputResults();
+        printReport();
+    }
+
     public static void main(String[] args) throws IOException, URISyntaxException {
 
         Path configurationPath = Paths.get(args[0]);
@@ -64,6 +75,19 @@ public class ItemsetMinerRunner {
         ItemsetMinerConfiguration<String> itemsetMinerConfiguration = ItemsetMinerConfiguration.from(configurationPath);
 
         new ItemsetMinerRunner(itemsetMinerConfiguration);
+    }
+
+    public ItemsetMinerConfiguration<String> getItemsetMinerConfiguration() {
+        return itemsetMinerConfiguration;
+    }
+
+    public List<EvaluationMetric<String>> getEvaluationMetrics() {
+        return evaluationMetrics;
+    }
+
+    public List<DataPoint<String>> getDataPoints() {
+
+        return dataPoints;
     }
 
     public ItemsetMiner<String> getItemsetMiner() {

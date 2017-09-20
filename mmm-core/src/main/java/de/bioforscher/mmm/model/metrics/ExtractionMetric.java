@@ -1,6 +1,7 @@
 package de.bioforscher.mmm.model.metrics;
 
 import de.bioforscher.mmm.model.Itemset;
+import de.bioforscher.singa.chemistry.physical.atoms.representations.RepresentationSchemeType;
 
 import java.util.List;
 import java.util.Map;
@@ -16,6 +17,10 @@ public interface ExtractionMetric<LabelType extends Comparable<LabelType>> exten
 
     Predicate<EvaluationMetric<?>> EXTRACTION_METRIC_FILTER = evaluationMetric -> evaluationMetric instanceof ExtractionMetric;
 
+    boolean isVertexOne();
+
+    RepresentationSchemeType getRepresentationSchemeType();
+
     Map<Itemset<LabelType>, List<Itemset<LabelType>>> getExtractedItemsets();
 
     /**
@@ -25,4 +30,6 @@ public interface ExtractionMetric<LabelType extends Comparable<LabelType>> exten
      * @return the filtered itemsets
      */
     Set<Itemset<LabelType>> filterItemsets(Set<Itemset<LabelType>> itemsets);
+
+
 }

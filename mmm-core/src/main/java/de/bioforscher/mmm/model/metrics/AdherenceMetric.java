@@ -2,6 +2,7 @@ package de.bioforscher.mmm.model.metrics;
 
 import de.bioforscher.mmm.Itemsets;
 import de.bioforscher.mmm.model.DataPoint;
+import de.bioforscher.mmm.model.Distribution;
 import de.bioforscher.mmm.model.Item;
 import de.bioforscher.mmm.model.Itemset;
 import de.bioforscher.mmm.model.configurations.metrics.AdherenceMetricConfiguration;
@@ -26,7 +27,7 @@ import java.util.stream.Collectors;
  *
  * @author fk
  */
-public class AdherenceMetric<LabelType extends Comparable<LabelType>> extends AbstractExtractionMetric<LabelType> implements ParallelizableMetric<LabelType> {
+public class AdherenceMetric<LabelType extends Comparable<LabelType>> extends AbstractExtractionMetric<LabelType> implements ParallelizableMetric<LabelType>, DistributionMetric<LabelType> {
 
     public static final Comparator<Itemset<?>> COMPARATOR = Comparator.comparing(Itemset::getAdherence);
     private static final Logger logger = LoggerFactory.getLogger(AdherenceMetric.class);
@@ -38,11 +39,11 @@ public class AdherenceMetric<LabelType extends Comparable<LabelType>> extends Ab
     private final boolean vertexOne;
     private final int levelOfParallelism;
     private final ExecutorService executorService;
-
-    private Map<Itemset<LabelType>, List<Double>> itemsetObservationsExtent;
+    private final Map<Itemset<LabelType>, Distribution> distributions;
 
     public AdherenceMetric(List<DataPoint<LabelType>> dataPoints, AdherenceMetricConfiguration adherenceMetricConfiguration) {
         super(dataPoints, adherenceMetricConfiguration.getRepresentationSchemeType());
+        distributions = Collections.synchronizedMap(new HashMap<>());
         desiredSquaredExtent = adherenceMetricConfiguration.getDesiredExtent() * adherenceMetricConfiguration.getDesiredExtent();
         squaredExtentDelta = adherenceMetricConfiguration.getDesiredExtentDelta() * adherenceMetricConfiguration.getDesiredExtentDelta();
         maximalAdherence = adherenceMetricConfiguration.getMaximalAdherence();
@@ -51,6 +52,11 @@ public class AdherenceMetric<LabelType extends Comparable<LabelType>> extends Ab
         executorService = (levelOfParallelism == -1) ? Executors.newWorkStealingPool() : Executors.newWorkStealingPool(levelOfParallelism);
         // initialize cache for distance matrices
         squaredDistanceMatrices = new HashMap<>();
+    }
+
+    @Override
+    public boolean isVertexOne() {
+        return vertexOne;
     }
 
     @Override public int getMinimalItemsetSize() {
@@ -72,9 +78,6 @@ public class AdherenceMetric<LabelType extends Comparable<LabelType>> extends Ab
     private Set<Itemset<LabelType>> calculateAdherence(Set<Itemset<LabelType>> itemsets) {
         // clear storage of extracted itemsets of previous round
         extractedItemsets = new HashMap<>();
-
-        // the storage for extent of itemset observations
-        itemsetObservationsExtent = Collections.synchronizedMap(new HashMap<>());
 
         // create chunks for parallel execution
         List<List<Itemset<LabelType>>> partitions = partition(new ArrayList<>(itemsets), (levelOfParallelism == -1) ? AVAILABLE_PROCESSORS : levelOfParallelism);
@@ -98,16 +101,16 @@ public class AdherenceMetric<LabelType extends Comparable<LabelType>> extends Ab
         }
 
         for (Itemset<LabelType> itemset : itemsets) {
-            if (itemsetObservationsExtent.containsKey(itemset)) {
-                List<Double> extentValues = itemsetObservationsExtent.get(itemset);
-                if (extentValues.size() < AdherenceMetricConfiguration.MINIMAL_OBSERVATIONS) {
+            if (distributions.containsKey(itemset)) {
+                Distribution distribution = distributions.get(itemset);
+                if (distribution.getObservations().size() < AdherenceMetricConfiguration.MINIMAL_OBSERVATIONS) {
                     logger.debug("not enough observations to determine adherence for itemset {}, will be removed", itemset);
                     itemset.setAdherence(Double.MAX_VALUE);
                     continue;
                 }
 
                 // calculate adherence of itemset (standard deviation of extent values)
-                double[] elements = extentValues.stream()
+                double[] elements = distribution.getObservations().stream()
                                                 .mapToDouble(Double::doubleValue)
                                                 .toArray();
                 RegularVector vector = new RegularVector(elements);
@@ -131,14 +134,9 @@ public class AdherenceMetric<LabelType extends Comparable<LabelType>> extends Ab
         extractedItemsets.entrySet().removeIf(entry -> entry.getKey().getAdherence() > maximalAdherence);
     }
 
-    private synchronized void storeExtent(Itemset<LabelType> itemset, double extent) {
-        if (!itemsetObservationsExtent.containsKey(itemset)) {
-            List<Double> listOfObservations = new ArrayList<>();
-            listOfObservations.add(extent);
-            itemsetObservationsExtent.put(itemset, listOfObservations);
-        } else {
-            itemsetObservationsExtent.get(itemset).add(extent);
-        }
+    @Override
+    public Map<Itemset<LabelType>, Distribution> getDistributions() {
+        return distributions;
     }
 
     private class AdherenceCalculator implements Callable<Void> {
@@ -168,9 +166,9 @@ public class AdherenceMetric<LabelType extends Comparable<LabelType>> extends Ab
 
                             // if candidate extent fulfills constraints
                             if ((candidateSquaredExtent > (desiredSquaredExtent - squaredExtentDelta)) && candidateSquaredExtent < ((desiredSquaredExtent + squaredExtentDelta))) {
-                                // store non-squared extent
-                                storeExtent(itemset, Math.sqrt(candidateSquaredExtent));
                                 addToExtractedItemsets(itemset, candidate);
+                                // store extent for probability distribution
+                                addObservationForItemset(itemset, Math.sqrt(candidateSquaredExtent));
                             }
                         }
                     } else {

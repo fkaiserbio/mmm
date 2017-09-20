@@ -38,8 +38,8 @@ public class CohesionMetric<LabelType extends Comparable<LabelType>> extends Abs
     private final boolean vertexOne;
     private final int levelOfParallelism;
     private final ExecutorService executorService;
+    private final Map<Itemset<LabelType>, Distribution> distributions;
     private Map<Itemset<LabelType>, Integer> itemsetObservationsCounts;
-    private Map<Itemset<LabelType>, Distribution> distributions;
 
     public CohesionMetric(List<DataPoint<LabelType>> dataPoints, CohesionMetricConfiguration cohesionMetricConfiguration) {
         super(dataPoints, cohesionMetricConfiguration.getRepresentationSchemeType());
@@ -125,6 +125,11 @@ public class CohesionMetric<LabelType extends Comparable<LabelType>> extends Abs
         } else {
             itemsetObservationsCounts.put(itemset, 1);
         }
+    }
+
+    @Override
+    public boolean isVertexOne() {
+        return vertexOne;
     }
 
     @Override

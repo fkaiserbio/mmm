@@ -28,6 +28,13 @@ public class Distribution {
         return distributionMetricType;
     }
 
+    @Override public String toString() {
+        return "Distribution{" +
+               "distributionMetricType=" + distributionMetricType.getSimpleName() +
+               ", observations=" + observations.size() +
+               '}';
+    }
+
     public void addObservationValue(double observationValue) {
         observations.add(observationValue);
     }
