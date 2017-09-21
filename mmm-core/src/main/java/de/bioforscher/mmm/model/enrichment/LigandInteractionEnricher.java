@@ -23,7 +23,9 @@ import java.util.Optional;
 public class LigandInteractionEnricher extends AbstractInteractionEnricher {
 
     private static final Logger logger = LoggerFactory.getLogger(LigandInteractionEnricher.class);
-    private static final String PLIP_REST_PROVIDER_URL = "https://biosciences.hs-mittweida.de/plip/interaction/calculate/protein";
+    // TODO adapt URL for proteins or nucleotides
+    private static final String PLIP_REST_PROVIDER_URL = "https://biosciences.hs-mittweida.de/plip/interaction/calculate/nucleotide";
+//    private static final String PLIP_REST_PROVIDER_URL = "https://biosciences.hs-mittweida.de/plip/interaction/calculate/nucleotide";
 
     @Override
     public String toString() {
