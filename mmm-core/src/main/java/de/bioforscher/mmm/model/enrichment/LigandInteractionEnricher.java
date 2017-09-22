@@ -2,9 +2,13 @@ package de.bioforscher.mmm.model.enrichment;
 
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import de.bioforscher.mmm.model.DataPoint;
+import de.bioforscher.mmm.model.Item;
 import de.bioforscher.mmm.model.plip.PlipPostRequest;
 import de.bioforscher.singa.chemistry.parser.plip.InteractionContainer;
 import de.bioforscher.singa.chemistry.parser.plip.InteractionType;
+import de.bioforscher.singa.chemistry.physical.families.NucleotideFamily;
+import de.bioforscher.singa.chemistry.physical.leaves.Nucleotide;
+import de.bioforscher.singa.chemistry.physical.model.StructuralFamily;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,6 +16,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Enriches {@link DataPoint}s that contain ligands with interaction information predicted by the Protein-Ligand Interaction Profiler (PLIP). Interactions are abstracted as pseudoatoms defined as the
@@ -23,9 +29,26 @@ import java.util.Optional;
 public class LigandInteractionEnricher extends AbstractInteractionEnricher {
 
     private static final Logger logger = LoggerFactory.getLogger(LigandInteractionEnricher.class);
-    // TODO adapt URL for proteins or nucleotides
-    private static final String PLIP_REST_PROVIDER_URL = "https://biosciences.hs-mittweida.de/plip/interaction/calculate/nucleotide";
-//    private static final String PLIP_REST_PROVIDER_URL = "https://biosciences.hs-mittweida.de/plip/interaction/calculate/nucleotide";
+    private static final String PLIP_REST_PROVIDER_URL_PROTEIN = "https://biosciences.hs-mittweida.de/plip/interaction/calculate/nucleotide";
+    private static final String PLIP_REST_PROVIDER_URL_NUCLEOTIDE = "https://biosciences.hs-mittweida.de/plip/interaction/calculate/nucleotide";
+
+    /**
+     * Tries to determine the type of the given {@link DataPoint}.
+     *
+     * @param dataPoint The {@link DataPoint} for which the type should be determined.
+     * @return True if the {@link DataPoint} is entirely composed of {@link Nucleotide}s.
+     */
+    private static boolean isNucleotideDataPoint(DataPoint<String> dataPoint) {
+        Set<StructuralFamily<?>> familyTypes = dataPoint.getItems().stream()
+                                                        .map(Item::getLeafSubstructure)
+                                                        .filter(Optional::isPresent)
+                                                        .map(Optional::get)
+                                                        .map(leafSubstructure -> (StructuralFamily<?>) leafSubstructure.getFamily())
+                                                        .distinct()
+                                                        .collect(Collectors.toSet());
+        return familyTypes.stream()
+                          .allMatch(type -> type instanceof NucleotideFamily);
+    }
 
     @Override
     public String toString() {
@@ -36,13 +59,21 @@ public class LigandInteractionEnricher extends AbstractInteractionEnricher {
     public void enrichDataPoint(DataPoint<String> dataPoint) {
         logger.debug("enriching data point {} with ligand interaction information", dataPoint);
 
+        String plipUrl;
+        if (isNucleotideDataPoint(dataPoint)) {
+            logger.debug("data point {} is of type nucleotide", dataPoint);
+            plipUrl = PLIP_REST_PROVIDER_URL_NUCLEOTIDE;
+        } else {
+            plipUrl = PLIP_REST_PROVIDER_URL_PROTEIN;
+        }
+
         try {
             // write PDB structure of data point to temporary file
             Path structureFilePath = Files.createTempFile("mmm_", "_" + dataPoint.getDataPointIdentifier().toString() + ".pdb");
             dataPoint.writeAsPdb(structureFilePath);
 
             // submit PLIP POST query
-            PlipPostRequest plipPostRequest = new PlipPostRequest(PLIP_REST_PROVIDER_URL, dataPoint.getDataPointIdentifier().getPdbIdentifier(), structureFilePath);
+            PlipPostRequest plipPostRequest = new PlipPostRequest(plipUrl, dataPoint.getDataPointIdentifier().getPdbIdentifier(), structureFilePath);
 
             Optional<InteractionContainer> interactions = plipPostRequest.queryInteractions();
             if (interactions.isPresent()) {
