@@ -15,13 +15,6 @@
 
     <dependencies>
         <dependency>
-            <groupId>uk.ac.man.cs</groupId>
-            <artifactId>javami</artifactId>
-            <version>1.0</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/JavaMI.jar</systemPath>
-        </dependency>
-        <dependency>
             <groupId>de.bioforscher.singa</groupId>
             <artifactId>singa-javafx</artifactId>
             <version>0.2.2</version>

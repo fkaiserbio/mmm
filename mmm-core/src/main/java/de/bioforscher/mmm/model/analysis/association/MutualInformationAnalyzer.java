@@ -1,6 +1,5 @@
 package de.bioforscher.mmm.model.analysis.association;
 
-import JavaMI.MutualInformation;
 import de.bioforscher.mmm.ItemsetMiner;
 import de.bioforscher.mmm.model.Itemset;
 import de.bioforscher.mmm.model.analysis.AbstractItemsetMinerAnalyzer;
@@ -129,8 +128,9 @@ public class MutualInformationAnalyzer<LabelType extends Comparable<LabelType>> 
                 }
 
                 logger.debug("calculating mutual information for pair {}_{}", itemsetOne, itemsetTwo);
-                double mi = MutualInformation.calculateMutualInformation(itemsetOneObservations.stream().mapToDouble(Double::doubleValue).toArray(),
-                                                                         itemsetTwoObservations.stream().mapToDouble(Double::doubleValue).toArray());
+                double mi = MutualInformation.calculate(itemsetOneObservations.stream().mapToDouble(Double::doubleValue).toArray(),
+                                                        itemsetTwoObservations.stream().mapToDouble(Double::doubleValue).toArray());
+
                 mutualInformation.put(mi, new Pair<>(itemsetOne, itemsetTwo));
             }
         }

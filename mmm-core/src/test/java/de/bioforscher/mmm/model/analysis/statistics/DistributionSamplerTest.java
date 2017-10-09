@@ -3,15 +3,16 @@ package de.bioforscher.mmm.model.analysis.statistics;
 import de.bioforscher.mmm.ItemsetMinerRunner;
 import de.bioforscher.mmm.model.Distribution;
 import de.bioforscher.mmm.model.Itemset;
+import de.bioforscher.mmm.model.analysis.ItemsetMinerAnalyzer;
+import de.bioforscher.mmm.model.analysis.association.MutualInformationAnalyzer;
 import de.bioforscher.mmm.model.configurations.ItemsetMinerConfiguration;
-import de.bioforscher.mmm.model.configurations.analysis.statistics.SignificanceEstimatorConfiguration;
+import de.bioforscher.mmm.model.metrics.CohesionMetric;
 import org.junit.Test;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Map;
 import java.util.StringJoiner;
 
 /**
@@ -25,14 +26,18 @@ public class DistributionSamplerTest {
         ItemsetMinerConfiguration<String> configuration = ItemsetMinerConfiguration.from(Paths.get("/home/fkaiser/Workspace/IdeaProjects/mmm/mmm-core/src/test/resources/mmm_config.json"));
 
         ItemsetMinerRunner itemsetMinerRunner = new ItemsetMinerRunner(configuration);
-        SignificanceEstimatorConfiguration significanceEstimatorConfiguration = new SignificanceEstimatorConfiguration();
-        significanceEstimatorConfiguration.setSignificanceType(SignificanceEstimatorType.COHESION);
-        significanceEstimatorConfiguration.setKsCutoff(0.1);
-        SignificanceEstimator<String> significanceEstimator = new SignificanceEstimator<>(itemsetMinerRunner.getItemsetMiner(), significanceEstimatorConfiguration);
-        for (Map.Entry<SignificanceEstimator<String>.Significance, Itemset<String>> significanceItemsetEntry : significanceEstimator.getSignificantItemsets().entrySet()) {
-            System.out.println(significanceItemsetEntry.getKey().getpValue() + " " + significanceItemsetEntry.getKey().getKs() + " " + significanceItemsetEntry.getValue());
-        }
-        System.out.println(significanceEstimator);
+
+
+        ItemsetMinerAnalyzer<String> mutualInformationAnalyzer = new MutualInformationAnalyzer<>(itemsetMinerRunner.getItemsetMiner(), CohesionMetric.class, 0.1, true);
+
+//        SignificanceEstimatorConfiguration significanceEstimatorConfiguration = new SignificanceEstimatorConfiguration();
+//        significanceEstimatorConfiguration.setSignificanceType(SignificanceEstimatorType.COHESION);
+//        significanceEstimatorConfiguration.setKsCutoff(0.1);
+//        SignificanceEstimator<String> significanceEstimator = new SignificanceEstimator<>(itemsetMinerRunner.getItemsetMiner(), significanceEstimatorConfiguration);
+//        for (Map.Entry<SignificanceEstimator<String>.Significance, Itemset<String>> significanceItemsetEntry : significanceEstimator.getSignificantItemsets().entrySet()) {
+//            System.out.println(significanceItemsetEntry.getKey().getpValue() + " " + significanceItemsetEntry.getKey().getKs() + " " + significanceItemsetEntry.getValue());
+//        }
+//        System.out.println(significanceEstimator);
 
 //        Files.createDirectories(Paths.get("/tmp/background_distributions/"));
 //
