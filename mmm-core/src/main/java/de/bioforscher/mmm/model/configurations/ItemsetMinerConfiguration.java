@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
@@ -67,9 +68,9 @@ public class ItemsetMinerConfiguration<LabelType extends Comparable<LabelType>> 
     public ItemsetMinerConfiguration() {
         this.creationUser = System.getProperty("user.name");
         this.creationDate = LocalDateTime.now().toString();
+        this.mappingRules = new ArrayList<>();
         this.simpleMetricConfigurations = new ArrayList<>();
         this.extractionDependentMetricConfigurations = new ArrayList<>();
-        this.mappingRules = new ArrayList<>();
     }
 
     @SuppressWarnings("unchecked")
@@ -77,6 +78,12 @@ public class ItemsetMinerConfiguration<LabelType extends Comparable<LabelType>> 
         logger.info("reading configuration from {}", configurationPath);
         String json = Files.lines(configurationPath).collect(Collectors.joining());
         return new ItemsetMinerConfiguration<>().fromJson(json);
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <LabelType extends Comparable<LabelType>> ItemsetMinerConfiguration<LabelType> from(InputStream inputStream) throws IOException {
+        logger.info("reading configuration from given input stream");
+        return new ItemsetMinerConfiguration<>().fromJson(inputStream);
     }
 
     public String getDescription() {

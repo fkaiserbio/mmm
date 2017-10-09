@@ -39,19 +39,30 @@ public class SignificanceEstimator<LabelType extends Comparable<LabelType>> {
         type = configuration.getSignificanceType();
         ksCutoff = configuration.getKsCutoff();
         significantItemsets = new TreeMap<>();
-        sampleDistributions(configuration.getLevelOfParallelism());
+        sampleDistributions(configuration.getLevelOfParallelism(), configuration.getSampleSize());
     }
 
     public TreeMap<Significance, Itemset<LabelType>> getSignificantItemsets() {
         return significantItemsets;
     }
 
-    private void sampleDistributions(int levelOfParallelism) {
-        DistributionSampler<LabelType> distributionSampler = new DistributionSampler<>(itemsetMiner, type.getDistributionMetric(), levelOfParallelism);
+    /**
+     * Samples background distributions with the given level of parallelism.
+     *
+     * @param levelOfParallelism The desired level of parallelism.
+     * @param sampleSize         The desired sample size.
+     */
+    private void sampleDistributions(int levelOfParallelism, int sampleSize) {
+        DistributionSampler<LabelType> distributionSampler = new DistributionSampler<>(itemsetMiner, type.getDistributionMetric(), levelOfParallelism, sampleSize);
         backgroundDistributions = distributionSampler.getBackgroundDistributions();
         backgroundDistributions.keySet().forEach(this::determineSignificance);
     }
 
+    /**
+     * Determines the significance for the given {@link Itemset} by modeling the background normal distribution.
+     *
+     * @param itemset The {@link Itemset} for which the significance should be calculated.
+     */
     private void determineSignificance(Itemset<LabelType> itemset) {
 
         double[] values = backgroundDistributions.get(itemset).getObservations().stream()
@@ -86,16 +97,16 @@ public class SignificanceEstimator<LabelType extends Comparable<LabelType>> {
      */
     public static class Significance implements Comparable<Significance> {
 
-        private final double pValue;
+        private final double pvalue;
         private final double ks;
 
-        public Significance(double pValue, double ks) {
-            this.pValue = pValue;
+        public Significance(double pvalue, double ks) {
+            this.pvalue = pvalue;
             this.ks = ks;
         }
 
-        public double getpValue() {
-            return pValue;
+        public double getPvalue() {
+            return pvalue;
         }
 
         public double getKs() {
@@ -104,13 +115,13 @@ public class SignificanceEstimator<LabelType extends Comparable<LabelType>> {
 
         @Override public String toString() {
             return "Significance{" +
-                   "pValue=" + pValue +
+                   "pvalue=" + pvalue +
                    ", ks=" + ks +
                    '}';
         }
 
         @Override public int compareTo(Significance o) {
-            return Double.compare(pValue, o.pValue);
+            return Double.compare(pvalue, o.pvalue);
         }
     }
 }

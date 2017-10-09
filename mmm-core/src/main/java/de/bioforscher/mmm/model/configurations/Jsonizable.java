@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
 import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * An interface providing the default methods for serialization and deserialization from Json.
@@ -21,6 +22,14 @@ public interface Jsonizable<ConfigurationType extends JsonConfiguration> extends
         mapper.enable(SerializationFeature.INDENT_OUTPUT);
         mapper.setPropertyNamingStrategy(PropertyNamingStrategy.KEBAB_CASE);
         return mapper.writeValueAsString(this);
+    }
+
+    default ConfigurationType fromJson(InputStream inputStream) throws IOException {
+        TypeReference<ConfigurationType> typeReference = new TypeReference<ConfigurationType>() {
+        };
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.enable(JsonParser.Feature.ALLOW_COMMENTS);
+        return mapper.readValue(inputStream, typeReference);
     }
 
     default ConfigurationType fromJson(String json) throws IOException {

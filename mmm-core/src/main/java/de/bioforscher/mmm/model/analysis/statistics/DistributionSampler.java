@@ -32,11 +32,11 @@ import java.util.stream.Collectors;
 class DistributionSampler<LabelType extends Comparable<LabelType>> extends DataPointCache<LabelType> {
 
     private static final Logger logger = LoggerFactory.getLogger(DistributionSampler.class);
-    private static final int SAMPLE_SIZE = 30;
     private static final int AVAILABLE_PROCESSORS = Runtime.getRuntime().availableProcessors();
 
     private final List<DataPoint<LabelType>> dataPoints;
     private final List<Itemset<LabelType>> itemsets;
+    private final int sampleSize;
     private final int levelOfParallelism;
     private final Class<? extends DistributionMetric> distributionMetricType;
     private final Class<? extends ExtractionMetric> extractionMetricType;
@@ -47,7 +47,7 @@ class DistributionSampler<LabelType extends Comparable<LabelType>> extends DataP
     private double clusterCutoff;
     private Map<Itemset<LabelType>, Integer> itemsetObservationCounts;
 
-    DistributionSampler(ItemsetMiner<LabelType> itemsetMiner, Class<? extends DistributionMetric> distributionMetricType, int levelOfParallelism) {
+    DistributionSampler(ItemsetMiner<LabelType> itemsetMiner, Class<? extends DistributionMetric> distributionMetricType, int levelOfParallelism, int sampleSize) {
 
         super(itemsetMiner.getEvaluationMetrics().stream()
                           .filter(ExtractionMetric.class::isInstance)
@@ -57,8 +57,9 @@ class DistributionSampler<LabelType extends Comparable<LabelType>> extends DataP
                           .findAny()
                           .orElse(null));
 
-        this.levelOfParallelism = levelOfParallelism;
         this.distributionMetricType = distributionMetricType;
+        this.levelOfParallelism = levelOfParallelism;
+        this.sampleSize = sampleSize;
 
         dataPoints = itemsetMiner.getDataPoints();
         itemsets = itemsetMiner.getTotalItemsets();
@@ -106,9 +107,9 @@ class DistributionSampler<LabelType extends Comparable<LabelType>> extends DataP
      * Runs the background sampling for the specified number of samples.
      */
     private void runBackgroundSampling() {
-        for (int i = 0; i < SAMPLE_SIZE; i++) {
+        for (int i = 0; i < sampleSize; i++) {
             if (i % 10 == 0) {
-                logger.info("running background sampling round {} of {}", i + 1, SAMPLE_SIZE);
+                logger.info("running background sampling round {} of {}", i + 1, sampleSize);
             }
             randomizeDataPoints();
             // reset itemset observation counts in each sample round

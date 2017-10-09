@@ -9,6 +9,7 @@ import de.bioforscher.mmm.model.analysis.statistics.SignificanceEstimatorType;
 public class SignificanceEstimatorConfiguration {
 
     private static final int DEFAULT_LEVEL_OF_PARALLELISM = -1;
+    private static final int DEFAULT_SAMPLE_SIZE = 30;
 
     @JsonProperty("significance-type")
     private SignificanceEstimatorType significanceType;
@@ -16,6 +17,16 @@ public class SignificanceEstimatorConfiguration {
     private double ksCutoff;
     @JsonProperty("level-of-parallelism")
     private int levelOfParallelism = DEFAULT_LEVEL_OF_PARALLELISM;
+    @JsonProperty("sample-size")
+    private int sampleSize = DEFAULT_SAMPLE_SIZE;
+
+    public int getSampleSize() {
+        return sampleSize;
+    }
+
+    public void setSampleSize(int sampleSize) {
+        this.sampleSize = sampleSize;
+    }
 
     public int getLevelOfParallelism() {
         return levelOfParallelism;

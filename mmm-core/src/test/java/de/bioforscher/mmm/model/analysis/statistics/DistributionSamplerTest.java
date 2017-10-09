@@ -35,7 +35,7 @@ public class DistributionSamplerTest {
 //        significanceEstimatorConfiguration.setKsCutoff(0.1);
 //        SignificanceEstimator<String> significanceEstimator = new SignificanceEstimator<>(itemsetMinerRunner.getItemsetMiner(), significanceEstimatorConfiguration);
 //        for (Map.Entry<SignificanceEstimator<String>.Significance, Itemset<String>> significanceItemsetEntry : significanceEstimator.getSignificantItemsets().entrySet()) {
-//            System.out.println(significanceItemsetEntry.getKey().getpValue() + " " + significanceItemsetEntry.getKey().getKs() + " " + significanceItemsetEntry.getValue());
+//            System.out.println(significanceItemsetEntry.getKey().getPvalue() + " " + significanceItemsetEntry.getKey().getKs() + " " + significanceItemsetEntry.getValue());
 //        }
 //        System.out.println(significanceEstimator);
 

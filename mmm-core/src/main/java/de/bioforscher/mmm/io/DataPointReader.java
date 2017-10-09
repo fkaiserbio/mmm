@@ -51,7 +51,6 @@ public class DataPointReader {
 
     public DataPointReader(DataPointReaderConfiguration dataPointReaderConfiguration, Path chainListPath) {
         createStructureParserOptions();
-
         if (dataPointReaderConfiguration.getPdbLocation() != null) {
             multiParser = StructureParser.local()
                                          .localPDB(new StructureParser.LocalPDB(dataPointReaderConfiguration.getPdbLocation()))

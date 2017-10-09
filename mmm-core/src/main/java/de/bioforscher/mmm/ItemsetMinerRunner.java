@@ -7,6 +7,7 @@ import de.bioforscher.mmm.model.Itemset;
 import de.bioforscher.mmm.model.analysis.statistics.SignificanceEstimator;
 import de.bioforscher.mmm.model.analysis.statistics.SignificanceEstimator.Significance;
 import de.bioforscher.mmm.model.configurations.ItemsetMinerConfiguration;
+import de.bioforscher.mmm.model.configurations.analysis.statistics.SignificanceEstimatorConfiguration;
 import de.bioforscher.mmm.model.configurations.metrics.ExtractionDependentMetricConfiguration;
 import de.bioforscher.mmm.model.configurations.metrics.ExtractionMetricConfiguration;
 import de.bioforscher.mmm.model.configurations.metrics.SimpleMetricConfiguration;
@@ -25,6 +26,8 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -90,7 +93,7 @@ public class ItemsetMinerRunner {
         // input path is resource
         String inputListLocation = itemsetMinerConfiguration.getInputListLocation();
 
-        // decide whether to use directory or chain list to mine
+        // decide whether to use directory, chain list, or given IDs
         DataPointReader dataPointReader;
         if (itemsetMinerConfiguration.getInputListLocation() == null) {
             List<Path> structurePaths = Files.list(Paths.get(itemsetMinerConfiguration.getInputDirectoryLocation()))
@@ -176,15 +179,40 @@ public class ItemsetMinerRunner {
         itemsetMiner.start();
     }
 
-    private void calculateSignificance() {
+    private void calculateSignificance() throws IOException {
 
         logger.info(">>>STEP 6<<< calculating significance");
 
-        SignificanceEstimator<String> significanceEstimator = new SignificanceEstimator<>(itemsetMiner, itemsetMinerConfiguration.getSignificanceEstimatorConfiguration());
+        DecimalFormat decimalFormat;
+
+        NumberFormat nf = NumberFormat.getNumberInstance(Locale.US);
+        decimalFormat = (DecimalFormat) nf;
+        decimalFormat.applyPattern("0.00000000");
+
+        StringJoiner stringJoiner = new StringJoiner("\n", "itemset,p-value,ks\n", "");
+        SignificanceEstimatorConfiguration significanceEstimatorConfiguration = itemsetMinerConfiguration.getSignificanceEstimatorConfiguration();
+
+        if (significanceEstimatorConfiguration == null) {
+            logger.info("skipped calculation of significance");
+        }
+
+        logger.info("calculating significance for type " + significanceEstimatorConfiguration.getSignificanceType());
+
+        SignificanceEstimator<String> significanceEstimator = new SignificanceEstimator<>(itemsetMiner, significanceEstimatorConfiguration);
         TreeMap<Significance, Itemset<String>> significantItemsets = significanceEstimator.getSignificantItemsets();
         for (Map.Entry<Significance, Itemset<String>> entry : significantItemsets.entrySet()) {
-
+            StringJoiner lineJoiner = new StringJoiner(",");
+            lineJoiner.add(entry.getValue().toSimpleString());
+            lineJoiner.add(decimalFormat.format(entry.getKey().getPvalue()));
+            lineJoiner.add(decimalFormat.format(entry.getKey().getKs()));
+            stringJoiner.add(lineJoiner.toString());
         }
+
+        Path significanceOutputPath = Paths.get(itemsetMinerConfiguration.getOutputLocation()).resolve("significance.csv");
+        Files.createDirectories(significanceOutputPath.getParent());
+
+        logger.info("writing significance of results to {}", significanceOutputPath);
+        Files.write(significanceOutputPath, stringJoiner.toString().getBytes());
     }
 
     private void outputResults() throws IOException {

@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.Base64;
 import java.util.Optional;
 
 /**
@@ -38,7 +39,7 @@ public class PlipGetRequest extends AbstractPlipRequest {
             // connect to the PLIP REST API and obtain interaction data
             URL url = new URL(plipUrl + "/" + pdbIdentifier + "/" + chainIdentifier);
             logger.debug("querying PLIP REST service: {}", url);
-            String encoding = new sun.misc.BASE64Encoder().encode(PLIP_REST_PROVIDER_CREDENTIALS.getBytes());
+            String encoding = Base64.getEncoder().encodeToString(PLIP_REST_PROVIDER_CREDENTIALS.getBytes());
             URLConnection connection = url.openConnection();
             connection.setRequestProperty("Authorization", "Basic " + encoding);
             connection.connect();

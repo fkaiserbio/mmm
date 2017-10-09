@@ -79,7 +79,8 @@
   "itemset-comparator-type": "CONSENSUS",
   "maximal-epochs": -1,
   "significance-estimator-configuration": {
-    "significance-type": "COHESION",
-    "ks-cutoff": 0.1
+    "significance-type": "CONSENSUS",
+    "ks-cutoff": 0.1,
+    "sample-size": 100
   }
 }
