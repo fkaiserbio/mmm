@@ -4,6 +4,8 @@ import de.bioforscher.mmm.io.DataPointReader;
 import de.bioforscher.mmm.io.ResultWriter;
 import de.bioforscher.mmm.model.DataPoint;
 import de.bioforscher.mmm.model.Itemset;
+import de.bioforscher.mmm.model.analysis.statistics.SignificanceEstimator;
+import de.bioforscher.mmm.model.analysis.statistics.SignificanceEstimator.Significance;
 import de.bioforscher.mmm.model.configurations.ItemsetMinerConfiguration;
 import de.bioforscher.mmm.model.configurations.metrics.ExtractionDependentMetricConfiguration;
 import de.bioforscher.mmm.model.configurations.metrics.ExtractionMetricConfiguration;
@@ -23,9 +25,7 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.StringJoiner;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -52,6 +52,7 @@ public class ItemsetMinerRunner {
         mapDataPoints();
         createMetrics();
         mineDataPoints();
+        calculateSignificance();
         outputResults();
         printReport();
     }
@@ -63,6 +64,7 @@ public class ItemsetMinerRunner {
         this.dataPoints = dataPoints;
         createMetrics();
         mineDataPoints();
+        calculateSignificance();
         outputResults();
         printReport();
     }
@@ -77,33 +79,65 @@ public class ItemsetMinerRunner {
         new ItemsetMinerRunner(itemsetMinerConfiguration);
     }
 
-    public ItemsetMinerConfiguration<String> getItemsetMinerConfiguration() {
-        return itemsetMinerConfiguration;
+    private void readDataPoints() throws URISyntaxException, IOException {
+
+        // create structure parser options
+        StructureParserOptions structureParserOptions = new StructureParserOptions();
+        structureParserOptions.retrieveLigandInformation(true);
+        structureParserOptions.omitHydrogens(true);
+
+        logger.info(">>>STEP 1<<< reading data points");
+        // input path is resource
+        String inputListLocation = itemsetMinerConfiguration.getInputListLocation();
+
+        // decide whether to use directory or chain list to mine
+        DataPointReader dataPointReader;
+        if (itemsetMinerConfiguration.getInputListLocation() == null) {
+            List<Path> structurePaths = Files.list(Paths.get(itemsetMinerConfiguration.getInputDirectoryLocation()))
+                                             .filter(path -> path.toFile().isFile())
+                                             .collect(Collectors.toList());
+            dataPointReader = new DataPointReader(itemsetMinerConfiguration.getDataPointReaderConfiguration(), structurePaths);
+
+        } else {
+            Path inputListPath;
+            URL inputListResourceURL = Thread.currentThread().getContextClassLoader()
+                                             .getResource(inputListLocation);
+            if (inputListResourceURL != null) {
+                inputListPath = Paths.get(inputListResourceURL.toURI());
+                logger.info("found input list in resources");
+            } else {
+                inputListPath = Paths.get(inputListLocation);
+                logger.info("external input list will be used");
+            }
+            dataPointReader = new DataPointReader(itemsetMinerConfiguration.getDataPointReaderConfiguration(), inputListPath);
+        }
+        dataPoints = dataPointReader.readDataPoints();
     }
 
-    public List<EvaluationMetric<String>> getEvaluationMetrics() {
-        return evaluationMetrics;
+    private void enrichDataPoints() {
+
+        logger.info(">>>STEP 2<<< enriching data points");
+
+        DataPointEnricher<String> dataPointEnricher = itemsetMinerConfiguration.getDataPointEnricher();
+        if (dataPointEnricher != null) {
+            logger.info("applying data point enricher {}", dataPointEnricher);
+            dataPoints.forEach(dataPointEnricher::enrichDataPoint);
+        }
     }
 
-    public List<DataPoint<String>> getDataPoints() {
+    private void mapDataPoints() {
 
-        return dataPoints;
-    }
+        logger.info(">>>STEP 3<<< mapping data points");
 
-    public ItemsetMiner<String> getItemsetMiner() {
-        return itemsetMiner;
-    }
-
-    private void outputResults() throws IOException {
-
-        logger.info(">>>STEP 7<<< writing results");
-
-        ResultWriter<String> resultWriter = new ResultWriter<>(itemsetMinerConfiguration, itemsetMiner);
-        resultWriter.writeItemsetMinerConfiguration();
-        if (!itemsetMiner.getTotalClusteredItemsets().isEmpty()) {
-            resultWriter.writeClusteredItemsets();
-        } else if (!itemsetMiner.getTotalExtractedItemsets().isEmpty() && itemsetMiner.getTotalClusteredItemsets().isEmpty()) {
-            resultWriter.writeExtractedItemsets();
+        List<MappingRule<String>> mappingRules = itemsetMinerConfiguration.getMappingRules();
+        if (mappingRules != null && !mappingRules.isEmpty()) {
+            logger.info("mapping data points according to mapping rules {}", mappingRules);
+            DataPointLabelMapper<String> dataPointLabelMapper = new DataPointLabelMapper<>(mappingRules);
+            dataPoints = dataPoints.stream()
+                                   .map(dataPointLabelMapper::mapDataPoint)
+                                   .collect(Collectors.toList());
+        } else {
+            logger.info("no mapping rule specified");
         }
     }
 
@@ -142,71 +176,33 @@ public class ItemsetMinerRunner {
         itemsetMiner.start();
     }
 
-    private void mapDataPoints() {
+    private void calculateSignificance() {
 
-        logger.info(">>>STEP 3<<< mapping data points");
+        logger.info(">>>STEP 6<<< calculating significance");
 
-        List<MappingRule<String>> mappingRules = itemsetMinerConfiguration.getMappingRules();
-        if (mappingRules != null && !mappingRules.isEmpty()) {
-            logger.info("mapping data points according to mapping rules {}", mappingRules);
-            DataPointLabelMapper<String> dataPointLabelMapper = new DataPointLabelMapper<>(mappingRules);
-            dataPoints = dataPoints.stream()
-                                   .map(dataPointLabelMapper::mapDataPoint)
-                                   .collect(Collectors.toList());
-        } else {
-            logger.info("no mapping rule specified");
+        SignificanceEstimator<String> significanceEstimator = new SignificanceEstimator<>(itemsetMiner, itemsetMinerConfiguration.getSignificanceEstimatorConfiguration());
+        TreeMap<Significance, Itemset<String>> significantItemsets = significanceEstimator.getSignificantItemsets();
+        for (Map.Entry<Significance, Itemset<String>> entry : significantItemsets.entrySet()) {
+
         }
     }
 
-    private void enrichDataPoints() {
+    private void outputResults() throws IOException {
 
-        logger.info(">>>STEP 2<<< enriching data points");
+        logger.info(">>>STEP 7<<< writing results");
 
-        DataPointEnricher<String> dataPointEnricher = itemsetMinerConfiguration.getDataPointEnricher();
-        if (dataPointEnricher != null) {
-            logger.info("applying data point enricher {}", dataPointEnricher);
-            dataPoints.forEach(dataPointEnricher::enrichDataPoint);
+        ResultWriter<String> resultWriter = new ResultWriter<>(itemsetMinerConfiguration, itemsetMiner);
+        resultWriter.writeItemsetMinerConfiguration();
+        if (!itemsetMiner.getTotalClusteredItemsets().isEmpty()) {
+            resultWriter.writeClusteredItemsets();
+        } else if (!itemsetMiner.getTotalExtractedItemsets().isEmpty() && itemsetMiner.getTotalClusteredItemsets().isEmpty()) {
+            resultWriter.writeExtractedItemsets();
         }
-    }
-
-    private void readDataPoints() throws URISyntaxException, IOException {
-
-        // create structure parser options
-        StructureParserOptions structureParserOptions = new StructureParserOptions();
-        structureParserOptions.retrieveLigandInformation(true);
-        structureParserOptions.omitHydrogens(true);
-
-        logger.info(">>>STEP 1<<< reading data points");
-        // input path is resource
-        String inputListLocation = itemsetMinerConfiguration.getInputListLocation();
-
-        // decide whether to use directory or chain list to mine
-        DataPointReader dataPointReader;
-        if (itemsetMinerConfiguration.getInputListLocation() == null) {
-            List<Path> structurePaths = Files.list(Paths.get(itemsetMinerConfiguration.getInputDirectoryLocation()))
-                                             .filter(path -> path.toFile().isFile())
-                                             .collect(Collectors.toList());
-            dataPointReader = new DataPointReader(itemsetMinerConfiguration.getDataPointReaderConfiguration(), structurePaths);
-
-        } else {
-            Path inputListPath;
-            URL inputListResourceURL = Thread.currentThread().getContextClassLoader()
-                                             .getResource(inputListLocation);
-            if (inputListResourceURL != null) {
-                inputListPath = Paths.get(inputListResourceURL.toURI());
-                logger.info("found input list in resources");
-            } else {
-                inputListPath = Paths.get(inputListLocation);
-                logger.info("external input list will be used");
-            }
-            dataPointReader = new DataPointReader(itemsetMinerConfiguration.getDataPointReaderConfiguration(), inputListPath);
-        }
-        dataPoints = dataPointReader.readDataPoints();
     }
 
     private void printReport() throws IOException {
 
-        logger.info(">>>STEP 6<<< printing report");
+        logger.info(">>>STEP 8<<< printing report");
 
         StringBuilder report = new StringBuilder()
                 .append("\n\n\t>>>Itemset Miner<<<")
@@ -249,5 +245,23 @@ public class ItemsetMinerRunner {
 
         logger.info("writing report to {}", reportOutputPath);
         Files.write(reportOutputPath, report.toString().getBytes());
+    }
+
+
+    public ItemsetMinerConfiguration<String> getItemsetMinerConfiguration() {
+        return itemsetMinerConfiguration;
+    }
+
+    public List<EvaluationMetric<String>> getEvaluationMetrics() {
+        return evaluationMetrics;
+    }
+
+    public List<DataPoint<String>> getDataPoints() {
+
+        return dataPoints;
+    }
+
+    public ItemsetMiner<String> getItemsetMiner() {
+        return itemsetMiner;
     }
 }

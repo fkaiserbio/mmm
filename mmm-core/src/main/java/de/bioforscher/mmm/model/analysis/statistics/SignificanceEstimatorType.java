@@ -5,6 +5,8 @@ import de.bioforscher.mmm.model.metrics.ConsensusMetric;
 import de.bioforscher.mmm.model.metrics.DistributionMetric;
 
 /**
+ * Defines types for estimation of significance of itemsets.
+ *
  * @author fk
  */
 public enum SignificanceEstimatorType {

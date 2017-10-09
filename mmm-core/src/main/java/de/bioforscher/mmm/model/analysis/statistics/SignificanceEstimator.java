@@ -81,13 +81,15 @@ public class SignificanceEstimator<LabelType extends Comparable<LabelType>> {
         significantItemsets.put(new Significance(pValue, ks), itemset);
     }
 
-    public class Significance implements Comparable<Significance> {
+    /**
+     * A data object to hold statistical measures, that is the p-value and the Kolmogorov-Smirnov value.
+     */
+    public static class Significance implements Comparable<Significance> {
 
         private final double pValue;
         private final double ks;
 
         public Significance(double pValue, double ks) {
-
             this.pValue = pValue;
             this.ks = ks;
         }

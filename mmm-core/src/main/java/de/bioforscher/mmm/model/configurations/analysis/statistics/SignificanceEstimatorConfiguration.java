@@ -9,9 +9,9 @@ import de.bioforscher.mmm.model.analysis.statistics.SignificanceEstimatorType;
 public class SignificanceEstimatorConfiguration {
 
     private static final int DEFAULT_LEVEL_OF_PARALLELISM = -1;
+
     @JsonProperty("significance-type")
     private SignificanceEstimatorType significanceType;
-
     @JsonProperty("ks-cutoff")
     private double ksCutoff;
     @JsonProperty("level-of-parallelism")
