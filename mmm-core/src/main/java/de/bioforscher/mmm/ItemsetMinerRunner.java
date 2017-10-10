@@ -46,10 +46,8 @@ public class ItemsetMinerRunner {
     private ItemsetMiner<String> itemsetMiner;
 
     public ItemsetMinerRunner(ItemsetMinerConfiguration<String> itemsetMinerConfiguration) throws IOException, URISyntaxException {
-
         this.itemsetMinerConfiguration = itemsetMinerConfiguration;
         logger.info("configuration created on {} by {}", itemsetMinerConfiguration.getCreationDate(), itemsetMinerConfiguration.getCreationUser());
-
         readDataPoints();
         enrichDataPoints();
         mapDataPoints();
@@ -194,6 +192,7 @@ public class ItemsetMinerRunner {
 
         if (significanceEstimatorConfiguration == null) {
             logger.info("skipped calculation of significance");
+            return;
         }
 
         logger.info("calculating significance for type " + significanceEstimatorConfiguration.getSignificanceType());
