@@ -72,7 +72,8 @@ public class ConsensusMetric<LabelType extends Comparable<LabelType>> extends Ab
                                            .collect(Collectors.toSet());
     }
 
-    @Override public String toString() {
+    @Override
+    public String toString() {
         return "ConsensusMetric{" +
                "maximalConsensus=" + maximalConsensus +
                '}';
