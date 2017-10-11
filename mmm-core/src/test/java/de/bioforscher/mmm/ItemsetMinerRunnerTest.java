@@ -4,7 +4,9 @@ import de.bioforscher.mmm.io.DataPointReaderConfiguration;
 import de.bioforscher.mmm.model.configurations.ItemsetMinerConfiguration;
 import de.bioforscher.mmm.model.configurations.metrics.SupportMetricConfiguration;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -14,6 +16,8 @@ import java.net.URISyntaxException;
  */
 public class ItemsetMinerRunnerTest {
 
+    @Rule
+    public TemporaryFolder folder = new TemporaryFolder();
     private ItemsetMinerConfiguration<String> itemsetMinerConfiguration;
 
     @Before
@@ -21,6 +25,7 @@ public class ItemsetMinerRunnerTest {
         itemsetMinerConfiguration = new ItemsetMinerConfiguration<>();
         itemsetMinerConfiguration.setMaximalEpochs(3);
         itemsetMinerConfiguration.setInputListLocation("craven2016_WSXWS_motif.txt");
+        itemsetMinerConfiguration.setOutputLocation(folder.getRoot().toString());
         DataPointReaderConfiguration dataPointReaderConfiguration = new DataPointReaderConfiguration();
         itemsetMinerConfiguration.setDataPointReaderConfiguration(dataPointReaderConfiguration);
     }
