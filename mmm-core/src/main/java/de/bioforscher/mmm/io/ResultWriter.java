@@ -3,6 +3,7 @@ package de.bioforscher.mmm.io;
 import de.bioforscher.mmm.ItemsetMiner;
 import de.bioforscher.mmm.model.Itemset;
 import de.bioforscher.mmm.model.configurations.ItemsetMinerConfiguration;
+import de.bioforscher.singa.chemistry.algorithms.superimposition.affinity.AffinityAlignment;
 import de.bioforscher.singa.chemistry.algorithms.superimposition.consensus.ConsensusAlignment;
 import de.bioforscher.singa.chemistry.parser.pdb.structures.StructureWriter;
 import de.bioforscher.singa.chemistry.physical.branches.StructuralMotif;
@@ -103,9 +104,15 @@ public class ResultWriter<LabelType extends Comparable<LabelType>> {
                                                                .map(List::size)
                                                                .reduce(Integer::sum);
 
-        logger.info("writing {} clustered itemsets with {} observations in total", itemsetMiner.getTotalClusteredItemsets().size(), extractedItemsetsCount.orElse(0));
+        int extractedItemsetCount = extractedItemsetsCount.orElse(0);
+        logger.info("writing {} clustered itemsets with {} observations in total", itemsetMiner.getTotalClusteredItemsets().size(), extractedItemsetCount);
 
-        DecimalFormat rankFormatter = new DecimalFormat("000000");
+        int patternCount = String.valueOf(extractedItemsetCount).length();
+        StringBuilder pattern = new StringBuilder();
+        for (int i = 0; i < patternCount; i++) {
+            pattern.append("0");
+        }
+        DecimalFormat rankFormatter = new DecimalFormat(pattern.toString());
 
         // write clusters
         List<Itemset<LabelType>> totalItemsets = itemsetMiner.getTotalItemsets();
@@ -116,6 +123,34 @@ public class ResultWriter<LabelType extends Comparable<LabelType>> {
             Path itemsetPath = outputPath.resolve("clustered_itemsets").resolve(rankString + "_" + itemset.toSimpleString());
             ConsensusAlignment consensusAlignment = itemsetMiner.getTotalClusteredItemsets().get(itemset);
             consensusAlignment.writeClusters(itemsetPath);
+        }
+    }
+
+    public void writeAffinityItemsets() throws IOException {
+        // determine count of extracted itemsets
+        Optional<Integer> extractedItemsetsCount = itemsetMiner.getTotalExtractedItemsets().values().stream()
+                                                               .map(List::size)
+                                                               .reduce(Integer::sum);
+
+        int extractedItemsetCount = extractedItemsetsCount.orElse(0);
+        logger.info("writing {} affinity itemsets with {} observations in total", itemsetMiner.getTotalAffinityItemsets().size(), extractedItemsetCount);
+
+        int patternCount = String.valueOf(extractedItemsetCount).length();
+        StringBuilder pattern = new StringBuilder();
+        for (int i = 0; i < patternCount; i++) {
+            pattern.append("0");
+        }
+        DecimalFormat rankFormatter = new DecimalFormat(pattern.toString());
+
+        // write clusters
+        List<Itemset<LabelType>> totalItemsets = itemsetMiner.getTotalItemsets();
+        for (int i = 0; i < totalItemsets.size(); i++) {
+            Itemset<LabelType> itemset = totalItemsets.get(i);
+            int rank = i + 1;
+            String rankString = rankFormatter.format(rank);
+            Path itemsetPath = outputPath.resolve("affinity_itemsets").resolve(rankString + "_" + itemset.toSimpleString());
+            AffinityAlignment affinityAlignment = itemsetMiner.getTotalAffinityItemsets().get(itemset);
+            affinityAlignment.writeClusters(itemsetPath);
         }
     }
 }

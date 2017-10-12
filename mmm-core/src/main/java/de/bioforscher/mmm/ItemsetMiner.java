@@ -5,6 +5,7 @@ import de.bioforscher.mmm.model.Item;
 import de.bioforscher.mmm.model.Itemset;
 import de.bioforscher.mmm.model.configurations.ItemsetMinerConfiguration;
 import de.bioforscher.mmm.model.metrics.*;
+import de.bioforscher.singa.chemistry.algorithms.superimposition.affinity.AffinityAlignment;
 import de.bioforscher.singa.chemistry.algorithms.superimposition.consensus.ConsensusAlignment;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,6 +34,7 @@ public class ItemsetMiner<LabelType extends Comparable<LabelType>> {
     private List<Itemset<LabelType>> totalItemsets;
     private TreeMap<Itemset<LabelType>, List<Itemset<LabelType>>> totalExtractedItemsets;
     private TreeMap<Itemset<LabelType>, ConsensusAlignment> totalClusteredItemsets;
+    private TreeMap<Itemset<LabelType>, AffinityAlignment> totalAffinityItemsets;
     private int previousItemsetSize;
 
     public ItemsetMiner(List<DataPoint<LabelType>> dataPoints, List<EvaluationMetric<LabelType>> evaluationMetrics, ItemsetMinerConfiguration<LabelType> itemsetMinerConfiguration) {
@@ -45,6 +47,10 @@ public class ItemsetMiner<LabelType extends Comparable<LabelType>> {
 
         logger.info("initialized with {} data points", dataPoints.size());
         initialize();
+    }
+
+    public TreeMap<Itemset<LabelType>, AffinityAlignment> getTotalAffinityItemsets() {
+        return totalAffinityItemsets;
     }
 
     public List<DataPoint<LabelType>> getDataPoints() {
@@ -75,6 +81,8 @@ public class ItemsetMiner<LabelType extends Comparable<LabelType>> {
         totalExtractedItemsets = new TreeMap<>(itemsetComparator);
         // initialize storage for clustered itemsets
         totalClusteredItemsets = new TreeMap<>(itemsetComparator);
+        // initialize storage for affinity itemsets
+        totalAffinityItemsets = new TreeMap<>(itemsetComparator);
 
         logger.info("creating initial 1-itemsets");
         previousCandidates = dataPoints.stream()
@@ -181,6 +189,7 @@ public class ItemsetMiner<LabelType extends Comparable<LabelType>> {
 
         // evaluate extraction-dependent metrics
         Map<Itemset<LabelType>, ConsensusAlignment> clusteredItemsets = new HashMap<>();
+        Map<Itemset<LabelType>, AffinityAlignment> affinityItemsets = new HashMap<>();
         evaluationMetrics.stream()
                          .filter(ExtractionDependentMetric.EXTRACTION_DEPENDENT_METRIC_FILTER)
                          .filter(minimalItemsetSizeFilter)
@@ -194,10 +203,14 @@ public class ItemsetMiner<LabelType extends Comparable<LabelType>> {
                              if (extractionDependentMetric instanceof ConsensusMetric) {
                                  clusteredItemsets.putAll(((ConsensusMetric<LabelType>) extractionDependentMetric).getClusteredItemsets());
                              }
+                             if (extractionDependentMetric instanceof AffinityMetric) {
+                                 affinityItemsets.putAll(((AffinityMetric<LabelType>) extractionDependentMetric).getAffinityItemsets());
+                             }
                          });
 
         // synchronize clustered and extracted itemsets
         clusteredItemsets.keySet().removeIf(itemset -> !extractedItemsets.containsKey(itemset));
+        affinityItemsets.keySet().removeIf(itemset -> !extractedItemsets.containsKey(itemset));
 
         if (previousItemsetSize > 1) {
             // globally store itemsets which passed all metrics
@@ -206,6 +219,8 @@ public class ItemsetMiner<LabelType extends Comparable<LabelType>> {
             totalExtractedItemsets.putAll(extractedItemsets);
             // globally store clustered itemsets
             totalClusteredItemsets.putAll(clusteredItemsets);
+            // globally store clustered itemsets
+            totalAffinityItemsets.putAll(affinityItemsets);
         }
 
         logger.info("pruned previous candidates after evaluation of all metrics are (size: {})\n\t{}", previousCandidates.size(), previousCandidates);

@@ -36,8 +36,8 @@ public class Itemset<LabelType extends Comparable<LabelType>> implements Compara
     private double cohesion;
     private double adherence;
     private double consensus;
+    private double affinity;
     private double separation;
-
     public Itemset(Set<Item<LabelType>> items) {
         this.items = items;
     }
@@ -66,6 +66,14 @@ public class Itemset<LabelType extends Comparable<LabelType>> implements Compara
 
     public static <LabelType extends Comparable<LabelType>> Itemset<LabelType> of(Set<Item<LabelType>> items) {
         return new Itemset<>(new TreeSet<>(items));
+    }
+
+    public double getAffinity() {
+        return affinity;
+    }
+
+    public void setAffinity(double affinity) {
+        this.affinity = affinity;
     }
 
     public Optional<DataPointIdentifier> getOriginDataPointIdentifier() {
@@ -126,6 +134,7 @@ public class Itemset<LabelType extends Comparable<LabelType>> implements Compara
                + ",cohesion=" + ((cohesion == Double.MAX_VALUE) ? "?" : DECIMAL_FORMAT.format(cohesion))
                + ",adherence=" + ((adherence == Double.MAX_VALUE) ? "?" : DECIMAL_FORMAT.format(adherence))
                + ",consensus=" + DECIMAL_FORMAT.format(consensus)
+               + ",affinity=" + DECIMAL_FORMAT.format(affinity)
                + ",separation=" + DECIMAL_FORMAT.format(separation)
                + "]";
     }

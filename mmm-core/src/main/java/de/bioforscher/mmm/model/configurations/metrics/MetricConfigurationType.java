@@ -16,6 +16,7 @@ public enum MetricConfigurationType {
     COHESION_CONFIGURATION(CohesionMetricConfiguration.class, CohesionMetric.class),
     ADHERENCE_CONFIGURATION(AdherenceMetricConfiguration.class, AdherenceMetric.class),
     CONSENSUS_CONFIGURATION(ConsensusMetricConfiguration.class, ConsensusMetric.class),
+    AFFINITY_CONFIGURATION(AffinityMetricConfiguration.class, AffinityMetric.class),
     SEPARATION_CONFIGURATION(SeparationMetricConfiguration.class, SeparationMetric.class);
 
     private Class<? extends MetricConfiguration> metricConfiguration;

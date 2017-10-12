@@ -33,6 +33,7 @@ public class ItemsetMinerConfiguration<LabelType extends Comparable<LabelType>> 
     private static final Logger logger = LoggerFactory.getLogger(ItemsetMinerConfiguration.class);
 
     private static final ItemsetComparatorType DEFAULT_ITEMSET_COMPARATOR = ItemsetComparatorType.SUPPORT;
+    private static final int DEFAULT_MAXIMAL_EPOCHS = -1;
 
     @JsonProperty("creation-user")
     private String creationUser;
@@ -61,7 +62,7 @@ public class ItemsetMinerConfiguration<LabelType extends Comparable<LabelType>> 
     @JsonProperty("itemset-comparator-type")
     private ItemsetComparatorType itemsetComparatorType = DEFAULT_ITEMSET_COMPARATOR;
     @JsonProperty("maximal-epochs")
-    private int maximalEpochs;
+    private int maximalEpochs = DEFAULT_MAXIMAL_EPOCHS;
     @JsonProperty("significance-estimator-configuration")
     private SignificanceEstimatorConfiguration significanceEstimatorConfiguration;
 

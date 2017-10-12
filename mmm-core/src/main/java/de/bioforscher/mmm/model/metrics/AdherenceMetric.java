@@ -38,7 +38,7 @@ public class AdherenceMetric<LabelType extends Comparable<LabelType>> extends Ab
     private final ExecutorService executorService;
     private final Map<Itemset<LabelType>, Distribution> distributions;
 
-    public AdherenceMetric(List<DataPoint<LabelType>> dataPoints, AdherenceMetricConfiguration adherenceMetricConfiguration) {
+    public AdherenceMetric(List<DataPoint<LabelType>> dataPoints, AdherenceMetricConfiguration<LabelType> adherenceMetricConfiguration) {
         super(dataPoints, adherenceMetricConfiguration.getRepresentationSchemeType());
         distributions = Collections.synchronizedMap(new HashMap<>());
         desiredSquaredExtent = adherenceMetricConfiguration.getDesiredExtent() * adherenceMetricConfiguration.getDesiredExtent();

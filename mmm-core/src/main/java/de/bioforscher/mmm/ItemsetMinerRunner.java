@@ -222,6 +222,8 @@ public class ItemsetMinerRunner {
         resultWriter.writeItemsetMinerConfiguration();
         if (!itemsetMiner.getTotalClusteredItemsets().isEmpty()) {
             resultWriter.writeClusteredItemsets();
+        } else if (!itemsetMiner.getTotalAffinityItemsets().isEmpty()) {
+            resultWriter.writeAffinityItemsets();
         } else if (!itemsetMiner.getTotalExtractedItemsets().isEmpty() && itemsetMiner.getTotalClusteredItemsets().isEmpty()) {
             resultWriter.writeExtractedItemsets();
         }
@@ -249,17 +251,27 @@ public class ItemsetMinerRunner {
         report.append("\n====RESULTS==========================================================\n");
         report.append("rank\titemset\n");
         List<Itemset<String>> totalItemsets = itemsetMiner.getTotalItemsets();
-        for (int i = 0; i < totalItemsets.size(); i++) {
+        int totalItemsetCount = totalItemsets.size();
+        int patternCount = String.valueOf(totalItemsetCount).length();
+        StringBuilder pattern = new StringBuilder();
+        for (int i = 0; i < patternCount; i++) {
+            pattern.append("0");
+        }
+        DecimalFormat rankFormatter = new DecimalFormat(pattern.toString());
+        for (int i = 0; i < totalItemsetCount; i++) {
             int rank = i + 1;
             Itemset<String> itemset = totalItemsets.get(i);
             StringJoiner stringJoiner = new StringJoiner("\t", "", "\n");
-            stringJoiner.add(rank + "/" + totalItemsets.size());
+            stringJoiner.add(rankFormatter.format(rank) + "/" + totalItemsetCount);
             stringJoiner.add(itemset.toString());
             if (itemsetMiner.getTotalExtractedItemsets() != null && !itemsetMiner.getTotalExtractedItemsets().isEmpty()) {
                 stringJoiner.add("(" + itemsetMiner.getTotalExtractedItemsets().get(itemset).size() + " observations)");
             }
-            if (itemsetMiner.getTotalClusteredItemsets() != null && !itemsetMiner.getTotalClusteredItemsets().isEmpty()) {
+            if ((itemsetMiner.getTotalClusteredItemsets() != null && !itemsetMiner.getTotalClusteredItemsets().isEmpty())) {
                 stringJoiner.add("(" + itemsetMiner.getTotalClusteredItemsets().get(itemset).getClusters().size() + " clusters)");
+            }
+            if ((itemsetMiner.getTotalAffinityItemsets() != null && !itemsetMiner.getTotalAffinityItemsets().isEmpty())) {
+                stringJoiner.add("(" + itemsetMiner.getTotalAffinityItemsets().get(itemset).getClusters().size() + " clusters)");
             }
             report.append(stringJoiner.toString());
         }
@@ -284,7 +296,6 @@ public class ItemsetMinerRunner {
     }
 
     public List<DataPoint<String>> getDataPoints() {
-
         return dataPoints;
     }
 

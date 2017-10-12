@@ -2,9 +2,8 @@ package de.bioforscher.mmm.model.metrics;
 
 import de.bioforscher.mmm.model.Distribution;
 import de.bioforscher.mmm.model.Itemset;
-import de.bioforscher.mmm.model.configurations.metrics.ConsensusMetricConfiguration;
-import de.bioforscher.singa.chemistry.algorithms.superimposition.consensus.ConsensusAlignment;
-import de.bioforscher.singa.chemistry.algorithms.superimposition.consensus.ConsensusBuilder;
+import de.bioforscher.mmm.model.configurations.metrics.AffinityMetricConfiguration;
+import de.bioforscher.singa.chemistry.algorithms.superimposition.affinity.AffinityAlignment;
 import de.bioforscher.singa.chemistry.physical.atoms.Atom;
 import de.bioforscher.singa.chemistry.physical.atoms.representations.RepresentationSchemeType;
 import de.bioforscher.singa.chemistry.physical.branches.StructuralMotif;
@@ -20,43 +19,41 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
- * An {@link ExtractionMetric} that extracts {@link Itemset}s based on the adherence of their items. For further reference see
- * <p/>
- * Kaiser, F. & Labudde, D. IEEE/ACM Trans. Comput. Biol. Bioinform. (under review)
- *
  * @author fk
  */
-public class ConsensusMetric<LabelType extends Comparable<LabelType>> extends AbstractExtractionDependentMetric<LabelType> implements ParallelizableMetric<LabelType>, DistributionMetric<LabelType> {
+public class AffinityMetric<LabelType extends Comparable<LabelType>> extends AbstractExtractionDependentMetric<LabelType> implements ParallelizableMetric<LabelType>, DistributionMetric<LabelType> {
 
-    public static final Comparator<Itemset<?>> COMPARATOR = Comparator.comparing(Itemset::getConsensus);
+    public static final Comparator<Itemset<?>> COMPARATOR = Comparator.comparing(Itemset::getAffinity);
 
-    private static final Logger logger = LoggerFactory.getLogger(ConsensusMetric.class);
+    private static final Logger logger = LoggerFactory.getLogger(AffinityMetric.class);
 
-    private final Map<Itemset<LabelType>, ConsensusAlignment> clusteredItemsets;
-    private final double maximalConsensus;
-    private final double clusterCutoff;
-    private final Predicate<Atom> atomFilter;
+    private final double maximalAffinity;
     private final int levelOfParallelism;
     private final ExecutorService executorService;
-    private final boolean alignWithinClusters;
     private final RepresentationSchemeType representationSchemeType;
-    private Map<Itemset<LabelType>, Distribution> distributions;
+    private final Predicate<Atom> atomFilter;
+    private final boolean alignWithinClusters;
+    private final Map<Itemset<LabelType>, AffinityAlignment> affinityItemsets;
 
-    public ConsensusMetric(ConsensusMetricConfiguration<LabelType> consensusMetricConfiguration) {
-        maximalConsensus = consensusMetricConfiguration.getMaximalConsensus();
-        clusterCutoff = consensusMetricConfiguration.getClusterCutoffValue();
-        levelOfParallelism = consensusMetricConfiguration.getLevelOfParallelism();
+    public AffinityMetric(AffinityMetricConfiguration<LabelType> affinityMetricConfiguration) {
+        maximalAffinity = affinityMetricConfiguration.getMaximalAffinity();
+        levelOfParallelism = affinityMetricConfiguration.getLevelOfParallelism();
         executorService = (levelOfParallelism == -1) ? Executors.newWorkStealingPool() : Executors.newWorkStealingPool(levelOfParallelism);
-        atomFilter = consensusMetricConfiguration.getAtomFilterType().getFilter();
-        representationSchemeType = consensusMetricConfiguration.getRepresentationSchemeType();
-        alignWithinClusters = consensusMetricConfiguration.isAlignWithinClusters();
+        representationSchemeType = affinityMetricConfiguration.getRepresentationSchemeType();
+        atomFilter = affinityMetricConfiguration.getAtomFilterType().getFilter();
+        alignWithinClusters = affinityMetricConfiguration.isAlignWithinClusters();
 
-        distributions = new HashMap<>();
-        clusteredItemsets = new HashMap<>();
+        affinityItemsets = new HashMap<>();
     }
 
-    public Map<Itemset<LabelType>, ConsensusAlignment> getClusteredItemsets() {
-        return clusteredItemsets;
+    public Map<Itemset<LabelType>, AffinityAlignment> getAffinityItemsets() {
+        return affinityItemsets;
+    }
+
+    @Override
+
+    public Map<Itemset<LabelType>, Distribution> getDistributions() {
+        return null;
     }
 
     @Override
@@ -67,27 +64,21 @@ public class ConsensusMetric<LabelType extends Comparable<LabelType>> extends Ab
     @Override
     public Set<Itemset<LabelType>> filterItemsets(Set<Itemset<LabelType>> itemsets, Map<Itemset<LabelType>, List<Itemset<LabelType>>> extractedItemsets) {
         this.extractedItemsets = extractedItemsets;
-        return calculateConsensus(itemsets).stream()
-                                           .filter(itemset -> itemset.getConsensus() <= maximalConsensus)
-                                           .collect(Collectors.toSet());
+
+        return calculateAffinity(itemsets).stream()
+                                          .filter(itemset -> itemset.getAffinity() <= maximalAffinity)
+                                          .collect(Collectors.toSet());
     }
 
-    @Override
-    public String toString() {
-        return "ConsensusMetric{" +
-               "maximalConsensus=" + maximalConsensus +
-               '}';
-    }
-
-    private Set<Itemset<LabelType>> calculateConsensus(Set<Itemset<LabelType>> itemsets) {
+    private Set<Itemset<LabelType>> calculateAffinity(Set<Itemset<LabelType>> itemsets) {
 
         // create chunks for parallel execution
         List<List<Itemset<LabelType>>> partitions = partition(new ArrayList<>(itemsets), (levelOfParallelism == -1) ? AVAILABLE_PROCESSORS : levelOfParallelism);
 
         // create jobs
-        List<ConsensusCalculator> jobs = partitions.stream()
-                                                   .map(ConsensusCalculator::new)
-                                                   .collect(Collectors.toList());
+        List<AffinityCalculator> jobs = partitions.stream()
+                                                  .map(AffinityCalculator::new)
+                                                  .collect(Collectors.toList());
         // execute jobs
         try {
             executorService.invokeAll(jobs).stream()
@@ -99,7 +90,7 @@ public class ConsensusMetric<LabelType extends Comparable<LabelType>> extends Ab
                                }
                            })
                            .collect(Collectors.toList())
-                           .forEach(clusteredItemsets::putAll);
+                           .forEach(affinityItemsets::putAll);
         } catch (InterruptedException e) {
             logger.error("parallel execution of {} failed", this, e);
         }
@@ -109,25 +100,27 @@ public class ConsensusMetric<LabelType extends Comparable<LabelType>> extends Ab
 
     @Override
     public void filterExtractedItemsets() {
-        extractedItemsets.entrySet().removeIf(entry -> entry.getKey().getConsensus() > maximalConsensus);
+        extractedItemsets.entrySet().removeIf(entry -> entry.getKey().getAffinity() >= maximalAffinity);
     }
 
-    @Override public Map<Itemset<LabelType>, Distribution> getDistributions() {
-        return distributions;
+    @Override
+    public String toString() {
+        return "AffinityMetric{" +
+               "maximalAffinity=" + maximalAffinity +
+               '}';
     }
 
-    private class ConsensusCalculator implements Callable<Map<Itemset<LabelType>, ConsensusAlignment>> {
+    private class AffinityCalculator implements Callable<Map<Itemset<LabelType>, AffinityAlignment>> {
         private final List<Itemset<LabelType>> itemsets;
 
-        public ConsensusCalculator(List<Itemset<LabelType>> itemsets) {
+        public AffinityCalculator(List<Itemset<LabelType>> itemsets) {
             this.itemsets = itemsets;
         }
 
         @Override
-        public Map<Itemset<LabelType>, ConsensusAlignment> call() throws Exception {
-            Map<Itemset<LabelType>, ConsensusAlignment> clusteredItemsets = new HashMap<>();
+        public Map<Itemset<LabelType>, AffinityAlignment> call() throws Exception {
+            Map<Itemset<LabelType>, AffinityAlignment> affinityItemsets = new HashMap<>();
             for (Itemset<LabelType> itemset : itemsets) {
-
                 // get structural motifs for current itemset
                 List<StructuralMotif> structuralMotifs = extractedItemsets.get(itemset).stream()
                                                                           .map(Itemset::getStructuralMotif)
@@ -136,32 +129,30 @@ public class ConsensusMetric<LabelType extends Comparable<LabelType>> extends Ab
                                                                           .collect(Collectors.toList());
 
                 // perform consensus alignment
-                ConsensusAlignment consensusAlignment;
+                AffinityAlignment affinityAlignment;
                 if (representationSchemeType != null) {
-                    consensusAlignment = ConsensusBuilder.create()
+                    affinityAlignment = AffinityAlignment.create()
                                                          .inputStructuralMotifs(structuralMotifs)
                                                          .representationSchemeType(representationSchemeType)
-                                                         .clusterCutoff(clusterCutoff)
                                                          .alignWithinClusters(alignWithinClusters)
                                                          .idealSuperimposition(false)
                                                          .run();
                 } else {
-                    consensusAlignment = ConsensusBuilder.create()
+                    affinityAlignment = AffinityAlignment.create()
                                                          .inputStructuralMotifs(structuralMotifs)
                                                          .atomFilter(atomFilter)
-                                                         .clusterCutoff(clusterCutoff)
                                                          .alignWithinClusters(alignWithinClusters)
                                                          .idealSuperimposition(false)
                                                          .run();
                 }
 
-                consensusAlignment.getAlignmentTrace().forEach(observationValue -> addObservationForItemset(itemset, observationValue));
+                affinityItemsets.put(itemset, affinityAlignment);
 
-                // store consensus score
-                itemset.setConsensus(consensusAlignment.getNormalizedConsensusScore());
-                clusteredItemsets.put(itemset, consensusAlignment);
+                // TODO preliminary naive computation of score for affinity
+                double affinity = affinityAlignment.getSelfSimilarity() / affinityAlignment.getClusters().size();
+                itemset.setAffinity(affinity);
             }
-            return clusteredItemsets;
+            return affinityItemsets;
         }
     }
 }

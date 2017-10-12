@@ -14,6 +14,7 @@ public enum ItemsetComparatorType {
     COHESION(CohesionMetric.COMPARATOR),
     ADHERENCE(AdherenceMetric.COMPARATOR),
     CONSENSUS(ConsensusMetric.COMPARATOR),
+    AFFINITY(AffinityMetric.COMPARATOR),
     SEPARATION(SeparationMetric.COMPARATOR);
 
     private final Comparator<Itemset<?>> comparator;

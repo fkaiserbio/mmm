@@ -33,7 +33,7 @@ public class SeparationMetric<LabelType extends Comparable<LabelType>> extends A
     private final double morseWellDepth;
     private final double morseShape;
 
-    public SeparationMetric(SeparationMetricConfiguration separationMetricConfiguration) {
+    public SeparationMetric(SeparationMetricConfiguration<LabelType> separationMetricConfiguration) {
         this.maximalSeparation = separationMetricConfiguration.getMaximalSeparation();
         this.optimalSeparation = separationMetricConfiguration.getOptimalSeparation();
         this.morseWellDepth = separationMetricConfiguration.getMorseWellDepth();

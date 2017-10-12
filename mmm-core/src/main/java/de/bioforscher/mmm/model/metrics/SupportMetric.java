@@ -23,7 +23,7 @@ public class SupportMetric<LabelType extends Comparable<LabelType>> implements S
     private final List<DataPoint<LabelType>> dataPoints;
     private final double minimalSupport;
 
-    public SupportMetric(List<DataPoint<LabelType>> dataPoints, SupportMetricConfiguration supportMetricConfiguration) {
+    public SupportMetric(List<DataPoint<LabelType>> dataPoints, SupportMetricConfiguration<LabelType> supportMetricConfiguration) {
         this.dataPoints = dataPoints;
         this.minimalSupport = supportMetricConfiguration.getMinimalSupport();
     }

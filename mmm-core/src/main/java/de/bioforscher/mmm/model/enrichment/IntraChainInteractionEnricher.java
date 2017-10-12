@@ -24,16 +24,17 @@ public class IntraChainInteractionEnricher extends AbstractInteractionEnricher {
     private static final Logger logger = LoggerFactory.getLogger(IntraChainInteractionEnricher.class);
     private static final String PLIP_REST_PROVIDER_URL = "https://biosciences.hs-mittweida.de/plip/interaction/plain";
 
-    private static void validateInteractions(InteractionContainer interactions, DataPoint<String> dataPoint) {
-        // TODO avoid fetching of structure every time
-        Structure structure = StructureParser.online()
-                                             .pdbIdentifier(dataPoint.getDataPointIdentifier().getPdbIdentifier())
-                                             .parse();
+    private static void validateInteractions(InteractionContainer interactions, Structure structure) {
         interactions.validateWithStructure(structure);
     }
 
     @Override
     public void enrichDataPoint(DataPoint<String> dataPoint) {
+
+        // TODO avoid fetching of structure every time
+        Structure structure = StructureParser.online()
+                                             .pdbIdentifier(dataPoint.getDataPointIdentifier().getPdbIdentifier())
+                                             .parse();
 
         logger.debug("enriching data point {} with interaction information", dataPoint);
 
@@ -46,11 +47,15 @@ public class IntraChainInteractionEnricher extends AbstractInteractionEnricher {
 
         if (optionalInteractions.isPresent()) {
             InteractionContainer interactions = optionalInteractions.get();
+            // validate interactions (necessary for intra-chain interactions)
+            validateInteractions(interactions, structure);
             for (InteractionType activeInteraction : ACTIVE_INTERACTIONS) {
                 logger.debug("enriching data point {} with interactions of type {}", dataPoint, activeInteraction);
-                // validate interactions (necessary for intra-chain interactions)
-                validateInteractions(interactions, dataPoint);
                 interactions.getInteractions().stream()
+                            .filter(interaction -> activeInteraction.getInteractionClass().equals(interaction.getClass()))
+                            .forEach(interaction -> addInteractionItem(interaction, dataPoint));
+                // metal complexes are stored as ligand interactions
+                interactions.getLigandInteractions().stream()
                             .filter(interaction -> activeInteraction.getInteractionClass().equals(interaction.getClass()))
                             .forEach(interaction -> addInteractionItem(interaction, dataPoint));
             }

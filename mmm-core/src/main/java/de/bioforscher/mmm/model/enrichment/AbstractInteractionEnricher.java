@@ -57,7 +57,6 @@ public abstract class AbstractInteractionEnricher implements DataPointEnricher<S
      * @param dataPoint   The {@link DataPoint} to which the {@link InteractionContainer} should be added.
      */
     void addInteractionItem(Interaction interaction, DataPoint<String> dataPoint) {
-
         // determine next identifiers
         int nextLeafIdentifier = dataPoint.getItems().stream()
                                           .map(Item::getLeafSubstructure)

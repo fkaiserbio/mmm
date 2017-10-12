@@ -41,7 +41,7 @@ public class CohesionMetric<LabelType extends Comparable<LabelType>> extends Abs
     private final Map<Itemset<LabelType>, Distribution> distributions;
     private Map<Itemset<LabelType>, Integer> itemsetObservationsCounts;
 
-    public CohesionMetric(List<DataPoint<LabelType>> dataPoints, CohesionMetricConfiguration cohesionMetricConfiguration) {
+    public CohesionMetric(List<DataPoint<LabelType>> dataPoints, CohesionMetricConfiguration<LabelType> cohesionMetricConfiguration) {
         super(dataPoints, cohesionMetricConfiguration.getRepresentationSchemeType());
         distributions = new HashMap<>();
         maximalCohesion = cohesionMetricConfiguration.getMaximalCohesion();
