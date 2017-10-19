@@ -41,7 +41,7 @@ public class ItemsetLibraryTest {
     public void setUp() {
         itemsetMinerConfiguration = new ItemsetMinerConfiguration<>();
         itemsetMinerConfiguration.setMaximalEpochs(3);
-        itemsetMinerConfiguration.setInputDirectoryLocation("/home/fkaiser/Workspace/CloudStation/PhD/Promotion/datasets/p-loop/structures");
+        itemsetMinerConfiguration.setInputListLocation("craven2016_WSXWS_motif.txt");
         itemsetMinerConfiguration.setOutputLocation(folder.getRoot().toString());
         DataPointReaderConfiguration dataPointReaderConfiguration = new DataPointReaderConfiguration();
         itemsetMinerConfiguration.setDataPointReaderConfiguration(dataPointReaderConfiguration);
