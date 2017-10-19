@@ -4,11 +4,9 @@ import de.bioforscher.mmm.ItemsetMiner;
 import de.bioforscher.mmm.Itemsets;
 import de.bioforscher.mmm.model.*;
 import de.bioforscher.mmm.model.configurations.metrics.ConsensusMetricConfiguration;
-import de.bioforscher.mmm.model.metrics.CohesionMetric;
-import de.bioforscher.mmm.model.metrics.ConsensusMetric;
-import de.bioforscher.mmm.model.metrics.DistributionMetric;
-import de.bioforscher.mmm.model.metrics.ExtractionMetric;
+import de.bioforscher.mmm.model.metrics.*;
 import de.bioforscher.mmm.model.metrics.cohesion.VertexCandidateGenerator;
+import de.bioforscher.singa.chemistry.algorithms.superimposition.affinity.AffinityAlignment;
 import de.bioforscher.singa.chemistry.algorithms.superimposition.consensus.ConsensusAlignment;
 import de.bioforscher.singa.chemistry.algorithms.superimposition.consensus.ConsensusBuilder;
 import de.bioforscher.singa.chemistry.physical.branches.StructuralMotif;
@@ -243,6 +241,23 @@ class DistributionSampler<LabelType extends Comparable<LabelType>> extends DataP
                                                                                 .run();
                         backgroundItemset.setConsensus(consensusAlignment.getNormalizedConsensusScore());
                         addSampleValueForItemset(itemset, backgroundItemset.getConsensus());
+                    }
+                } else if (distributionMetricType == AffinityMetric.class) {
+                    if (!allCandidates.isEmpty()) {
+                        List<StructuralMotif> structuralMotifs = allCandidates.stream()
+                                                                              .map(Itemset::getStructuralMotif)
+                                                                              .filter(Optional::isPresent)
+                                                                              .map(Optional::get)
+                                                                              .collect(Collectors.toList());
+                        // perform consensus alignment with backbone atoms only
+                        AffinityAlignment affinityAlignment = AffinityAlignment.create()
+                                                                               .inputStructuralMotifs(structuralMotifs)
+                                                                               .atomFilter(AtomFilter.isBackbone())
+                                                                               .alignWithinClusters(false)
+                                                                               .idealSuperimposition(false)
+                                                                               .run();
+                        backgroundItemset.setAffinity(AffinityMetric.calculateAffinity(affinityAlignment));
+                        addSampleValueForItemset(itemset, backgroundItemset.getAffinity());
                     }
                 }
                 // normalize and store cohesion value

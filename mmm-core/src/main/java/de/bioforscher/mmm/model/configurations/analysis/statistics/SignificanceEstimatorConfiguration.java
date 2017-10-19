@@ -10,15 +10,26 @@ public class SignificanceEstimatorConfiguration {
 
     private static final int DEFAULT_LEVEL_OF_PARALLELISM = -1;
     private static final int DEFAULT_SAMPLE_SIZE = 30;
+    private static final double DEFAULT_SIGNIFICANCE_CUTOFF = 1E-3;
 
     @JsonProperty("significance-type")
     private SignificanceEstimatorType significanceType;
     @JsonProperty("ks-cutoff")
     private double ksCutoff;
+    @JsonProperty("significance-cutoff")
+    private double significanceCutoff = DEFAULT_SIGNIFICANCE_CUTOFF;
     @JsonProperty("level-of-parallelism")
     private int levelOfParallelism = DEFAULT_LEVEL_OF_PARALLELISM;
     @JsonProperty("sample-size")
     private int sampleSize = DEFAULT_SAMPLE_SIZE;
+
+    public double getSignificanceCutoff() {
+        return significanceCutoff;
+    }
+
+    public void setSignificanceCutoff(double significanceCutoff) {
+        this.significanceCutoff = significanceCutoff;
+    }
 
     public int getSampleSize() {
         return sampleSize;

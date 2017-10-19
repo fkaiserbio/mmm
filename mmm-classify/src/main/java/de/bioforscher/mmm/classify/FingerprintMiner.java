@@ -9,6 +9,7 @@ import de.bioforscher.singa.chemistry.algorithms.superimposition.consensus.Conse
 import de.bioforscher.singa.chemistry.algorithms.superimposition.consensus.ConsensusContainer;
 import de.bioforscher.singa.chemistry.algorithms.superimposition.fit3d.Fit3D;
 import de.bioforscher.singa.chemistry.algorithms.superimposition.fit3d.Fit3DBuilder;
+import de.bioforscher.singa.chemistry.algorithms.superimposition.fit3d.Fit3DMatch;
 import de.bioforscher.singa.chemistry.parser.pdb.structures.StructureParser;
 import de.bioforscher.singa.chemistry.parser.pdb.structures.StructureParser.LocalPDB;
 import de.bioforscher.singa.chemistry.parser.pdb.structures.StructureParser.MultiParser;
@@ -155,7 +156,8 @@ public class FingerprintMiner {
                                       .rmsdCutoff(RMSD_CUTOFF)
                                       .run();
 
-            List<List<LeafSubstructure<?, ?>>> decoyDataset = fit3d.getMatches().values().stream()
+            List<List<LeafSubstructure<?, ?>>> decoyDataset = fit3d.getMatches().stream()
+                                                                   .map(Fit3DMatch::getSubstructureSuperimposition)
                                                                    .map(SubstructureSuperimposition::getMappedFullCandidate)
                                                                    .collect(Collectors.toList());
 

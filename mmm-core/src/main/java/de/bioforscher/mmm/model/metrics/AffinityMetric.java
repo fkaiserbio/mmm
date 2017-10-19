@@ -46,6 +46,16 @@ public class AffinityMetric<LabelType extends Comparable<LabelType>> extends Abs
         affinityItemsets = new HashMap<>();
     }
 
+    /**
+     * Calculates the affinity score for the given {@link AffinityAlignment}.
+     *
+     * @param affinityAlignment The {@link AffinityAlignment} for which the score should be calculated.
+     * @return The affinity score.
+     */
+    public static double calculateAffinity(AffinityAlignment affinityAlignment) {
+        return affinityAlignment.getSelfDissimilarity() / affinityAlignment.getClusters().size();
+    }
+
     public Map<Itemset<LabelType>, AffinityAlignment> getAffinityItemsets() {
         return affinityItemsets;
     }
@@ -149,7 +159,7 @@ public class AffinityMetric<LabelType extends Comparable<LabelType>> extends Abs
                 affinityItemsets.put(itemset, affinityAlignment);
 
                 // TODO preliminary naive computation of score for affinity
-                double affinity = affinityAlignment.getSelfSimilarity() / affinityAlignment.getClusters().size();
+                double affinity = calculateAffinity(affinityAlignment);
                 itemset.setAffinity(affinity);
             }
             return affinityItemsets;

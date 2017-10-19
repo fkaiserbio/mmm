@@ -55,6 +55,16 @@ public class ConsensusMetric<LabelType extends Comparable<LabelType>> extends Ab
         clusteredItemsets = new HashMap<>();
     }
 
+    /**
+     * Calculates the consensus score for a given {@link ConsensusAlignment}.
+     *
+     * @param consensusAlignment The {@link ConsensusAlignment} for which the score should be calculated.
+     * @return The consensus score.
+     */
+    public static double calculateConsensus(ConsensusAlignment consensusAlignment) {
+        return consensusAlignment.getNormalizedConsensusScore();
+    }
+
     public Map<Itemset<LabelType>, ConsensusAlignment> getClusteredItemsets() {
         return clusteredItemsets;
     }
@@ -158,7 +168,7 @@ public class ConsensusMetric<LabelType extends Comparable<LabelType>> extends Ab
                 consensusAlignment.getAlignmentTrace().forEach(observationValue -> addObservationForItemset(itemset, observationValue));
 
                 // store consensus score
-                itemset.setConsensus(consensusAlignment.getNormalizedConsensusScore());
+                itemset.setConsensus(calculateConsensus(consensusAlignment));
                 clusteredItemsets.put(itemset, consensusAlignment);
             }
             return clusteredItemsets;

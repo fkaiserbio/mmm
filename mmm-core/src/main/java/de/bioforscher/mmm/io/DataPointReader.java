@@ -81,7 +81,7 @@ public class DataPointReader {
      * Creates the {@link StructureParserOptions} to be used for the {@link StructureParser}.
      */
     private void createStructureParserOptions() {
-        structureParserOptions = StructureParserOptions.withSettings(Setting.GET_LIGAND_INFORMATION, Setting.OMIT_HYDROGENS);
+        structureParserOptions = StructureParserOptions.withSettings(Setting.GET_LIGAND_INFORMATION, Setting.OMIT_HYDROGENS, Setting.GET_IDENTIFIER_FROM_FILENAME);
     }
 
     /**

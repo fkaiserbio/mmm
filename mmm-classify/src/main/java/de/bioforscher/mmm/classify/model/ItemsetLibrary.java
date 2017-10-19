@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import de.bioforscher.mmm.model.Itemset;
+import de.bioforscher.singa.chemistry.algorithms.superimposition.affinity.AffinityAlignment;
 import de.bioforscher.singa.chemistry.algorithms.superimposition.consensus.ConsensusAlignment;
 import de.bioforscher.singa.chemistry.algorithms.superimposition.consensus.ConsensusContainer;
 import de.bioforscher.singa.chemistry.parser.pdb.structures.StructureRepresentation;
@@ -41,10 +42,38 @@ public class ItemsetLibrary {
     }
 
     /**
-     * Creates a {@link ItemsetLibrary} out of clustered {@link Itemset} observations. The largest cluster is determined by their consensus observation.
+     * Creates an {@link ItemsetLibrary} of the {@link Itemset} observations calculated with the {@link de.bioforscher.mmm.model.metrics.AffinityMetric}. The exemplars of each cluster are added to
+     * the library for each {@link Itemset}.
+     *
+     * @param affinityItemsets   The clustered {@link Itemset}s with {@link de.bioforscher.mmm.model.metrics.AffinityMetric} fo which a library should be created.
+     * @param minimalItemsetSize The minimal size of an {@link Itemset} to be considered for the {@link ItemsetLibrary}.
+     * @return A new {@link ItemsetLibrary}.
+     */
+    public static ItemsetLibrary of(Map<Itemset<String>, AffinityAlignment> affinityItemsets, int minimalItemsetSize) {
+        logger.info("creating library for {} itemsets", affinityItemsets.size());
+        List<ItemsetLibraryEntry> entries = new ArrayList<>();
+        for (Map.Entry<Itemset<String>, AffinityAlignment> entry : affinityItemsets.entrySet()) {
+            Itemset<String> itemset = entry.getKey();
+            if (itemset.getItems().size() < minimalItemsetSize) {
+                continue;
+            }
+            for (Map.Entry<StructuralMotif, List<StructuralMotif>> cluster : entry.getValue().getClusters().entrySet()) {
+                StructuralMotif exemplar = cluster.getKey();
+                String pdbLines = StructureRepresentation.composePdbRepresentation(exemplar.getOrderedLeafSubstructures());
+                ItemsetLibraryEntry libraryEntry = new ItemsetLibraryEntry(entry.getKey(), pdbLines);
+                entries.add(libraryEntry);
+                entries.add(libraryEntry);
+            }
+        }
+        return new ItemsetLibrary(entries);
+    }
+
+    /**
+     * Creates an {@link ItemsetLibrary} out of clustered {@link Itemset} observations. The largest cluster is determined by their consensus observation.
      *
      * @param clusteredItemsets   The clustered {@link Itemset}s for which an {@link ItemsetLibrary} should be created.
      * @param minimalClusterRatio The minimal ratio of which a cluster must exist for the consensus {@link Itemset} to be included in the library.
+     * @param minimalItemsetSize  The minimal size of an {@link Itemset} to be considered for the {@link ItemsetLibrary}.
      * @return A new {@link ItemsetLibrary}.
      */
     public static ItemsetLibrary of(Map<Itemset<String>, ConsensusAlignment> clusteredItemsets, int minimalItemsetSize, double minimalClusterRatio) {
@@ -78,9 +107,10 @@ public class ItemsetLibrary {
     }
 
     /**
-     * Creates a {@link ItemsetLibrary} out of clustered {@link Itemset} observations. The largest cluster is determined by their consensus observation.
+     * Creates an {@link ItemsetLibrary} out of clustered {@link Itemset} observations. The largest cluster is determined by their consensus observation.
      *
-     * @param itemsets The extracted {@link Itemset}s for which an {@link ItemsetLibrary} should be created.
+     * @param itemsets           The extracted {@link Itemset}s for which an {@link ItemsetLibrary} should be created.
+     * @param minimalItemsetSize The minimal size of an {@link Itemset} to be considered for the {@link ItemsetLibrary}.
      * @return A new {@link ItemsetLibrary}.
      */
     public static ItemsetLibrary of(List<Itemset<String>> itemsets, int minimalItemsetSize) {

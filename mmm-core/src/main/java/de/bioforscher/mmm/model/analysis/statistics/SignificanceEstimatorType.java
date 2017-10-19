@@ -1,5 +1,6 @@
 package de.bioforscher.mmm.model.analysis.statistics;
 
+import de.bioforscher.mmm.model.metrics.AffinityMetric;
 import de.bioforscher.mmm.model.metrics.CohesionMetric;
 import de.bioforscher.mmm.model.metrics.ConsensusMetric;
 import de.bioforscher.mmm.model.metrics.DistributionMetric;
@@ -11,7 +12,7 @@ import de.bioforscher.mmm.model.metrics.DistributionMetric;
  */
 public enum SignificanceEstimatorType {
 
-    COHESION(CohesionMetric.class), CONSENSUS(ConsensusMetric.class);
+    COHESION(CohesionMetric.class), CONSENSUS(ConsensusMetric.class), AFFINITY(AffinityMetric.class);
 
     private Class<? extends DistributionMetric> distributionMetric;
 

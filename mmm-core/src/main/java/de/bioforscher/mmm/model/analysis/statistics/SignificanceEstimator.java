@@ -31,6 +31,7 @@ public class SignificanceEstimator<LabelType extends Comparable<LabelType>> {
     private final ItemsetMiner<LabelType> itemsetMiner;
     private final SignificanceEstimatorType type;
     private final double ksCutoff;
+    private final double significanceCutoff;
     private final TreeMap<Significance, Itemset<LabelType>> significantItemsets;
     private Map<Itemset<LabelType>, Distribution> backgroundDistributions;
 
@@ -38,6 +39,7 @@ public class SignificanceEstimator<LabelType extends Comparable<LabelType>> {
         this.itemsetMiner = itemsetMiner;
         type = configuration.getSignificanceType();
         ksCutoff = configuration.getKsCutoff();
+        significanceCutoff = configuration.getSignificanceCutoff();
         significantItemsets = new TreeMap<>();
         sampleDistributions(configuration.getLevelOfParallelism(), configuration.getSampleSize());
     }
@@ -86,10 +88,15 @@ public class SignificanceEstimator<LabelType extends Comparable<LabelType>> {
             pValue = normalDistribution.cumulativeProbability(itemset.getCohesion());
         } else if (type == SignificanceEstimatorType.CONSENSUS) {
             pValue = normalDistribution.cumulativeProbability(itemset.getConsensus());
+        } else if (type == SignificanceEstimatorType.AFFINITY) {
+            pValue = normalDistribution.cumulativeProbability(itemset.getAffinity());
         }
 
         logger.debug("p-value for itemset {} is {}", itemset.toSimpleString(), pValue);
-        significantItemsets.put(new Significance(pValue, ks), itemset);
+        if (pValue < significanceCutoff) {
+            logger.info("itemset {} is significant", itemset.toSimpleString());
+            significantItemsets.put(new Significance(pValue, ks), itemset);
+        }
     }
 
     /**

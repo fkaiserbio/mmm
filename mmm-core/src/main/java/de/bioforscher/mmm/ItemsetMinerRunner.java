@@ -44,6 +44,7 @@ public class ItemsetMinerRunner {
     private List<DataPoint<String>> dataPoints;
     private List<EvaluationMetric<String>> evaluationMetrics;
     private ItemsetMiner<String> itemsetMiner;
+    private TreeMap<Significance, Itemset<String>> significantItemsets;
 
     public ItemsetMinerRunner(ItemsetMinerConfiguration<String> itemsetMinerConfiguration) throws IOException, URISyntaxException {
         this.itemsetMinerConfiguration = itemsetMinerConfiguration;
@@ -177,6 +178,10 @@ public class ItemsetMinerRunner {
         itemsetMiner.start();
     }
 
+    public TreeMap<Significance, Itemset<String>> getSignificantItemsets() {
+        return significantItemsets;
+    }
+
     private void calculateSignificance() throws IOException {
 
         logger.info(">>>STEP 6<<< calculating significance");
@@ -198,7 +203,7 @@ public class ItemsetMinerRunner {
         logger.info("calculating significance for type " + significanceEstimatorConfiguration.getSignificanceType());
 
         SignificanceEstimator<String> significanceEstimator = new SignificanceEstimator<>(itemsetMiner, significanceEstimatorConfiguration);
-        TreeMap<Significance, Itemset<String>> significantItemsets = significanceEstimator.getSignificantItemsets();
+        significantItemsets = significanceEstimator.getSignificantItemsets();
         for (Map.Entry<Significance, Itemset<String>> entry : significantItemsets.entrySet()) {
             StringJoiner lineJoiner = new StringJoiner(",");
             lineJoiner.add(entry.getValue().toSimpleString());
