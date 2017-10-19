@@ -25,7 +25,7 @@ public class PlipPostRequest extends AbstractPlipRequest {
     private final String pdbIdentifier;
     private final Path pdbFilePath;
 
-    public PlipPostRequest(String plipUrl, String pdbIdentifier, Path pdbFilePath) throws IOException {
+    public PlipPostRequest(String plipUrl, String pdbIdentifier, Path pdbFilePath) {
         super(plipUrl);
         this.pdbIdentifier = pdbIdentifier;
         this.pdbFilePath = pdbFilePath;

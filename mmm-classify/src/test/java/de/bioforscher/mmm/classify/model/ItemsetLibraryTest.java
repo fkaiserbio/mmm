@@ -11,6 +11,7 @@ import de.bioforscher.mmm.model.configurations.metrics.AffinityMetricConfigurati
 import de.bioforscher.mmm.model.configurations.metrics.CohesionMetricConfiguration;
 import de.bioforscher.mmm.model.configurations.metrics.ConsensusMetricConfiguration;
 import de.bioforscher.mmm.model.configurations.metrics.SupportMetricConfiguration;
+import de.bioforscher.mmm.model.enrichment.IntraChainInteractionEnricher;
 import de.bioforscher.singa.chemistry.algorithms.superimposition.affinity.AffinityAlignment;
 import de.bioforscher.singa.chemistry.parser.pdb.structures.StructureParser;
 import de.bioforscher.singa.chemistry.parser.pdb.structures.StructureWriter;
@@ -42,7 +43,7 @@ public class ItemsetLibraryTest {
         itemsetMinerConfiguration = new ItemsetMinerConfiguration<>();
         itemsetMinerConfiguration.setMaximalEpochs(3);
         itemsetMinerConfiguration.setInputListLocation("craven2016_WSXWS_motif.txt");
-        itemsetMinerConfiguration.setOutputLocation(folder.getRoot().toString());
+        itemsetMinerConfiguration.setOutputLocation("/tmp/WSXWS");
         DataPointReaderConfiguration dataPointReaderConfiguration = new DataPointReaderConfiguration();
         itemsetMinerConfiguration.setDataPointReaderConfiguration(dataPointReaderConfiguration);
         SupportMetricConfiguration<String> supportMetricConfiguration = new SupportMetricConfiguration<>();
@@ -73,6 +74,7 @@ public class ItemsetLibraryTest {
 
     @Test
     public void shouldSerializeAndDeserializeWithAffinity() throws IOException, URISyntaxException {
+        itemsetMinerConfiguration.setDataPointEnricher(new IntraChainInteractionEnricher());
         AffinityMetricConfiguration<String> affinityMetricConfiguration = new AffinityMetricConfiguration<>();
         affinityMetricConfiguration.setMaximalAffinity(1.0);
         affinityMetricConfiguration.setAlignWithinClusters(true);

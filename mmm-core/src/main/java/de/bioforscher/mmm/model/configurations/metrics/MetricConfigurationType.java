@@ -31,14 +31,14 @@ public enum MetricConfigurationType {
      * Returns the metric for a given {@link MetricConfiguration} class.
      *
      * @param metricConfiguration The {@link MetricConfiguration} class for which a corresponding {@link EvaluationMetric} class should be retrieved.
-     * @return
+     * @return The desired {@link EvaluationMetric} that is represented by this {@link MetricConfiguration}.
      */
     public static Class<? extends EvaluationMetric> getMetric(Class<? extends MetricConfiguration> metricConfiguration) {
         return Stream.of(values())
-                     .filter(metricConfigurationType -> metricConfigurationType.getMetricConfiguration().equals(metricConfiguration))
-                     .findFirst()
-                     .map(MetricConfigurationType::getAssociatedMetric)
-                     .orElseThrow(() -> new IllegalArgumentException("no compatible metric for this configuration found"));
+                .filter(metricConfigurationType -> metricConfigurationType.getMetricConfiguration().equals(metricConfiguration))
+                .findFirst()
+                .map(MetricConfigurationType::getAssociatedMetric)
+                .orElseThrow(() -> new IllegalArgumentException("no compatible metric for this configuration found"));
     }
 
     public Class<? extends MetricConfiguration> getMetricConfiguration() {

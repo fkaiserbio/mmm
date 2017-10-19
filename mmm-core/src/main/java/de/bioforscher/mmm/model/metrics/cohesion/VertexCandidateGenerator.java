@@ -89,11 +89,6 @@ public class VertexCandidateGenerator<LabelType extends Comparable<LabelType>> {
                     // determine closest item of list
                     Item<LabelType> closestItem = findClosestItem(itemOne, listTwo).orElseThrow(() -> new VertexCandidateGeneratorException("failed to determine closest item"));
 
-                    // break candidate assembly if no closest item could be found
-                    if (closestItem == null) {
-                        continue outerLoop;
-                    }
-
                     // add closest item to candidate
                     candidateItems.add(closestItem);
                 }

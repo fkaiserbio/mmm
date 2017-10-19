@@ -2,11 +2,14 @@ package de.bioforscher.mmm;
 
 import de.bioforscher.mmm.io.DataPointReaderConfiguration;
 import de.bioforscher.mmm.model.ItemsetComparatorType;
+import de.bioforscher.mmm.model.analysis.statistics.SignificanceEstimatorType;
 import de.bioforscher.mmm.model.configurations.ItemsetMinerConfiguration;
+import de.bioforscher.mmm.model.configurations.analysis.statistics.SignificanceEstimatorConfiguration;
 import de.bioforscher.mmm.model.configurations.metrics.CohesionMetricConfiguration;
 import de.bioforscher.mmm.model.configurations.metrics.ConsensusMetricConfiguration;
 import de.bioforscher.mmm.model.configurations.metrics.SeparationMetricConfiguration;
 import de.bioforscher.mmm.model.configurations.metrics.SupportMetricConfiguration;
+import de.bioforscher.mmm.model.enrichment.DataPointEnricher;
 import de.bioforscher.mmm.model.enrichment.IntraChainInteractionEnricher;
 import de.bioforscher.mmm.model.mapping.rules.ChemicalGroupsMappingRule;
 import org.junit.Before;
@@ -41,6 +44,9 @@ public class ItemsetMinerRunnerTest {
     @Test
     public void shouldRun() throws IOException, URISyntaxException {
 
+        DataPointEnricher<String> dataPointEnricher = new IntraChainInteractionEnricher();
+        itemsetMinerConfiguration.setDataPointEnricher(dataPointEnricher);
+
         itemsetMinerConfiguration.setMappingRules(Stream.of(new ChemicalGroupsMappingRule()).collect(Collectors.toList()));
         itemsetMinerConfiguration.setDataPointEnricher(new IntraChainInteractionEnricher());
         itemsetMinerConfiguration.setMaximalEpochs(3);
@@ -66,6 +72,9 @@ public class ItemsetMinerRunnerTest {
         itemsetMinerConfiguration.addExtractionDependentMetricConfiguration(consensusMetricConfiguration);
         itemsetMinerConfiguration.setItemsetComparatorType(ItemsetComparatorType.CONSENSUS);
 
+        SignificanceEstimatorConfiguration significanceEstimatorConfiguration = new SignificanceEstimatorConfiguration();
+        significanceEstimatorConfiguration.setSignificanceType(SignificanceEstimatorType.CONSENSUS);
+        itemsetMinerConfiguration.setSignificanceEstimatorConfiguration(significanceEstimatorConfiguration);
 //        AffinityMetricConfiguration<String> affinityMetricConfiguration = new AffinityMetricConfiguration<>();
 //        affinityMetricConfiguration.setMaximalAffinity(1.0);
 //        affinityMetricConfiguration.setAlignWithinClusters(true);

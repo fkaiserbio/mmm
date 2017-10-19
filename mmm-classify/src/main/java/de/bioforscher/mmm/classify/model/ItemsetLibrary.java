@@ -62,7 +62,6 @@ public class ItemsetLibrary {
                 String pdbLines = StructureRepresentation.composePdbRepresentation(exemplar.getOrderedLeafSubstructures());
                 ItemsetLibraryEntry libraryEntry = new ItemsetLibraryEntry(entry.getKey(), pdbLines);
                 entries.add(libraryEntry);
-                entries.add(libraryEntry);
             }
         }
         return new ItemsetLibrary(entries);
@@ -121,7 +120,7 @@ public class ItemsetLibrary {
             }
             // TODO implement proper exception
             StructuralMotif structuralMotif = itemset.getStructuralMotif()
-                                                     .orElseThrow(() -> new UnsupportedOperationException("itemset libraries can only be constructed out of itemset observations"));
+                    .orElseThrow(() -> new UnsupportedOperationException("itemset libraries can only be constructed out of itemset observations"));
             String pdbLines = StructureRepresentation.composePdbRepresentation(structuralMotif.getLeafSubstructures());
             ItemsetLibraryEntry entry = new ItemsetLibraryEntry(itemset, pdbLines);
             entries.add(entry);
@@ -134,7 +133,7 @@ public class ItemsetLibrary {
      *
      * @param libraryPath The {@link Path} of the {@link ItemsetLibrary}.
      * @return The {@link ItemsetLibrary}
-     * @throws IOException
+     * @throws IOException If {@link ItemsetLibrary} cannot be read.
      */
     public static ItemsetLibrary readFromPath(Path libraryPath) throws IOException {
         try (GZIPInputStream zip = new GZIPInputStream(new FileInputStream(libraryPath.toFile()));
@@ -150,7 +149,7 @@ public class ItemsetLibrary {
      *
      * @param json The Json representation of the {@link ItemsetLibrary}.
      * @return The {@link ItemsetLibrary}.
-     * @throws IOException
+     * @throws IOException If {@link ItemsetLibrary} cannot be read from the JSON representation.
      */
     public static ItemsetLibrary fromJson(String json) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
@@ -162,7 +161,7 @@ public class ItemsetLibrary {
      * Writes the {@link ItemsetLibrary} to the given path.
      *
      * @param libraryPath The {@link Path} to which the {@link ItemsetLibrary} should be written.
-     * @throws IOException
+     * @throws IOException If the writing of the {@link ItemsetLibrary} fails.
      */
     public void writeToPath(Path libraryPath) throws IOException {
         try (GZIPOutputStream zip = new GZIPOutputStream(new FileOutputStream(libraryPath.toFile()));
@@ -178,7 +177,7 @@ public class ItemsetLibrary {
      * Converts this {@link ItemsetLibrary} into a Json representation.
      *
      * @return The Json representation.
-     * @throws JsonProcessingException
+     * @throws JsonProcessingException If mapping to JSON fails.
      */
     public String toJson() throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();

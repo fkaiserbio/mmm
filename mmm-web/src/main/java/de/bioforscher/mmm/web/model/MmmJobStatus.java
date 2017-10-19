@@ -5,5 +5,5 @@ package de.bioforscher.mmm.web.model;
  */
 public enum MmmJobStatus {
 
-    QUEUED, RUNNING, FINISHED, ERRORED, CANCELLED;
+    QUEUED, RUNNING, FINISHED, ERRORED, CANCELLED
 }

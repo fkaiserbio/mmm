@@ -37,8 +37,8 @@ public class ResultWriter<LabelType extends Comparable<LabelType>> {
 
         if (outputPath.toFile().exists()) {
             long outputFolderCount = Files.list(outputPath.getParent())
-                                          .filter(path -> path.getFileName().toString().startsWith(outputPath.getFileName().toString()))
-                                          .count();
+                    .filter(path -> path.getFileName().toString().startsWith(outputPath.getFileName().toString()))
+                    .count();
             Path movedPath = outputPath.getParent().resolve(outputPath.getFileName() + "." + outputFolderCount);
             logger.info("output folder already present, will be renamed to {}", movedPath);
             Files.move(outputPath, movedPath);
@@ -53,7 +53,7 @@ public class ResultWriter<LabelType extends Comparable<LabelType>> {
     /**
      * Writes the {@link ItemsetMinerConfiguration} that was used.
      *
-     * @throws IOException
+     * @throws IOException If the {@link ItemsetMinerConfiguration} cannot be written.
      */
     public void writeItemsetMinerConfiguration() throws IOException {
         Files.write(outputPath.resolve("itemset-miner_config.json"), itemsetMinerConfiguration.toJson().getBytes());
@@ -63,14 +63,14 @@ public class ResultWriter<LabelType extends Comparable<LabelType>> {
     /**
      * Writes all extracted {@link Itemset}s (only available if {@link de.bioforscher.mmm.model.metrics.ExtractionMetric} was used).
      *
-     * @throws IOException
+     * @throws IOException If extracted {@link Itemset}s cannot be written.
      */
     public void writeExtractedItemsets() throws IOException {
 
         // determine count of extracted itemsets
         Optional<Integer> extractedItemsetsCount = itemsetMiner.getTotalExtractedItemsets().values().stream()
-                                                               .map(List::size)
-                                                               .reduce(Integer::sum);
+                .map(List::size)
+                .reduce(Integer::sum);
 
         logger.info("writing {} extracted itemsets", extractedItemsetsCount.orElse(0));
 
@@ -95,14 +95,14 @@ public class ResultWriter<LabelType extends Comparable<LabelType>> {
     /**
      * Writes all clustered {@link Itemset}s (only available if {@link de.bioforscher.mmm.model.metrics.ConsensusMetric} was used).
      *
-     * @throws IOException
+     * @throws IOException If the clustered {@link Itemset}s cannot be written.
      */
     public void writeClusteredItemsets() throws IOException {
 
         // determine count of extracted itemsets
         Optional<Integer> extractedItemsetsCount = itemsetMiner.getTotalExtractedItemsets().values().stream()
-                                                               .map(List::size)
-                                                               .reduce(Integer::sum);
+                .map(List::size)
+                .reduce(Integer::sum);
 
         int extractedItemsetCount = extractedItemsetsCount.orElse(0);
         logger.info("writing {} clustered itemsets with {} observations in total", itemsetMiner.getTotalClusteredItemsets().size(), extractedItemsetCount);
@@ -129,8 +129,8 @@ public class ResultWriter<LabelType extends Comparable<LabelType>> {
     public void writeAffinityItemsets() throws IOException {
         // determine count of extracted itemsets
         Optional<Integer> extractedItemsetsCount = itemsetMiner.getTotalExtractedItemsets().values().stream()
-                                                               .map(List::size)
-                                                               .reduce(Integer::sum);
+                .map(List::size)
+                .reduce(Integer::sum);
 
         int extractedItemsetCount = extractedItemsetsCount.orElse(0);
         logger.info("writing {} affinity itemsets with {} observations in total", itemsetMiner.getTotalAffinityItemsets().size(), extractedItemsetCount);

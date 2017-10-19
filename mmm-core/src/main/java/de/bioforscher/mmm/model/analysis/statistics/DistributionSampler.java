@@ -249,7 +249,7 @@ class DistributionSampler<LabelType extends Comparable<LabelType>> extends DataP
                                                                               .filter(Optional::isPresent)
                                                                               .map(Optional::get)
                                                                               .collect(Collectors.toList());
-                        // perform consensus alignment with backbone atoms only
+                        // perform affinity alignment with backbone atoms only
                         AffinityAlignment affinityAlignment = AffinityAlignment.create()
                                                                                .inputStructuralMotifs(structuralMotifs)
                                                                                .atomFilter(AtomFilter.isBackbone())

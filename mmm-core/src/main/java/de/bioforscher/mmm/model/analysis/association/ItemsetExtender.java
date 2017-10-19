@@ -77,14 +77,14 @@ public class ItemsetExtender<LabelType extends Comparable<LabelType>> {
         for (ItemsetGraph<LabelType> subgraph : subgraphs) {
 
             List<Itemset<LabelType>> subgraphItemsets = subgraph.getNodes().stream()
-                                                                .map(ItemsetNode::getItemset)
-                                                                .collect(Collectors.toList());
+                    .map(ItemsetNode::getItemset)
+                    .collect(Collectors.toList());
 
             // collect all extracted itemsets for subgraph
             List<Itemset<LabelType>> extractedItemsets = subgraphItemsets.stream()
-                                                                         .map(itemset -> itemsetMiner.getTotalExtractedItemsets().get(itemset))
-                                                                         .flatMap(Collection::stream)
-                                                                         .collect(Collectors.toList());
+                    .map(itemset -> itemsetMiner.getTotalExtractedItemsets().get(itemset))
+                    .flatMap(Collection::stream)
+                    .collect(Collectors.toList());
 
             mergeItemsets(extractedItemsets);
             if (referenceLigandFamily != null) {
@@ -108,10 +108,10 @@ public class ItemsetExtender<LabelType extends Comparable<LabelType>> {
 
         // pick first a first reference leaf substructure from the current subgraph
         Optional<LeafSubstructure<?, ?>> referenceLeafSubstructure = mergedMotifs.values().stream()
-                                                                                 .map(StructuralMotif::getLeafSubstructures)
-                                                                                 .flatMap(Collection::stream)
-                                                                                 .filter(alignmentReferenceFilter)
-                                                                                 .findFirst();
+                .map(StructuralMotif::getLeafSubstructures)
+                .flatMap(Collection::stream)
+                .filter(alignmentReferenceFilter)
+                .findFirst();
         if (referenceLeafSubstructure.isPresent()) {
 
             logger.info("handling subgraph {}", subgraph);
@@ -119,8 +119,8 @@ public class ItemsetExtender<LabelType extends Comparable<LabelType>> {
             for (Map.Entry<DataPointIdentifier, StructuralMotif> entry : mergedMotifs.entrySet()) {
 
                 Optional<LeafSubstructure<?, ?>> candidateLeafSubstructure = entry.getValue().getLeafSubstructures().stream()
-                                                                                  .filter(alignmentReferenceFilter)
-                                                                                  .findFirst();
+                        .filter(alignmentReferenceFilter)
+                        .findFirst();
                 if (candidateLeafSubstructure.isPresent()) {
                     // compute superimposition based on ligand and apply to merged motif
                     List<LeafSubstructure<?, ?>> candidate = new ArrayList<>();
@@ -143,21 +143,21 @@ public class ItemsetExtender<LabelType extends Comparable<LabelType>> {
      * Writes all merged {@link StructuralMotif}s of the given subgraph.
      *
      * @param subgraph The subgraph of which all {@link StructuralMotif}s should be written.
-     * @throws IOException
+     * @throws IOException If the merged motifs cannot be written.
      */
     private void writeMergedMotifs(ItemsetGraph<LabelType> subgraph) throws IOException {
 
         logger.info("writing {} merged motifs", mergedMotifs.size());
 
         String subgraphItemString = subgraph.getNodes()
-                                            .stream()
-                                            .map(ItemsetNode::getItemset)
-                                            .map(Itemset::getItems)
-                                            .flatMap(Collection::stream)
-                                            .map(Item::toString)
-                                            .distinct()
-                                            .sorted()
-                                            .collect(Collectors.joining("-"));
+                .stream()
+                .map(ItemsetNode::getItemset)
+                .map(Itemset::getItems)
+                .flatMap(Collection::stream)
+                .map(Item::toString)
+                .distinct()
+                .sorted()
+                .collect(Collectors.joining("-"));
 
         for (Map.Entry<DataPointIdentifier, StructuralMotif> entry : mergedMotifs.entrySet()) {
             StructuralMotif structuralMotif = entry.getValue();
@@ -192,14 +192,14 @@ public class ItemsetExtender<LabelType extends Comparable<LabelType>> {
         for (Map.Entry<DataPointIdentifier, List<Itemset<LabelType>>> entry : itemsetsOfDataPoints.entrySet()) {
             // collect all leaf substructures
             List<LeafSubstructure<?, ?>> allLeafSubStructures = entry.getValue().stream()
-                                                                     .map(Itemset::getStructuralMotif)
-                                                                     .filter(Optional::isPresent)
-                                                                     .map(Optional::get)
-                                                                     .map(StructuralMotif::getLeafSubstructures)
-                                                                     .flatMap(Collection::stream)
-                                                                     .sorted(Comparator.comparing(LeafSubstructure::getIdentifier))
-                                                                     .distinct()
-                                                                     .collect(Collectors.toList());
+                    .map(Itemset::getStructuralMotif)
+                    .filter(Optional::isPresent)
+                    .map(Optional::get)
+                    .map(StructuralMotif::getLeafSubstructures)
+                    .flatMap(Collection::stream)
+                    .sorted(Comparator.comparing(LeafSubstructure::getIdentifier))
+                    .distinct()
+                    .collect(Collectors.toList());
             // convert to structural motif
             StructuralMotif mergedMotif = StructuralMotif.fromLeafSubstructures(allLeafSubStructures);
 

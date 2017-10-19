@@ -125,7 +125,7 @@ public class FingerprintMiner {
         }
     }
 
-    private void createDecoy() throws IOException, FingerprintMinerException {
+    private void createDecoy() throws IOException {
         logger.info("creating decoy dataset using Fit3D");
         for (Itemset<String> topScoringItemset : topScoringItemsets) {
             ConsensusAlignment consensusAlignment = itemsetMiner.getTotalClusteredItemsets().get(topScoringItemset);
@@ -197,13 +197,13 @@ public class FingerprintMiner {
         List<LeafSubstructure<?, ?>> aminoAcids = new ArrayList<>();
         for (LeafSubstructure<?, ?> leafSubstructure : consensusMotif.getLeafSubstructures()) {
             Optional<AminoAcidFamily> aminoAcidFamily = AminoAcidFamily.getAminoAcidTypeByOneLetterCode(leafSubstructure.getFamily().getOneLetterCode());
-            if (aminoAcidFamily.isPresent()) {
-                AminoAcid aminoAcid = new AminoAcid(leafSubstructure.getIdentifier(), aminoAcidFamily.get());
+            aminoAcidFamily.ifPresent(aminoAcidFamily1 -> {
+                AminoAcid aminoAcid = new AminoAcid(leafSubstructure.getIdentifier(), aminoAcidFamily1);
                 leafSubstructure.getAllAtoms().stream()
-                                .map(Atom::getCopy)
-                                .forEach(aminoAcid::addNode);
+                        .map(Atom::getCopy)
+                        .forEach(aminoAcid::addNode);
                 aminoAcids.add(aminoAcid);
-            }
+            });
         }
         return StructuralMotif.fromLeafSubstructures(aminoAcids);
     }
