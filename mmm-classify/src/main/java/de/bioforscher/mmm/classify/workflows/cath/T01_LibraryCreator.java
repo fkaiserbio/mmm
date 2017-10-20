@@ -34,6 +34,7 @@ public class T01_LibraryCreator extends WorkflowTask {
     private final int rankCutoff;
     private final Path superfamilyStructuresPath;
     private List<Path> topSuperfamilies;
+    private TreeMap<Integer, List<Path>> rankedPopulatedSuperfamilies;
 
     public T01_LibraryCreator(Path outputPath, int rankCutoff, Path superfamilyStructuresPath) throws IOException, URISyntaxException {
         super(outputPath);
@@ -126,7 +127,7 @@ public class T01_LibraryCreator extends WorkflowTask {
                                                                        return -1;
                                                                    }
                                                                }));
-        TreeMap<Integer, List<Path>> rankedPopulatedSuperfamilies = new TreeMap<>(Collections.reverseOrder());
+        rankedPopulatedSuperfamilies = new TreeMap<>(Collections.reverseOrder());
         rankedPopulatedSuperfamilies.putAll(populatedSuperfamilies);
         int rankCounter = 1;
         topSuperfamilies = new ArrayList<>();
