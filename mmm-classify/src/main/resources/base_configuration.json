@@ -1,61 +1,74 @@
 {
-  "type": "ITEMSET-MINER",
+  "type": "ITEMSET_MINER_CONFIGURATION",
   "creation-user": "fkaiser",
-  "creation-date": "2017-06-06T10:45:14.401",
+  "creation-date": "2017-10-20T10:58:27.406",
+  "description": null,
   "input-list-location": null,
   "input-directory-location": null,
-  "output-location": null,
+  "output-location": "/tmp/junit5662418091978120830",
   "data-point-reader-configuration": {
-    "type": "DataPointReaderConfiguration",
+    "type": "DATA_POINT_READER_CONFIGURATION",
     "pdb-location": null,
     "chain-list-separator": "\t",
     "parse-ligands": false,
-    "parse-nucleotides": false
+    "ligand-label-whitelist": [],
+    "parse-nucleotides": false,
+    "parse-water": false
   },
-  /*"data-point-enricher-type" : "INTRA_CHAIN_INTERACTION",*/
-  /*"mapping-rule" : {
-    "type" : "CHEMICAL_GROUPS"
-  },*/
+  "data-point-enricher": {
+    "type": "INTRA_CHAIN_INTERACTION"
+  },
+  "mapping-rules": [
+    {
+      "type": "FUNCTIONAL_GROUPS"
+    }
+  ],
   "simple-metrics": [
     {
       "type": "SUPPORT",
-      "minimal-support": 0.8
+      "minimal-support": 0.9
     }
   ],
   "extraction-metric": {
     "type": "COHESION",
-    "maximal-cohesion": 10.0,
+    "maximal-cohesion": 8.0,
     "vertex-one": false,
-    "level-of-parallelism": -1
+    "level-of-parallelism": -1,
+    "representation-scheme-type": null
   },
-  /*"extraction-metric" : {
-    "type" : "AdherenceMetricConfiguration",
-    "level-of-parallelism" : 1,
-    "desired-extent" : 8.0,
-    "desired-extent-delta" : 1.0,
-    "maximal-adherence" : 0.3,
-    "minimal-observations" : 3,
-    "vertex-one" : false,
-    "representation-scheme-type" : null
-  },*/
   "extraction-dependent-metric": [
     {
       "type": "SEPARATION",
-      "maximal-separation": 100.0,
+      "maximal-separation": 50.0,
       "optimal-separation": 5.0,
       "morse-well-depth": 500.0,
       "morse-shape": 0.2
     },
-    {
+    /*{
       "type": "CONSENSUS",
-      "maximal-consensus": 0.8,
+      "maximal-consensus": 0.5,
       "cluster-cutoff-value": 0.5,
+      "level-of-parallelism": -1,
+      "atom-filter-type": "ARBITRARY",
+      "representation-scheme-type": null,
+      "align-within-clusters": true
+    },*/
+    {
+      "type": "AFFINITY",
+      "maximal-affinity": 1.0,
       "level-of-parallelism": -1,
       "atom-filter-type": "ARBITRARY",
       "representation-scheme-type": null,
       "align-within-clusters": true
     }
   ],
-  "itemset-comparator-type": "CONSENSUS",
-  "maximal-epochs": 4
+  "itemset-comparator-type": "AFFINITY",
+  "maximal-epochs": -1,
+  "significance-estimator-configuration": {
+    "significance-type": "AFFINITY",
+    "ks-cutoff": 0.0,
+    "significance-cutoff": 0.001,
+    "level-of-parallelism": -1,
+    "sample-size": 10
+  }
 }

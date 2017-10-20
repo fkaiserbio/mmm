@@ -80,7 +80,6 @@ public class ItemsetMinerRunnerTest {
 //        affinityMetricConfiguration.setAlignWithinClusters(true);
 //        itemsetMinerConfiguration.addExtractionDependentMetricConfiguration(affinityMetricConfiguration);
 //        itemsetMinerConfiguration.setItemsetComparatorType(ItemsetComparatorType.AFFINITY);
-
         new ItemsetMinerRunner(itemsetMinerConfiguration);
     }
 }

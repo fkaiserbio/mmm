@@ -14,7 +14,8 @@ import java.lang.reflect.InvocationTargetException;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
 @JsonSubTypes({@JsonSubTypes.Type(value = SeparationMetricConfiguration.class),
-               @JsonSubTypes.Type(value = ConsensusMetricConfiguration.class)})
+               @JsonSubTypes.Type(value = ConsensusMetricConfiguration.class),
+               @JsonSubTypes.Type(value = AffinityMetricConfiguration.class)})
 public interface ExtractionDependentMetricConfiguration<LabelType extends Comparable<LabelType>> extends MetricConfiguration<LabelType> {
     @SuppressWarnings("unchecked")
     default EvaluationMetric<LabelType> createMetric() throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
