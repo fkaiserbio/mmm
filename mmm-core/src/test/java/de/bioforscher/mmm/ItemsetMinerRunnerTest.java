@@ -9,9 +9,6 @@ import de.bioforscher.mmm.model.configurations.metrics.CohesionMetricConfigurati
 import de.bioforscher.mmm.model.configurations.metrics.ConsensusMetricConfiguration;
 import de.bioforscher.mmm.model.configurations.metrics.SeparationMetricConfiguration;
 import de.bioforscher.mmm.model.configurations.metrics.SupportMetricConfiguration;
-import de.bioforscher.mmm.model.enrichment.DataPointEnricher;
-import de.bioforscher.mmm.model.enrichment.IntraChainInteractionEnricher;
-import de.bioforscher.mmm.model.mapping.rules.ChemicalGroupsMappingRule;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -19,8 +16,6 @@ import org.junit.rules.TemporaryFolder;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * @author fk
@@ -35,7 +30,7 @@ public class ItemsetMinerRunnerTest {
     public void setUp() {
         itemsetMinerConfiguration = new ItemsetMinerConfiguration<>();
         itemsetMinerConfiguration.setMaximalEpochs(3);
-        itemsetMinerConfiguration.setInputListLocation("craven2016_WSXWS_motif.txt");
+        itemsetMinerConfiguration.setInputListLocation("/home/fkaiser/Workspace/CloudStation/PhD/Promotion/datasets/pfam/v31/PF00089/PF00089_chains_BLAST_e-80.txt");
         itemsetMinerConfiguration.setOutputLocation(folder.getRoot().toString());
         DataPointReaderConfiguration dataPointReaderConfiguration = new DataPointReaderConfiguration();
         itemsetMinerConfiguration.setDataPointReaderConfiguration(dataPointReaderConfiguration);
@@ -44,12 +39,9 @@ public class ItemsetMinerRunnerTest {
     @Test
     public void shouldRun() throws IOException, URISyntaxException {
 
-        DataPointEnricher<String> dataPointEnricher = new IntraChainInteractionEnricher();
-        itemsetMinerConfiguration.setDataPointEnricher(dataPointEnricher);
-
-        itemsetMinerConfiguration.setMappingRules(Stream.of(new ChemicalGroupsMappingRule()).collect(Collectors.toList()));
-        itemsetMinerConfiguration.setDataPointEnricher(new IntraChainInteractionEnricher());
+//        itemsetMinerConfiguration.setMappingRules(Stream.of(new ChemicalGroupsMappingRule()).collect(Collectors.toList()));
         itemsetMinerConfiguration.setMaximalEpochs(3);
+//        itemsetMinerConfiguration.setDataPointEnricher(new IntraChainInteractionEnricher());
 
         SupportMetricConfiguration<String> supportMetricConfiguration = new SupportMetricConfiguration<>();
         supportMetricConfiguration.setMinimalSupport(0.9);
@@ -60,26 +52,38 @@ public class ItemsetMinerRunnerTest {
         cohesionMetricConfiguration.setVertexOne(false);
         itemsetMinerConfiguration.setExtractionMetricConfiguration(cohesionMetricConfiguration);
 
+//        AdherenceMetricConfiguration<String> adherenceMetricConfiguration = new AdherenceMetricConfiguration<>();
+//        adherenceMetricConfiguration.setDesiredExtent(6.5);
+//        adherenceMetricConfiguration.setDesiredExtent(0.2);
+//        adherenceMetricConfiguration.setMaximalAdherence(1.0);
+//        itemsetMinerConfiguration.setExtractionMetricConfiguration(adherenceMetricConfiguration);
+
         SeparationMetricConfiguration<String> separationMetricConfiguration = new SeparationMetricConfiguration<>();
-        separationMetricConfiguration.setMaximalSeparation(50);
+        separationMetricConfiguration.setMaximalSeparation(100);
         separationMetricConfiguration.setOptimalSeparation(5);
         itemsetMinerConfiguration.addExtractionDependentMetricConfiguration(separationMetricConfiguration);
 
         ConsensusMetricConfiguration<String> consensusMetricConfiguration = new ConsensusMetricConfiguration<>();
-        consensusMetricConfiguration.setMaximalConsensus(0.5);
+        consensusMetricConfiguration.setMaximalConsensus(0.6);
         consensusMetricConfiguration.setClusterCutoffValue(0.5);
         consensusMetricConfiguration.setAlignWithinClusters(true);
         itemsetMinerConfiguration.addExtractionDependentMetricConfiguration(consensusMetricConfiguration);
         itemsetMinerConfiguration.setItemsetComparatorType(ItemsetComparatorType.CONSENSUS);
 
-        SignificanceEstimatorConfiguration significanceEstimatorConfiguration = new SignificanceEstimatorConfiguration();
-        significanceEstimatorConfiguration.setSignificanceType(SignificanceEstimatorType.CONSENSUS);
-        itemsetMinerConfiguration.setSignificanceEstimatorConfiguration(significanceEstimatorConfiguration);
 //        AffinityMetricConfiguration<String> affinityMetricConfiguration = new AffinityMetricConfiguration<>();
 //        affinityMetricConfiguration.setMaximalAffinity(1.0);
-//        affinityMetricConfiguration.setAlignWithinClusters(true);
+//        affinityMetricConfiguration.setAlignWithinClusters(false);
 //        itemsetMinerConfiguration.addExtractionDependentMetricConfiguration(affinityMetricConfiguration);
 //        itemsetMinerConfiguration.setItemsetComparatorType(ItemsetComparatorType.AFFINITY);
-        new ItemsetMinerRunner(itemsetMinerConfiguration);
+
+        SignificanceEstimatorConfiguration significanceEstimatorConfiguration = new SignificanceEstimatorConfiguration();
+        significanceEstimatorConfiguration.setSignificanceType(SignificanceEstimatorType.CONSENSUS);
+        significanceEstimatorConfiguration.setSampleSize(10);
+        significanceEstimatorConfiguration.setSignificanceCutoff(0.1);
+        itemsetMinerConfiguration.setSignificanceEstimatorConfiguration(significanceEstimatorConfiguration);
+
+        System.out.println(itemsetMinerConfiguration.toJson());
+        ItemsetMinerRunner itemsetMinerRunner = new ItemsetMinerRunner(itemsetMinerConfiguration);
+        System.out.println();
     }
 }

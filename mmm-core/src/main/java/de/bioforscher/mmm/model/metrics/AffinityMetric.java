@@ -53,7 +53,46 @@ public class AffinityMetric<LabelType extends Comparable<LabelType>> extends Abs
      * @return The affinity score.
      */
     public static double calculateAffinity(AffinityAlignment affinityAlignment) {
-        return affinityAlignment.getSelfDissimilarity() / affinityAlignment.getClusters().size();
+//        double affinity = 0.0;
+//        List<StructuralMotif> exemplars = new ArrayList<>(affinityAlignment.getClusters().keySet());
+//        for (StructuralMotif exemplar : exemplars) {
+//            Pair<Integer> positionFromLabels = affinityAlignment.getDistanceMatrix().getPositionFromLabels(exemplar, exemplar);
+//            RegularVector column = affinityAlignment.getDistanceMatrix().getColumnByLabel(exemplar);
+//            double
+//            for (int i = 0; i < column.getElements().length; i++) {
+//                if(i==positionFromLabels.getFirst()){
+//                continue;
+//                }
+//            }
+////            RegularVector rowByLabel = affinityAlignment.getDistanceMatrix().getpgetRowByLabel(exemplar);
+//        }
+//        for (int i = 0; i < exemplars.size(); i++) {
+//            for (int j = i + 1; j < exemplars.size() - 1; j++) {
+//                StructuralMotif exemplar1 = exemplars.get(i);
+//                StructuralMotif exemplar2 = exemplars.get(j);
+//                int clusterSize1 = affinityAlignment.getClusters().get(exemplar1).size();
+//                int clusterSize2 = affinityAlignment.getClusters().get(exemplar2).size();
+//                logger.debug("exemplar pair is {}/{}", exemplar1, exemplar2);
+//
+//                affinity += (affinityAlignment.getDistanceMatrix().getValueForLabel(exemplar1, exemplar2) / (clusterSize1 + clusterSize2));
+//            }
+//        }
+//        affinity = affinity / exemplars.size();
+//        double affinity = 0.0;
+//        for (List<StructuralMotif> structuralMotifs : affinityAlignment.getClusters().values()) {
+//            double averageClusterDissimilarity = 0.0;
+//            for (int i = 0; i < structuralMotifs.size(); i++) {
+//                for (int j = i + 1; j < structuralMotifs.size() - 1; j++) {
+//                    StructuralMotif structuralMotif1 = structuralMotifs.get(i);
+//                    StructuralMotif structuralMotif2 = structuralMotifs.get(j);
+//                    averageClusterDissimilarity += affinityAlignment.getDistanceMatrix().getValueForLabel(structuralMotif1, structuralMotif2);
+//                }
+//            }
+//            averageClusterDissimilarity /= structuralMotifs.size();
+//            affinity += averageClusterDissimilarity;
+//        }
+//        return affinity / (affinityAlignment.getClusters().size()*size);
+        return affinityAlignment.getSilhouetteCoefficient();
     }
 
     public Map<Itemset<LabelType>, AffinityAlignment> getAffinityItemsets() {

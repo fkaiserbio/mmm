@@ -5,7 +5,7 @@
   "description": null,
   "input-list-location": null,
   "input-directory-location": null,
-  "output-location": "/tmp/junit5662418091978120830",
+  "output-location": null,
   "data-point-reader-configuration": {
     "type": "DATA_POINT_READER_CONFIGURATION",
     "pdb-location": null,
@@ -31,7 +31,7 @@
   ],
   "extraction-metric": {
     "type": "COHESION",
-    "maximal-cohesion": 8.0,
+    "maximal-cohesion": 6.0,
     "vertex-one": false,
     "level-of-parallelism": -1,
     "representation-scheme-type": null
@@ -44,7 +44,7 @@
       "morse-well-depth": 500.0,
       "morse-shape": 0.2
     },
-    /*{
+    {
       "type": "CONSENSUS",
       "maximal-consensus": 0.5,
       "cluster-cutoff-value": 0.5,
@@ -52,22 +52,23 @@
       "atom-filter-type": "ARBITRARY",
       "representation-scheme-type": null,
       "align-within-clusters": true
-    },*/
-    {
-      "type": "AFFINITY",
-      "maximal-affinity": 1.0,
-      "level-of-parallelism": -1,
-      "atom-filter-type": "ARBITRARY",
-      "representation-scheme-type": null,
-      "align-within-clusters": true
     }
+    /*,
+        {
+          "type": "AFFINITY",
+          "maximal-affinity": 1.0,
+          "level-of-parallelism": -1,
+          "atom-filter-type": "ARBITRARY",
+          "representation-scheme-type": null,
+          "align-within-clusters": true
+        }*/
   ],
-  "itemset-comparator-type": "AFFINITY",
+  "itemset-comparator-type": "CONSENSUS",
   "maximal-epochs": -1,
   "significance-estimator-configuration": {
-    "significance-type": "AFFINITY",
+    "significance-type": "CONSENSUS",
     "ks-cutoff": 0.0,
-    "significance-cutoff": 0.001,
+    "significance-cutoff": 0.1,
     "level-of-parallelism": -1,
     "sample-size": 10
   }

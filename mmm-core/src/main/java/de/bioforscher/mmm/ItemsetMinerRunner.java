@@ -186,13 +186,6 @@ public class ItemsetMinerRunner {
 
         logger.info(">>>STEP 6<<< calculating significance");
 
-        DecimalFormat decimalFormat;
-
-        NumberFormat nf = NumberFormat.getNumberInstance(Locale.US);
-        decimalFormat = (DecimalFormat) nf;
-        decimalFormat.applyPattern("0.00000000");
-
-        StringJoiner stringJoiner = new StringJoiner("\n", "itemset,p-value,ks\n", "");
         SignificanceEstimatorConfiguration significanceEstimatorConfiguration = itemsetMinerConfiguration.getSignificanceEstimatorConfiguration();
 
         if (significanceEstimatorConfiguration == null) {
@@ -204,19 +197,6 @@ public class ItemsetMinerRunner {
 
         SignificanceEstimator<String> significanceEstimator = new SignificanceEstimator<>(itemsetMiner, significanceEstimatorConfiguration);
         significantItemsets = significanceEstimator.getSignificantItemsets();
-        for (Map.Entry<Significance, Itemset<String>> entry : significantItemsets.entrySet()) {
-            StringJoiner lineJoiner = new StringJoiner(",");
-            lineJoiner.add(entry.getValue().toSimpleString());
-            lineJoiner.add(decimalFormat.format(entry.getKey().getPvalue()));
-            lineJoiner.add(decimalFormat.format(entry.getKey().getKs()));
-            stringJoiner.add(lineJoiner.toString());
-        }
-
-        Path significanceOutputPath = Paths.get(itemsetMinerConfiguration.getOutputLocation()).resolve("significance.csv");
-        Files.createDirectories(significanceOutputPath.getParent());
-
-        logger.info("writing significance of results to {}", significanceOutputPath);
-        Files.write(significanceOutputPath, stringJoiner.toString().getBytes());
     }
 
     private void outputResults() throws IOException {
@@ -289,6 +269,27 @@ public class ItemsetMinerRunner {
 
         logger.info("writing report to {}", reportOutputPath);
         Files.write(reportOutputPath, report.toString().getBytes());
+
+        if (significantItemsets != null && !significantItemsets.isEmpty()) {
+            NumberFormat nf = NumberFormat.getNumberInstance(Locale.US);
+            DecimalFormat decimalFormat = (DecimalFormat) nf;
+            decimalFormat.applyPattern("0.00000000");
+
+            StringJoiner stringJoiner = new StringJoiner("\n", "itemset,p-value,ks\n", "");
+            for (Map.Entry<Significance, Itemset<String>> entry : significantItemsets.entrySet()) {
+                StringJoiner lineJoiner = new StringJoiner(",");
+                lineJoiner.add(entry.getValue().toSimpleString());
+                lineJoiner.add(decimalFormat.format(entry.getKey().getPvalue()));
+                lineJoiner.add(decimalFormat.format(entry.getKey().getKs()));
+                stringJoiner.add(lineJoiner.toString());
+            }
+
+            Path significanceOutputPath = Paths.get(itemsetMinerConfiguration.getOutputLocation()).resolve("significance.csv");
+            Files.createDirectories(significanceOutputPath.getParent());
+
+            logger.info("writing significance of results to {}", significanceOutputPath);
+            Files.write(significanceOutputPath, stringJoiner.toString().getBytes());
+        }
     }
 
 

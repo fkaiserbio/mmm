@@ -12,6 +12,7 @@
     </parent>
 
     <artifactId>mmm-core</artifactId>
+    <packaging>jar</packaging>
 
     <dependencies>
         <dependency>

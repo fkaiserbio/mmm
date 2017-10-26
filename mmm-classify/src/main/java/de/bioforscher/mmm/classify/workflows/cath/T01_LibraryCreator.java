@@ -92,7 +92,7 @@ public class T01_LibraryCreator extends WorkflowTask {
                 itemsetLibrary = ItemsetLibrary.of(totalAffinityItemsets, MINIMAL_ITEMSET_SIZE);
             }
             if (itemsetLibrary != null) {
-                itemsetLibrary.writeToPath(outputPath.resolve(superfamilyIdentifier + ".gz"));
+                itemsetLibrary.writeToPath(outputPath.resolve(superfamilyIdentifier).resolve(superfamilyIdentifier + ".gz"));
             }
         }
     }
@@ -100,6 +100,7 @@ public class T01_LibraryCreator extends WorkflowTask {
     private ItemsetMinerConfiguration<String> createItemsetMinerConfiguration(Path topSuperfamily) throws IOException {
         ItemsetMinerConfiguration<String> itemsetMinerConfiguration = ItemsetMinerConfiguration.from(Thread.currentThread().getContextClassLoader().getResourceAsStream("base_configuration.json"));
         itemsetMinerConfiguration.setInputDirectoryLocation(topSuperfamily.toString());
+        itemsetMinerConfiguration.setOutputLocation(outputPath.resolve(getSuperfamilyIdentifier(topSuperfamily)).toString());
         return itemsetMinerConfiguration;
     }
 

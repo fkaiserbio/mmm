@@ -59,7 +59,10 @@ class DistributionSampler<LabelType extends Comparable<LabelType>> extends DataP
         this.levelOfParallelism = levelOfParallelism;
         this.sampleSize = sampleSize;
 
-        dataPoints = itemsetMiner.getDataPoints();
+        // work with copy of data points such that original labels stay the same
+        dataPoints = itemsetMiner.getDataPoints().stream()
+                                 .map(DataPoint::getCopy)
+                                 .collect(Collectors.toList());
         itemsets = itemsetMiner.getTotalItemsets();
         backgroundDistributions = new HashMap<>();
         executorService = (levelOfParallelism == -1) ? Executors.newWorkStealingPool() : Executors.newWorkStealingPool(levelOfParallelism);
@@ -221,6 +224,7 @@ class DistributionSampler<LabelType extends Comparable<LabelType>> extends DataP
                             }
                             allCandidates.add(bestCandidate);
                         }
+                        // TODO implement support for adherence metric here
                     }
                 }
                 // calculate consensus if wanted

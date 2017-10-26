@@ -94,8 +94,9 @@ public class SignificanceEstimator<LabelType extends Comparable<LabelType>> {
 
         logger.debug("p-value for itemset {} is {}", itemset.toSimpleString(), pValue);
         if (pValue < significanceCutoff) {
-            logger.info("itemset {} is significant", itemset.toSimpleString());
-            significantItemsets.put(new Significance(pValue, ks), itemset);
+            Significance significance = new Significance(pValue, ks);
+            significantItemsets.put(significance, itemset);
+            logger.info("itemset {} is significant with {}", itemset.toSimpleString(), significance);
         }
     }
 

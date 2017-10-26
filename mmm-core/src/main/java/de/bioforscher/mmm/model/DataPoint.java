@@ -37,8 +37,8 @@ public class DataPoint<LabelType extends Comparable<LabelType>> {
     @Override
     public String toString() {
         return items.stream()
-                .map(Item::toString)
-                .collect(Collectors.joining("-", dataPointIdentifier + "{", "}"));
+                    .map(Item::toString)
+                    .collect(Collectors.joining("-", dataPointIdentifier + "{", "}"));
     }
 
     /**
@@ -50,16 +50,23 @@ public class DataPoint<LabelType extends Comparable<LabelType>> {
     public void writeAsPdb(Path pdbFilePath) throws IOException {
 
         List<LeafSubstructure<?, ?>> leafSubstructures = items.stream()
-                .map(Item::getLeafSubstructure)
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                // ignore interaction representations when writing data points
-                .filter(leafSubstructure -> Arrays.stream(InteractionType.values())
-                        .noneMatch(interactionType -> interactionType.getThreeLetterCode()
-                                .equalsIgnoreCase(leafSubstructure.getFamily()
-                                        .getThreeLetterCode())))
-                .collect(Collectors.toList());
+                                                              .map(Item::getLeafSubstructure)
+                                                              .filter(Optional::isPresent)
+                                                              .map(Optional::get)
+                                                              // ignore interaction representations when writing data points
+                                                              .filter(leafSubstructure -> Arrays.stream(InteractionType.values())
+                                                                                                .noneMatch(interactionType -> interactionType.getThreeLetterCode()
+                                                                                                                                             .equalsIgnoreCase(leafSubstructure.getFamily()
+                                                                                                                                                                               .getThreeLetterCode())))
+                                                              .collect(Collectors.toList());
 
         StructureWriter.writeLeafSubstructures(leafSubstructures, pdbFilePath);
+    }
+
+    public DataPoint<LabelType> getCopy() {
+        List<Item<LabelType>> copiedItems = items.stream()
+                                                 .map(Item::getDeepCopy)
+                                                 .collect(Collectors.toList());
+        return new DataPoint<>(copiedItems, new DataPointIdentifier(dataPointIdentifier.getPdbIdentifier(), dataPointIdentifier.getChainIdentifier()));
     }
 }
