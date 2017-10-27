@@ -1,6 +1,6 @@
 package de.bioforscher.mmm.classify;
 
-import de.bioforscher.singa.chemistry.algorithms.superimposition.consensus.ConsensusContainer;
+import de.bioforscher.singa.structure.algorithms.superimposition.consensus.ConsensusContainer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -8,13 +8,13 @@ import de.bioforscher.mmm.model.Item;
 import de.bioforscher.mmm.model.mapping.MappingRule;
 import de.bioforscher.mmm.model.plip.PlipGetRequest;
 import de.bioforscher.mmm.model.plip.PlipPostRequest;
-import de.bioforscher.singa.chemistry.parser.pdb.structures.StructureParser;
-import de.bioforscher.singa.chemistry.parser.plip.InteractionContainer;
-import de.bioforscher.singa.chemistry.parser.plip.PlipShellGenerator;
-import de.bioforscher.singa.chemistry.parser.plip.PlipShellGenerator.InteractionShell;
-import de.bioforscher.singa.chemistry.physical.branches.Chain;
-import de.bioforscher.singa.chemistry.physical.leaves.LeafSubstructure;
-import de.bioforscher.singa.chemistry.physical.model.Structure;
+import de.bioforscher.singa.structure.model.interfaces.Chain;
+import de.bioforscher.singa.structure.model.interfaces.LeafSubstructure;
+import de.bioforscher.singa.structure.model.interfaces.Structure;
+import de.bioforscher.singa.structure.parser.pdb.structures.StructureParser;
+import de.bioforscher.singa.structure.parser.plip.InteractionContainer;
+import de.bioforscher.singa.structure.parser.plip.PlipShellGenerator;
+import de.bioforscher.singa.structure.parser.plip.PlipShellGenerator.InteractionShell;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,7 +39,7 @@ public class InteractionShellMappingRule implements MappingRule<String> {
     @JsonProperty("ligand-label")
     private String ligandLabel;
     @JsonProperty("current-interaction-shells")
-    private Map<InteractionShell, List<LeafSubstructure<?, ?>>> currentInteractionShells;
+    private Map<InteractionShell, List<LeafSubstructure<?>>> currentInteractionShells;
 
     public InteractionShellMappingRule(String ligandLabel) {
         this.ligandLabel = ligandLabel;
@@ -48,7 +48,7 @@ public class InteractionShellMappingRule implements MappingRule<String> {
     public InteractionShellMappingRule() {
     }
 
-    public Map<InteractionShell, List<LeafSubstructure<?, ?>>> getCurrentInteractionShells() {
+    public Map<InteractionShell, List<LeafSubstructure<?>>> getCurrentInteractionShells() {
         return currentInteractionShells;
     }
 
@@ -61,7 +61,7 @@ public class InteractionShellMappingRule implements MappingRule<String> {
                                              .pdbIdentifier(pdbIdentifier)
                                              .parse();
         Chain chain = structure.getFirstChain();
-        Optional<LeafSubstructure<?, ?>> optionalLigand = selectLigand(chain);
+        Optional<LeafSubstructure<?>> optionalLigand = selectLigand(chain);
 
         if (optionalLigand.isPresent()) {
 
@@ -87,18 +87,18 @@ public class InteractionShellMappingRule implements MappingRule<String> {
         }
     }
 
-    private Optional<LeafSubstructure<?, ?>> selectLigand(Chain chain) {
-        return chain.getLeafSubstructures().stream()
+    private Optional<LeafSubstructure<?>> selectLigand(Chain chain) {
+        return chain.getAllLeafSubstructures().stream()
                     .filter(leafSubstructure -> leafSubstructure.getFamily().getThreeLetterCode().equals(ligandLabel))
                     .findFirst();
     }
 
     @Override
     public Optional<Item<String>> mapItem(Item<String> item) {
-        LeafSubstructure<?, ?> leafSubstructure = item.getLeafSubstructure()
-                                                      .orElseThrow(() -> new UnsupportedOperationException("interaction shells can only be computed for structure-derived items"));
+        LeafSubstructure<?> leafSubstructure = item.getLeafSubstructure()
+                                                   .orElseThrow(() -> new UnsupportedOperationException("interaction shells can only be computed for structure-derived items"));
         if (currentInteractionShells != null) {
-            for (Map.Entry<InteractionShell, List<LeafSubstructure<?, ?>>> interactionShellEntry : currentInteractionShells.entrySet()) {
+            for (Map.Entry<InteractionShell, List<LeafSubstructure<?>>> interactionShellEntry : currentInteractionShells.entrySet()) {
                 if (interactionShellEntry.getValue().contains(leafSubstructure)) {
                     InteractionShell interactionShell = interactionShellEntry.getKey();
                     logger.info("item {} is shell {}", item, interactionShell);

@@ -1,11 +1,11 @@
 package de.bioforscher.mmm.model;
 
-import de.bioforscher.singa.chemistry.physical.atoms.Atom;
-import de.bioforscher.singa.chemistry.physical.atoms.representations.RepresentationScheme;
-import de.bioforscher.singa.chemistry.physical.atoms.representations.RepresentationSchemeFactory;
-import de.bioforscher.singa.chemistry.physical.atoms.representations.RepresentationSchemeType;
-import de.bioforscher.singa.chemistry.physical.leaves.LeafSubstructure;
 import de.bioforscher.singa.mathematics.vectors.Vector3D;
+import de.bioforscher.singa.structure.algorithms.superimposition.fit3d.representations.RepresentationScheme;
+import de.bioforscher.singa.structure.algorithms.superimposition.fit3d.representations.RepresentationSchemeFactory;
+import de.bioforscher.singa.structure.algorithms.superimposition.fit3d.representations.RepresentationSchemeType;
+import de.bioforscher.singa.structure.model.interfaces.Atom;
+import de.bioforscher.singa.structure.model.interfaces.LeafSubstructure;
 
 import java.util.Optional;
 
@@ -17,14 +17,14 @@ import java.util.Optional;
 public class Item<LabelType extends Comparable<LabelType>> implements Comparable<Item<LabelType>> {
 
     private LabelType label;
-    private LeafSubstructure<?, ?> leafSubstructure;
+    private LeafSubstructure<?> leafSubstructure;
     private int sequencePosition;
 
     public Item(LabelType label) {
         this.label = label;
     }
 
-    public Item(LabelType label, LeafSubstructure<?, ?> leafSubstructure) {
+    public Item(LabelType label, LeafSubstructure<?> leafSubstructure) {
         this.label = label;
         this.leafSubstructure = leafSubstructure;
         this.sequencePosition = leafSubstructure.getIdentifier().getSerial();
@@ -34,11 +34,11 @@ public class Item<LabelType extends Comparable<LabelType>> implements Comparable
         return sequencePosition;
     }
 
-    public Optional<LeafSubstructure<?, ?>> getLeafSubstructure() {
+    public Optional<LeafSubstructure<?>> getLeafSubstructure() {
         return Optional.ofNullable(leafSubstructure);
     }
 
-    public void setLeafSubstructure(LeafSubstructure<?, ?> leafSubstructure) {
+    public void setLeafSubstructure(LeafSubstructure<?> leafSubstructure) {
         this.leafSubstructure = leafSubstructure;
     }
 

@@ -4,11 +4,11 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 import de.bioforscher.mmm.model.DataPoint;
 import de.bioforscher.mmm.model.Item;
 import de.bioforscher.mmm.model.plip.PlipPostRequest;
-import de.bioforscher.singa.chemistry.parser.plip.InteractionContainer;
-import de.bioforscher.singa.chemistry.parser.plip.InteractionType;
-import de.bioforscher.singa.chemistry.physical.families.NucleotideFamily;
-import de.bioforscher.singa.chemistry.physical.leaves.Nucleotide;
-import de.bioforscher.singa.chemistry.physical.model.StructuralFamily;
+import de.bioforscher.singa.structure.model.families.NucleotideFamily;
+import de.bioforscher.singa.structure.model.families.StructuralFamily;
+import de.bioforscher.singa.structure.model.interfaces.Nucleotide;
+import de.bioforscher.singa.structure.parser.plip.InteractionContainer;
+import de.bioforscher.singa.structure.parser.plip.InteractionType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

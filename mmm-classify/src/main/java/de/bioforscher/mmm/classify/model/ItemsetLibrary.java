@@ -7,12 +7,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import de.bioforscher.mmm.model.Itemset;
-import de.bioforscher.singa.chemistry.algorithms.superimposition.affinity.AffinityAlignment;
-import de.bioforscher.singa.chemistry.algorithms.superimposition.consensus.ConsensusAlignment;
-import de.bioforscher.singa.chemistry.algorithms.superimposition.consensus.ConsensusContainer;
-import de.bioforscher.singa.chemistry.parser.pdb.structures.StructureRepresentation;
-import de.bioforscher.singa.chemistry.physical.branches.StructuralMotif;
 import de.bioforscher.singa.mathematics.graphs.trees.BinaryTree;
+import de.bioforscher.singa.structure.algorithms.superimposition.affinity.AffinityAlignment;
+import de.bioforscher.singa.structure.algorithms.superimposition.consensus.ConsensusAlignment;
+import de.bioforscher.singa.structure.algorithms.superimposition.consensus.ConsensusContainer;
+import de.bioforscher.singa.structure.model.oak.StructuralMotif;
+import de.bioforscher.singa.structure.parser.pdb.structures.StructureRepresentation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -59,7 +59,7 @@ public class ItemsetLibrary {
             }
             for (Map.Entry<StructuralMotif, List<StructuralMotif>> cluster : entry.getValue().getClusters().entrySet()) {
                 StructuralMotif exemplar = cluster.getKey();
-                String pdbLines = StructureRepresentation.composePdbRepresentation(exemplar.getOrderedLeafSubstructures());
+                String pdbLines = StructureRepresentation.composePdbRepresentation(exemplar.getAllLeafSubstructures());
                 ItemsetLibraryEntry libraryEntry = new ItemsetLibraryEntry(entry.getKey(), pdbLines);
                 entries.add(libraryEntry);
             }
@@ -98,7 +98,7 @@ public class ItemsetLibrary {
                 logger.info("itemset {} added to the library, largest cluster has size {}", itemset, largestClusterCount);
             }
             StructuralMotif structuralMotif = clusters.last().getRoot().getData().getStructuralMotif();
-            String pdbLines = StructureRepresentation.composePdbRepresentation(structuralMotif.getOrderedLeafSubstructures());
+            String pdbLines = StructureRepresentation.composePdbRepresentation(structuralMotif.getAllLeafSubstructures());
             ItemsetLibraryEntry libraryEntry = new ItemsetLibraryEntry(entry.getKey(), pdbLines);
             entries.add(libraryEntry);
         }
@@ -121,7 +121,7 @@ public class ItemsetLibrary {
             // TODO implement proper exception
             StructuralMotif structuralMotif = itemset.getStructuralMotif()
                     .orElseThrow(() -> new UnsupportedOperationException("itemset libraries can only be constructed out of itemset observations"));
-            String pdbLines = StructureRepresentation.composePdbRepresentation(structuralMotif.getLeafSubstructures());
+            String pdbLines = StructureRepresentation.composePdbRepresentation(structuralMotif.getAllLeafSubstructures());
             ItemsetLibraryEntry entry = new ItemsetLibraryEntry(itemset, pdbLines);
             entries.add(entry);
         }

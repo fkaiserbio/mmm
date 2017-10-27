@@ -32,9 +32,15 @@ public class ItemsetNode<LabelType extends Comparable<LabelType>> extends Abstra
         return itemset;
     }
 
-    @Override public String toString() {
+    @Override
+    public String toString() {
         return "ItemsetNode{" +
                "itemset=" + itemset.toSimpleString() +
                '}';
+    }
+
+    @Override
+    public ItemsetNode<LabelType> getCopy() {
+        throw new UnsupportedOperationException("not implemented");
     }
 }

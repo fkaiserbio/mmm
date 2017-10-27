@@ -6,8 +6,8 @@ import de.bioforscher.mmm.model.DataPoint;
 import de.bioforscher.mmm.model.Item;
 import de.bioforscher.mmm.model.mapping.DataPointLabelMapper;
 import de.bioforscher.mmm.model.mapping.MappingRule;
-import de.bioforscher.singa.chemistry.physical.families.AminoAcidFamily;
 import de.bioforscher.singa.core.utility.Resources;
+import de.bioforscher.singa.structure.model.families.AminoAcidFamily;
 import org.junit.Test;
 
 import java.io.IOException;

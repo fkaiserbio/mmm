@@ -3,8 +3,8 @@ package de.bioforscher.mmm.model.metrics;
 import de.bioforscher.mmm.model.Item;
 import de.bioforscher.mmm.model.Itemset;
 import de.bioforscher.mmm.model.configurations.metrics.SeparationMetricConfiguration;
-import de.bioforscher.singa.chemistry.physical.leaves.AminoAcid;
-import de.bioforscher.singa.chemistry.physical.leaves.Nucleotide;
+import de.bioforscher.singa.structure.model.interfaces.AminoAcid;
+import de.bioforscher.singa.structure.model.interfaces.Nucleotide;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

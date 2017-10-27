@@ -15,7 +15,7 @@ import de.bioforscher.mmm.model.enrichment.DataPointEnricher;
 import de.bioforscher.mmm.model.mapping.DataPointLabelMapper;
 import de.bioforscher.mmm.model.mapping.MappingRule;
 import de.bioforscher.mmm.model.metrics.EvaluationMetric;
-import de.bioforscher.singa.chemistry.parser.pdb.structures.StructureParserOptions;
+import de.bioforscher.singa.structure.parser.pdb.structures.StructureParserOptions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

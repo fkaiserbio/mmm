@@ -1,10 +1,10 @@
 package de.bioforscher.mmm.model;
 
-import de.bioforscher.singa.chemistry.physical.branches.StructuralMotif;
-import de.bioforscher.singa.chemistry.physical.leaves.LeafSubstructure;
 import de.bioforscher.singa.mathematics.vectors.Vector;
 import de.bioforscher.singa.mathematics.vectors.Vector3D;
 import de.bioforscher.singa.mathematics.vectors.Vectors;
+import de.bioforscher.singa.structure.model.interfaces.LeafSubstructure;
+import de.bioforscher.singa.structure.model.oak.StructuralMotif;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -38,6 +38,7 @@ public class Itemset<LabelType extends Comparable<LabelType>> implements Compara
     private double consensus;
     private double affinity;
     private double separation;
+
     public Itemset(Set<Item<LabelType>> items) {
         this.items = items;
     }
@@ -148,11 +149,11 @@ public class Itemset<LabelType extends Comparable<LabelType>> implements Compara
     public Optional<StructuralMotif> getStructuralMotif() {
         // try to construct structural motif
         if (structuralMotif == null) {
-            List<LeafSubstructure<?, ?>> leafSubstructures = items.stream()
-                                                                  .map(Item::getLeafSubstructure)
-                                                                  .filter(Optional::isPresent)
-                                                                  .map(Optional::get)
-                                                                  .collect(Collectors.toList());
+            List<LeafSubstructure<?>> leafSubstructures = items.stream()
+                                                               .map(Item::getLeafSubstructure)
+                                                               .filter(Optional::isPresent)
+                                                               .map(Optional::get)
+                                                               .collect(Collectors.toList());
 
             // sort leaves based on three letter code
             // FIXME adapt sorting from VCG

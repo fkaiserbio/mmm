@@ -1,7 +1,7 @@
 package de.bioforscher.mmm.model.plip;
 
-import de.bioforscher.singa.chemistry.parser.plip.InteractionContainer;
-import de.bioforscher.singa.chemistry.parser.plip.PlipParser;
+import de.bioforscher.singa.structure.parser.plip.InteractionContainer;
+import de.bioforscher.singa.structure.parser.plip.PlipParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

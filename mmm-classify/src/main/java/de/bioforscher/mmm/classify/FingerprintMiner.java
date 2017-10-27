@@ -4,26 +4,25 @@ import de.bioforscher.mmm.ItemsetMiner;
 import de.bioforscher.mmm.ItemsetMinerRunner;
 import de.bioforscher.mmm.model.Itemset;
 import de.bioforscher.mmm.model.configurations.ItemsetMinerConfiguration;
-import de.bioforscher.singa.chemistry.algorithms.superimposition.SubstructureSuperimposition;
-import de.bioforscher.singa.chemistry.algorithms.superimposition.consensus.ConsensusAlignment;
-import de.bioforscher.singa.chemistry.algorithms.superimposition.consensus.ConsensusContainer;
-import de.bioforscher.singa.chemistry.algorithms.superimposition.fit3d.Fit3D;
-import de.bioforscher.singa.chemistry.algorithms.superimposition.fit3d.Fit3DBuilder;
-import de.bioforscher.singa.chemistry.algorithms.superimposition.fit3d.Fit3DMatch;
-import de.bioforscher.singa.chemistry.parser.pdb.structures.StructureParser;
-import de.bioforscher.singa.chemistry.parser.pdb.structures.StructureParser.LocalPDB;
-import de.bioforscher.singa.chemistry.parser.pdb.structures.StructureParser.MultiParser;
-import de.bioforscher.singa.chemistry.parser.pdb.structures.StructureParserOptions;
-import de.bioforscher.singa.chemistry.parser.pdb.structures.StructureWriter;
-import de.bioforscher.singa.chemistry.physical.atoms.Atom;
-import de.bioforscher.singa.chemistry.physical.branches.StructuralMotif;
-import de.bioforscher.singa.chemistry.physical.families.AminoAcidFamily;
-import de.bioforscher.singa.chemistry.physical.leaves.AminoAcid;
-import de.bioforscher.singa.chemistry.physical.leaves.AtomContainer;
-import de.bioforscher.singa.chemistry.physical.leaves.LeafSubstructure;
-import de.bioforscher.singa.chemistry.physical.model.StructuralEntityFilter.AtomFilter;
 import de.bioforscher.singa.mathematics.graphs.trees.BinaryTree;
 import de.bioforscher.singa.mathematics.graphs.trees.BinaryTreeNode;
+import de.bioforscher.singa.structure.algorithms.superimposition.SubstructureSuperimposition;
+import de.bioforscher.singa.structure.algorithms.superimposition.consensus.ConsensusAlignment;
+import de.bioforscher.singa.structure.algorithms.superimposition.consensus.ConsensusContainer;
+import de.bioforscher.singa.structure.algorithms.superimposition.fit3d.Fit3D;
+import de.bioforscher.singa.structure.algorithms.superimposition.fit3d.Fit3DBuilder;
+import de.bioforscher.singa.structure.algorithms.superimposition.fit3d.Fit3DMatch;
+import de.bioforscher.singa.structure.model.families.AminoAcidFamily;
+import de.bioforscher.singa.structure.model.interfaces.AminoAcid;
+import de.bioforscher.singa.structure.model.interfaces.LeafSubstructure;
+import de.bioforscher.singa.structure.model.oak.OakAminoAcid;
+import de.bioforscher.singa.structure.model.oak.StructuralEntityFilter;
+import de.bioforscher.singa.structure.model.oak.StructuralMotif;
+import de.bioforscher.singa.structure.parser.pdb.structures.StructureParser;
+import de.bioforscher.singa.structure.parser.pdb.structures.StructureParser.LocalPDB;
+import de.bioforscher.singa.structure.parser.pdb.structures.StructureParser.MultiParser;
+import de.bioforscher.singa.structure.parser.pdb.structures.StructureParserOptions;
+import de.bioforscher.singa.structure.parser.pdb.structures.StructureWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -54,7 +53,7 @@ public class FingerprintMiner {
     private final Path blacklistChainListPath;
     private final Path decoyChainListPath;
     private final Map<Itemset<String>, BinaryTree<ConsensusContainer>> topScoringClusters;
-    private final Map<Itemset<String>, List<List<LeafSubstructure<?, ?>>>> decoyDatasets;
+    private final Map<Itemset<String>, List<List<LeafSubstructure<?>>>> decoyDatasets;
     private ItemsetMiner<String> itemsetMiner;
     private List<Itemset<String>> topScoringItemsets;
     private StructureParserOptions structureParserOptions;
@@ -93,7 +92,7 @@ public class FingerprintMiner {
             }
             Path decoyOutputPath = Paths.get(itemsetMinerConfiguration.getOutputLocation()).getParent().resolve(topScoringItemset.toSimpleString()).resolve("decoy");
             Files.createDirectories(decoyOutputPath);
-            for (List<LeafSubstructure<?, ?>> leafSubstructures : decoyDatasets.get(topScoringItemset)) {
+            for (List<LeafSubstructure<?>> leafSubstructures : decoyDatasets.get(topScoringItemset)) {
                 StructuralMotif decoyMotif = StructuralMotif.fromLeafSubstructures(leafSubstructures);
                 StructureWriter.writeBranchSubstructure(decoyMotif, decoyOutputPath.resolve(decoyMotif.toString() + ".pdb"));
             }
@@ -103,7 +102,7 @@ public class FingerprintMiner {
                                                                         .map(BinaryTreeNode::getData)
                                                                         .map(ConsensusContainer::getSuperimposition)
                                                                         .map(SubstructureSuperimposition::getMappedFullCandidate)
-                    .map(StructuralMotif::fromLeafSubstructures)
+                                                                        .map(StructuralMotif::fromLeafSubstructures)
                                                                         .collect(Collectors.toList());
             for (StructuralMotif fingerprintMotif : fingerprintMotifs) {
                 StructureWriter.writeBranchSubstructure(fingerprintMotif, fingerprintOutputPath.resolve(fingerprintMotif.toString() + ".pdb"));
@@ -152,21 +151,21 @@ public class FingerprintMiner {
                                       .query(artificialSearchMotif)
                                       .targets(multiParser)
                                       .maximalParallelism()
-                                      .atomFilter(AtomFilter.isArbitrary())
+                                      .atomFilter(StructuralEntityFilter.AtomFilter.isArbitrary())
                                       .rmsdCutoff(RMSD_CUTOFF)
                                       .run();
 
-            List<List<LeafSubstructure<?, ?>>> decoyDataset = fit3d.getMatches().stream()
-                                                                   .map(Fit3DMatch::getSubstructureSuperimposition)
-                                                                   .map(SubstructureSuperimposition::getMappedFullCandidate)
-                                                                   .collect(Collectors.toList());
+            List<List<LeafSubstructure<?>>> decoyDataset = fit3d.getMatches().stream()
+                                                                .map(Fit3DMatch::getSubstructureSuperimposition)
+                                                                .map(SubstructureSuperimposition::getMappedFullCandidate)
+                                                                .collect(Collectors.toList());
 
             // read black list
             List<String> blacklistContent = Files.readAllLines(blacklistChainListPath);
 
             // filter blacklisted entries
-            for (Iterator<List<LeafSubstructure<?, ?>>> iterator = decoyDataset.iterator(); iterator.hasNext(); ) {
-                List<LeafSubstructure<?, ?>> decoy = iterator.next();
+            for (Iterator<List<LeafSubstructure<?>>> iterator = decoyDataset.iterator(); iterator.hasNext(); ) {
+                List<LeafSubstructure<?>> decoy = iterator.next();
                 String pdbIdentifier = decoy.iterator().next().getPdbIdentifier();
                 String chainIdentifier = decoy.iterator().next().getChainIdentifier();
                 boolean blacklisted = blacklistContent.stream()
@@ -188,21 +187,18 @@ public class FingerprintMiner {
     }
 
     /**
-     * Converts the given consensus motif, which is composed of {@link AtomContainer}s, to a {@link StructuralMotif} composed of {@link AminoAcid}s.
+     * Converts the given consensus motif, which is composed of {@link LeafSubstructure}s, to a {@link StructuralMotif} composed of {@link AminoAcid}s.
      *
      * @param consensusMotif The artificial consensus motif.
      * @return A {@link StructuralMotif} composed of {@link AminoAcid}s.
      */
     private StructuralMotif convertConsensusMotif(StructuralMotif consensusMotif) {
-        List<LeafSubstructure<?, ?>> aminoAcids = new ArrayList<>();
-        for (LeafSubstructure<?, ?> leafSubstructure : consensusMotif.getLeafSubstructures()) {
+        List<LeafSubstructure<?>> aminoAcids = new ArrayList<>();
+        for (LeafSubstructure<?> leafSubstructure : consensusMotif.getAllLeafSubstructures()) {
             Optional<AminoAcidFamily> aminoAcidFamily = AminoAcidFamily.getAminoAcidTypeByOneLetterCode(leafSubstructure.getFamily().getOneLetterCode());
             aminoAcidFamily.ifPresent(aminoAcidFamily1 -> {
-                AminoAcid aminoAcid = new AminoAcid(leafSubstructure.getIdentifier(), aminoAcidFamily1);
-                leafSubstructure.getAllAtoms().stream()
-                        .map(Atom::getCopy)
-                        .forEach(aminoAcid::addNode);
-                aminoAcids.add(aminoAcid);
+                AminoAcid aminoAcid = new OakAminoAcid(leafSubstructure.getIdentifier(), aminoAcidFamily1);
+                aminoAcids.add(aminoAcid.getCopy());
             });
         }
         return StructuralMotif.fromLeafSubstructures(aminoAcids);

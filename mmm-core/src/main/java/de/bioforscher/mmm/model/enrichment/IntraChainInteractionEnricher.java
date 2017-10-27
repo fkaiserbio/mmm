@@ -3,10 +3,10 @@ package de.bioforscher.mmm.model.enrichment;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import de.bioforscher.mmm.model.DataPoint;
 import de.bioforscher.mmm.model.plip.PlipGetRequest;
-import de.bioforscher.singa.chemistry.parser.pdb.structures.StructureParser;
-import de.bioforscher.singa.chemistry.parser.plip.InteractionContainer;
-import de.bioforscher.singa.chemistry.parser.plip.InteractionType;
-import de.bioforscher.singa.chemistry.physical.model.Structure;
+import de.bioforscher.singa.structure.model.oak.OakStructure;
+import de.bioforscher.singa.structure.parser.pdb.structures.StructureParser;
+import de.bioforscher.singa.structure.parser.plip.InteractionContainer;
+import de.bioforscher.singa.structure.parser.plip.InteractionType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,7 +24,7 @@ public class IntraChainInteractionEnricher extends AbstractInteractionEnricher {
     private static final Logger logger = LoggerFactory.getLogger(IntraChainInteractionEnricher.class);
     private static final String PLIP_REST_PROVIDER_URL = "https://biosciences.hs-mittweida.de/plip/interaction/plain";
 
-    private static void validateInteractions(InteractionContainer interactions, Structure structure) {
+    private static void validateInteractions(InteractionContainer interactions, OakStructure structure) {
         interactions.validateWithStructure(structure);
     }
 
@@ -32,9 +32,9 @@ public class IntraChainInteractionEnricher extends AbstractInteractionEnricher {
     public void enrichDataPoint(DataPoint<String> dataPoint) {
 
         // TODO avoid fetching of structure every time
-        Structure structure = StructureParser.online()
-                                             .pdbIdentifier(dataPoint.getDataPointIdentifier().getPdbIdentifier())
-                                             .parse();
+        OakStructure structure = (OakStructure) StructureParser.online()
+                                                               .pdbIdentifier(dataPoint.getDataPointIdentifier().getPdbIdentifier())
+                                                               .parse();
 
         logger.debug("enriching data point {} with interaction information", dataPoint);
 

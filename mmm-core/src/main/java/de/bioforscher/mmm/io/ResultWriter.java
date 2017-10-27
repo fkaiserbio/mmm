@@ -3,10 +3,10 @@ package de.bioforscher.mmm.io;
 import de.bioforscher.mmm.ItemsetMiner;
 import de.bioforscher.mmm.model.Itemset;
 import de.bioforscher.mmm.model.configurations.ItemsetMinerConfiguration;
-import de.bioforscher.singa.chemistry.algorithms.superimposition.affinity.AffinityAlignment;
-import de.bioforscher.singa.chemistry.algorithms.superimposition.consensus.ConsensusAlignment;
-import de.bioforscher.singa.chemistry.parser.pdb.structures.StructureWriter;
-import de.bioforscher.singa.chemistry.physical.branches.StructuralMotif;
+import de.bioforscher.singa.structure.algorithms.superimposition.affinity.AffinityAlignment;
+import de.bioforscher.singa.structure.algorithms.superimposition.consensus.ConsensusAlignment;
+import de.bioforscher.singa.structure.model.oak.StructuralMotif;
+import de.bioforscher.singa.structure.parser.pdb.structures.StructureWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,8 +37,8 @@ public class ResultWriter<LabelType extends Comparable<LabelType>> {
 
         if (outputPath.toFile().exists()) {
             long outputFolderCount = Files.list(outputPath.getParent())
-                    .filter(path -> path.getFileName().toString().startsWith(outputPath.getFileName().toString()))
-                    .count();
+                                          .filter(path -> path.getFileName().toString().startsWith(outputPath.getFileName().toString()))
+                                          .count();
             Path movedPath = outputPath.getParent().resolve(outputPath.getFileName() + "." + outputFolderCount);
             logger.info("output folder already present, will be renamed to {}", movedPath);
             Files.move(outputPath, movedPath);
@@ -69,8 +69,8 @@ public class ResultWriter<LabelType extends Comparable<LabelType>> {
 
         // determine count of extracted itemsets
         Optional<Integer> extractedItemsetsCount = itemsetMiner.getTotalExtractedItemsets().values().stream()
-                .map(List::size)
-                .reduce(Integer::sum);
+                                                               .map(List::size)
+                                                               .reduce(Integer::sum);
 
         logger.info("writing {} extracted itemsets", extractedItemsetsCount.orElse(0));
 
@@ -84,7 +84,7 @@ public class ResultWriter<LabelType extends Comparable<LabelType>> {
                 Optional<StructuralMotif> structuralMotifOptional = extractedItemset.getStructuralMotif();
                 if (structuralMotifOptional.isPresent()) {
                     StructuralMotif structuralMotif = structuralMotifOptional.get();
-                    StructureWriter.writeBranchSubstructure(structuralMotif, itemsetPath.resolve(structuralMotif + ".pdb"));
+                    StructureWriter.writeLeafSubstructureContainer(structuralMotif, itemsetPath.resolve(structuralMotif + ".pdb"));
                 } else {
                     logger.warn("no extracted itemset observations available for itemset {}", itemset);
                 }
@@ -101,8 +101,8 @@ public class ResultWriter<LabelType extends Comparable<LabelType>> {
 
         // determine count of extracted itemsets
         Optional<Integer> extractedItemsetsCount = itemsetMiner.getTotalExtractedItemsets().values().stream()
-                .map(List::size)
-                .reduce(Integer::sum);
+                                                               .map(List::size)
+                                                               .reduce(Integer::sum);
 
         int extractedItemsetCount = extractedItemsetsCount.orElse(0);
         logger.info("writing {} clustered itemsets with {} observations in total", itemsetMiner.getTotalClusteredItemsets().size(), extractedItemsetCount);
@@ -129,8 +129,8 @@ public class ResultWriter<LabelType extends Comparable<LabelType>> {
     public void writeAffinityItemsets() throws IOException {
         // determine count of extracted itemsets
         Optional<Integer> extractedItemsetsCount = itemsetMiner.getTotalExtractedItemsets().values().stream()
-                .map(List::size)
-                .reduce(Integer::sum);
+                                                               .map(List::size)
+                                                               .reduce(Integer::sum);
 
         int extractedItemsetCount = extractedItemsetsCount.orElse(0);
         logger.info("writing {} affinity itemsets with {} observations in total", itemsetMiner.getTotalAffinityItemsets().size(), extractedItemsetCount);

@@ -3,9 +3,9 @@ package de.bioforscher.mmm.model.metrics.cohesion;
 import de.bioforscher.mmm.model.DataPoint;
 import de.bioforscher.mmm.model.Item;
 import de.bioforscher.mmm.model.Itemset;
-import de.bioforscher.singa.chemistry.physical.branches.StructuralMotif;
-import de.bioforscher.singa.chemistry.physical.leaves.LeafSubstructure;
 import de.bioforscher.singa.mathematics.matrices.LabeledSymmetricMatrix;
+import de.bioforscher.singa.structure.model.interfaces.LeafSubstructure;
+import de.bioforscher.singa.structure.model.oak.StructuralMotif;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,13 +38,13 @@ public class VertexCandidateGenerator<LabelType extends Comparable<LabelType>> {
     }
 
     private static <LabelType extends Comparable<LabelType>> boolean isRedundant(Itemset<LabelType> candidate, List<Itemset<LabelType>> candidates) {
-        List<LeafSubstructure<?, ?>> candidateLeafSubstructures = candidate.getStructuralMotif()
-                                                                           .orElseThrow(() -> new VertexCandidateGeneratorException("no structural motif found during redundancy check"))
-                                                                           .getLeafSubstructures();
+        List<LeafSubstructure<?>> candidateLeafSubstructures = candidate.getStructuralMotif()
+                                                                        .orElseThrow(() -> new VertexCandidateGeneratorException("no structural motif found during redundancy check"))
+                                                                        .getAllLeafSubstructures();
         for (Itemset<LabelType> reference : candidates) {
-            List<LeafSubstructure<?, ?>> referenceLeafSubstructures = reference.getStructuralMotif()
-                                                                               .orElseThrow(() -> new VertexCandidateGeneratorException("no structural motif found during redundancy check"))
-                                                                               .getLeafSubstructures();
+            List<LeafSubstructure<?>> referenceLeafSubstructures = reference.getStructuralMotif()
+                                                                            .orElseThrow(() -> new VertexCandidateGeneratorException("no structural motif found during redundancy check"))
+                                                                            .getAllLeafSubstructures();
             if (candidateLeafSubstructures.equals(referenceLeafSubstructures)) {
                 return true;
             }
@@ -94,20 +94,20 @@ public class VertexCandidateGenerator<LabelType extends Comparable<LabelType>> {
                 }
 
                 // create new candidate
-                List<LeafSubstructure<?, ?>> leafSubstructures = candidateItems.stream()
-                                                                               .map(Item::getLeafSubstructure)
-                                                                               .filter(Optional::isPresent)
-                                                                               .map(Optional::get)
-                                                                               .collect(Collectors.toList());
+                List<LeafSubstructure<?>> leafSubstructures = candidateItems.stream()
+                                                                            .map(Item::getLeafSubstructure)
+                                                                            .filter(Optional::isPresent)
+                                                                            .map(Optional::get)
+                                                                            .collect(Collectors.toList());
 
                 // leaf substructures are sorted based on the natural ordering of their labels
-                TreeMap<LabelType, LeafSubstructure<?, ?>> labelMap = new TreeMap<>();
+                TreeMap<LabelType, LeafSubstructure<?>> labelMap = new TreeMap<>();
                 for (int k = 0; k < candidateItems.size(); k++) {
                     labelMap.put(candidateItems.get(k).getLabel(), leafSubstructures.get(k));
                 }
-                List<LeafSubstructure<?, ?>> orderedLeafSubstructures = labelMap.entrySet().stream()
-                                                                                .map(Map.Entry::getValue)
-                                                                                .collect(Collectors.toList());
+                List<LeafSubstructure<?>> orderedLeafSubstructures = labelMap.entrySet().stream()
+                                                                             .map(Map.Entry::getValue)
+                                                                             .collect(Collectors.toList());
                 // sort leaves based on three letter code
                 // FIXME this has to be adapted when mapping rule is used such that sorting is based on mapped labels
 //                leafSubstructures.sort(Comparator.comparing(leafSubstructure -> leafSubstructure.getFamily().getThreeLetterCode()));

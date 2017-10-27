@@ -3,7 +3,7 @@ package de.bioforscher.mmm.model.mapping.rules;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import de.bioforscher.mmm.model.Item;
 import de.bioforscher.mmm.model.mapping.MappingRule;
-import de.bioforscher.singa.chemistry.physical.leaves.AminoAcid;
+import de.bioforscher.singa.structure.model.interfaces.AminoAcid;
 
 import java.util.Optional;
 

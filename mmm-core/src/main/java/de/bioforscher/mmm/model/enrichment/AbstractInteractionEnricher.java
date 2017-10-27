@@ -3,19 +3,18 @@ package de.bioforscher.mmm.model.enrichment;
 import de.bioforscher.mmm.model.DataPoint;
 import de.bioforscher.mmm.model.Item;
 import de.bioforscher.singa.chemistry.descriptive.elements.ElementProvider;
-import de.bioforscher.singa.chemistry.parser.plip.Interaction;
-import de.bioforscher.singa.chemistry.parser.plip.InteractionContainer;
-import de.bioforscher.singa.chemistry.parser.plip.InteractionType;
-import de.bioforscher.singa.chemistry.physical.atoms.Atom;
-import de.bioforscher.singa.chemistry.physical.atoms.RegularAtom;
-import de.bioforscher.singa.chemistry.physical.families.LigandFamily;
-import de.bioforscher.singa.chemistry.physical.leaves.AtomContainer;
-import de.bioforscher.singa.chemistry.physical.leaves.LeafSubstructure;
-import de.bioforscher.singa.chemistry.physical.model.LeafIdentifier;
-import de.bioforscher.singa.mathematics.graphs.model.Node;
 import de.bioforscher.singa.mathematics.vectors.Vector;
 import de.bioforscher.singa.mathematics.vectors.Vector3D;
 import de.bioforscher.singa.mathematics.vectors.Vectors;
+import de.bioforscher.singa.structure.model.families.LigandFamily;
+import de.bioforscher.singa.structure.model.identifiers.LeafIdentifier;
+import de.bioforscher.singa.structure.model.interfaces.Atom;
+import de.bioforscher.singa.structure.model.interfaces.LeafSubstructure;
+import de.bioforscher.singa.structure.model.oak.OakAtom;
+import de.bioforscher.singa.structure.model.oak.OakLigand;
+import de.bioforscher.singa.structure.parser.plip.Interaction;
+import de.bioforscher.singa.structure.parser.plip.InteractionContainer;
+import de.bioforscher.singa.structure.parser.plip.InteractionType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -71,7 +70,7 @@ public abstract class AbstractInteractionEnricher implements DataPointEnricher<S
                                           .map(Optional::get)
                                           .map(LeafSubstructure::getAllAtoms)
                                           .flatMap(Collection::stream)
-                                          .mapToInt(Node::getIdentifier)
+                                          .mapToInt(Atom::getIdentifier)
                                           .max()
                                           .orElseThrow(() -> new RuntimeException("failed to determine next atom identifer")) + 1;
 
@@ -83,14 +82,14 @@ public abstract class AbstractInteractionEnricher implements DataPointEnricher<S
         // create new atom container
         String interactionThreeLetterCode = InteractionType.getThreeLetterCode(interaction.getClass());
         LigandFamily family = new LigandFamily("X", interactionThreeLetterCode);
-        AtomContainer<LigandFamily> atomContainer = new AtomContainer<>(new LeafIdentifier(dataPoint.getDataPointIdentifier().getPdbIdentifier(),
-                                                                                           0,
-                                                                                           dataPoint.getDataPointIdentifier().getChainIdentifier(),
-                                                                                           nextLeafIdentifier), family);
+        OakLigand ligandContainer = new OakLigand(new LeafIdentifier(dataPoint.getDataPointIdentifier().getPdbIdentifier(),
+                                                                     0,
+                                                                     dataPoint.getDataPointIdentifier().getChainIdentifier(),
+                                                                     nextLeafIdentifier), family);
 
-        Atom interactionPseudoAtom = new RegularAtom(nextAtomIdentifier, ElementProvider.UNKOWN, "CA", interactionCentroid.as(Vector3D.class));
-        atomContainer.addNode(interactionPseudoAtom);
-        Item<String> interactionItem = new Item<>(interactionThreeLetterCode, atomContainer);
+        OakAtom interactionPseudoAtom = new OakAtom(nextAtomIdentifier, ElementProvider.UNKOWN, "CA", interactionCentroid.as(Vector3D.class));
+        ligandContainer.addAtom(interactionPseudoAtom);
+        Item<String> interactionItem = new Item<>(interactionThreeLetterCode, ligandContainer);
         dataPoint.getItems().add(interactionItem);
 
         logger.debug("added {} to data point {}", interactionItem, dataPoint);

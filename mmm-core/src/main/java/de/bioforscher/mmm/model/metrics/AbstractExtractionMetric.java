@@ -3,7 +3,7 @@ package de.bioforscher.mmm.model.metrics;
 import de.bioforscher.mmm.model.DataPoint;
 import de.bioforscher.mmm.model.DataPointCache;
 import de.bioforscher.mmm.model.Itemset;
-import de.bioforscher.singa.chemistry.physical.atoms.representations.RepresentationSchemeType;
+import de.bioforscher.singa.structure.algorithms.superimposition.fit3d.representations.RepresentationSchemeType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

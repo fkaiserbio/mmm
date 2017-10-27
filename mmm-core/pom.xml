@@ -18,7 +18,7 @@
         <dependency>
             <groupId>de.bioforscher.singa</groupId>
             <artifactId>singa-javafx</artifactId>
-            <version>0.2.2</version>
+            <version>0.3.0-alpha</version>
         </dependency>
         <dependency>
             <groupId>org.jsoup</groupId>

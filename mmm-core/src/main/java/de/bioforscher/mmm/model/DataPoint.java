@@ -1,8 +1,8 @@
 package de.bioforscher.mmm.model;
 
-import de.bioforscher.singa.chemistry.parser.pdb.structures.StructureWriter;
-import de.bioforscher.singa.chemistry.parser.plip.InteractionType;
-import de.bioforscher.singa.chemistry.physical.leaves.LeafSubstructure;
+import de.bioforscher.singa.structure.model.interfaces.LeafSubstructure;
+import de.bioforscher.singa.structure.parser.pdb.structures.StructureWriter;
+import de.bioforscher.singa.structure.parser.plip.InteractionType;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -49,16 +49,16 @@ public class DataPoint<LabelType extends Comparable<LabelType>> {
      */
     public void writeAsPdb(Path pdbFilePath) throws IOException {
 
-        List<LeafSubstructure<?, ?>> leafSubstructures = items.stream()
-                                                              .map(Item::getLeafSubstructure)
-                                                              .filter(Optional::isPresent)
-                                                              .map(Optional::get)
-                                                              // ignore interaction representations when writing data points
-                                                              .filter(leafSubstructure -> Arrays.stream(InteractionType.values())
+        List<LeafSubstructure<?>> leafSubstructures = items.stream()
+                                                           .map(Item::getLeafSubstructure)
+                                                           .filter(Optional::isPresent)
+                                                           .map(Optional::get)
+                                                           // ignore interaction representations when writing data points
+                                                           .filter(leafSubstructure -> Arrays.stream(InteractionType.values())
                                                                                                 .noneMatch(interactionType -> interactionType.getThreeLetterCode()
                                                                                                                                              .equalsIgnoreCase(leafSubstructure.getFamily()
                                                                                                                                                                                .getThreeLetterCode())))
-                                                              .collect(Collectors.toList());
+                                                           .collect(Collectors.toList());
 
         StructureWriter.writeLeafSubstructures(leafSubstructures, pdbFilePath);
     }

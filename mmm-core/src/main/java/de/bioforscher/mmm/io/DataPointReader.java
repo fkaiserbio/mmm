@@ -4,16 +4,16 @@ import de.bioforscher.mmm.ItemsetMiner;
 import de.bioforscher.mmm.model.DataPoint;
 import de.bioforscher.mmm.model.DataPointIdentifier;
 import de.bioforscher.mmm.model.Item;
-import de.bioforscher.singa.chemistry.parser.pdb.structures.StructureParser;
-import de.bioforscher.singa.chemistry.parser.pdb.structures.StructureParser.MultiParser;
-import de.bioforscher.singa.chemistry.parser.pdb.structures.StructureParserOptions;
-import de.bioforscher.singa.chemistry.parser.pdb.structures.StructureParserOptions.Setting;
-import de.bioforscher.singa.chemistry.physical.branches.StructuralModel;
-import de.bioforscher.singa.chemistry.physical.leaves.AtomContainer;
-import de.bioforscher.singa.chemistry.physical.leaves.LeafSubstructure;
-import de.bioforscher.singa.chemistry.physical.model.StructuralEntityFilter.LeafFilter;
-import de.bioforscher.singa.chemistry.physical.model.Structure;
-import de.bioforscher.singa.chemistry.physical.model.Structures;
+import de.bioforscher.singa.structure.model.interfaces.LeafSubstructure;
+import de.bioforscher.singa.structure.model.interfaces.Ligand;
+import de.bioforscher.singa.structure.model.interfaces.Model;
+import de.bioforscher.singa.structure.model.interfaces.Structure;
+import de.bioforscher.singa.structure.model.oak.StructuralEntityFilter;
+import de.bioforscher.singa.structure.model.oak.Structures;
+import de.bioforscher.singa.structure.parser.pdb.structures.StructureParser;
+import de.bioforscher.singa.structure.parser.pdb.structures.StructureParser.MultiParser;
+import de.bioforscher.singa.structure.parser.pdb.structures.StructureParserOptions;
+import de.bioforscher.singa.structure.parser.pdb.structures.StructureParserOptions.Setting;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,7 +35,7 @@ public class DataPointReader {
 
     private MultiParser multiParser;
     private StructureParserOptions structureParserOptions;
-    private Predicate<LeafSubstructure<?, ?>> leafSubstructureFilter;
+    private Predicate<LeafSubstructure> leafSubstructureFilter;
     private List<String> labelWhiteList;
 
     public DataPointReader(DataPointReaderConfiguration dataPointReaderConfiguration, List<Path> structurePaths) {
@@ -57,7 +57,7 @@ public class DataPointReader {
                                          .chainList(chainListPath, dataPointReaderConfiguration.getChainListSeparator())
                                          .setOptions(structureParserOptions);
         } else {
-            multiParser = StructureParser.online()
+            multiParser = StructureParser.mmtf()
                                          .chainList(chainListPath, dataPointReaderConfiguration.getChainListSeparator())
                                          .setOptions(structureParserOptions);
         }
@@ -73,8 +73,8 @@ public class DataPointReader {
      * @param labelWhiteList          The label white list.
      * @return True if label is whitelisted.
      */
-    private static boolean hasValidLabel(LeafSubstructure<?, ?> leafSubstructureToCheck, List<String> labelWhiteList) {
-        return !(leafSubstructureToCheck instanceof AtomContainer) || labelWhiteList.contains(leafSubstructureToCheck.getFamily().getThreeLetterCode());
+    private static boolean hasValidLabel(LeafSubstructure<?> leafSubstructureToCheck, List<String> labelWhiteList) {
+        return !(leafSubstructureToCheck instanceof Ligand) || labelWhiteList.contains(leafSubstructureToCheck.getFamily().getThreeLetterCode());
     }
 
     /**
@@ -90,12 +90,12 @@ public class DataPointReader {
      * @param dataPointReaderConfiguration The {@link DataPointReaderConfiguration} holding the desired filter information.
      */
     private void createLeafSubstructureFilter(DataPointReaderConfiguration dataPointReaderConfiguration) {
-        leafSubstructureFilter = LeafFilter.isAminoAcid();
+        leafSubstructureFilter = StructuralEntityFilter.LeafFilter.isAminoAcid();
         if (dataPointReaderConfiguration.isParseNucleotides()) {
-            leafSubstructureFilter = leafSubstructureFilter.or(LeafFilter.isNucleotide());
+            leafSubstructureFilter = leafSubstructureFilter.or(StructuralEntityFilter.LeafFilter.isNucleotide());
         }
         if (dataPointReaderConfiguration.isParseLigands()) {
-            leafSubstructureFilter = leafSubstructureFilter.or(LeafFilter.isAtomContainer());
+            leafSubstructureFilter = leafSubstructureFilter.or(StructuralEntityFilter.LeafFilter.isLigand());
         }
         if (!dataPointReaderConfiguration.isParseWater()) {
             leafSubstructureFilter = leafSubstructureFilter.and(leafSubstructure -> !leafSubstructure.getFamily().getThreeLetterCode().equals("HOH"));
@@ -138,8 +138,8 @@ public class DataPointReader {
         if (structure.getAllModels().size() > 1) {
             logger.info("multi-model structure {} detected, using only first model", structure);
         }
-        StructuralModel firstModel = structure.getFirstModel();
-        List<Item<String>> items = firstModel.getLeafSubstructures().stream()
+        Model firstModel = structure.getFirstModel();
+        List<Item<String>> items = firstModel.getAllLeafSubstructures().stream()
                                              .filter(leafSubstructureFilter)
                                              .filter(leafSubstructure -> leafSubstructureFilter.test(leafSubstructure) &&
                                                                          hasValidLabel(leafSubstructure, labelWhiteList))
@@ -155,7 +155,7 @@ public class DataPointReader {
      * @param leafSubstructure The {@link LeafSubstructure} to be converted.
      * @return The converted {@link Item}.
      */
-    private Item<String> toItem(LeafSubstructure<?, ?> leafSubstructure) {
+    private Item<String> toItem(LeafSubstructure<?> leafSubstructure) {
         return new Item<>(leafSubstructure.getFamily().getThreeLetterCode(), leafSubstructure);
     }
 }

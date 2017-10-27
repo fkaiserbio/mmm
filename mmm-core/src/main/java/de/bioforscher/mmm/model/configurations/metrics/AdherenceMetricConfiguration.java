@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import de.bioforscher.mmm.model.Itemset;
 import de.bioforscher.mmm.model.configurations.Jsonizable;
-import de.bioforscher.singa.chemistry.physical.atoms.representations.RepresentationSchemeType;
+import de.bioforscher.singa.structure.algorithms.superimposition.fit3d.representations.RepresentationSchemeType;
 
 /**
  * The {@link Jsonizable} configuration of the {@link de.bioforscher.mmm.model.metrics.AdherenceMetric}.

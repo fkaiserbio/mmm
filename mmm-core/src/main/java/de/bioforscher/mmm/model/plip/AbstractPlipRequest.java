@@ -1,7 +1,7 @@
 package de.bioforscher.mmm.model.plip;
 
-import de.bioforscher.singa.chemistry.parser.plip.InteractionContainer;
 import de.bioforscher.singa.core.utility.Resources;
+import de.bioforscher.singa.structure.parser.plip.InteractionContainer;
 
 import java.io.BufferedReader;
 import java.io.IOException;
