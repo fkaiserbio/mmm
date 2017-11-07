@@ -94,7 +94,7 @@ public class FingerprintMiner {
             Files.createDirectories(decoyOutputPath);
             for (List<LeafSubstructure<?>> leafSubstructures : decoyDatasets.get(topScoringItemset)) {
                 StructuralMotif decoyMotif = StructuralMotif.fromLeafSubstructures(leafSubstructures);
-                StructureWriter.writeBranchSubstructure(decoyMotif, decoyOutputPath.resolve(decoyMotif.toString() + ".pdb"));
+                StructureWriter.writeLeafSubstructureContainer(decoyMotif, decoyOutputPath.resolve(decoyMotif.toString() + ".pdb"));
             }
             Path fingerprintOutputPath = Paths.get(itemsetMinerConfiguration.getOutputLocation()).getParent().resolve(topScoringItemset.toSimpleString()).resolve("fingerprint");
             Files.createDirectories(fingerprintOutputPath);
@@ -105,7 +105,7 @@ public class FingerprintMiner {
                                                                         .map(StructuralMotif::fromLeafSubstructures)
                                                                         .collect(Collectors.toList());
             for (StructuralMotif fingerprintMotif : fingerprintMotifs) {
-                StructureWriter.writeBranchSubstructure(fingerprintMotif, fingerprintOutputPath.resolve(fingerprintMotif.toString() + ".pdb"));
+                StructureWriter.writeLeafSubstructureContainer(fingerprintMotif, fingerprintOutputPath.resolve(fingerprintMotif.toString() + ".pdb"));
             }
         }
     }

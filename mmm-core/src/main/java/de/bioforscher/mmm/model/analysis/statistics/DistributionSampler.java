@@ -109,7 +109,7 @@ class DistributionSampler<LabelType extends Comparable<LabelType>> extends DataP
      */
     private void runBackgroundSampling() {
         for (int i = 0; i < sampleSize; i++) {
-            if (i % 10 == 0) {
+            if (i % Math.floor(sampleSize / 10) == 0) {
                 logger.info("running background sampling round {} of {}", i + 1, sampleSize);
             }
             randomizeDataPoints();

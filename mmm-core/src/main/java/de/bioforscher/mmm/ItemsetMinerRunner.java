@@ -273,7 +273,7 @@ public class ItemsetMinerRunner {
         if (significantItemsets != null && !significantItemsets.isEmpty()) {
             NumberFormat nf = NumberFormat.getNumberInstance(Locale.US);
             DecimalFormat decimalFormat = (DecimalFormat) nf;
-            decimalFormat.applyPattern("0.00000000");
+            decimalFormat.applyPattern("0.000000000000");
 
             StringJoiner stringJoiner = new StringJoiner("\n", "itemset,p-value,ks\n", "");
             for (Map.Entry<Significance, Itemset<String>> entry : significantItemsets.entrySet()) {

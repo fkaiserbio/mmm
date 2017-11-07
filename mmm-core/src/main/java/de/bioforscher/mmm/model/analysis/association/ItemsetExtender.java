@@ -162,7 +162,7 @@ public class ItemsetExtender<LabelType extends Comparable<LabelType>> {
         for (Map.Entry<DataPointIdentifier, StructuralMotif> entry : mergedMotifs.entrySet()) {
             StructuralMotif structuralMotif = entry.getValue();
             logger.debug("writing motif {}", structuralMotif);
-            StructureWriter.writeBranchSubstructure(entry.getValue(), outputPath.resolve(subgraphItemString).resolve(structuralMotif.toString().split("_")[0] + ".pdb"));
+            StructureWriter.writeLeafSubstructureContainer(entry.getValue(), outputPath.resolve(subgraphItemString).resolve(structuralMotif.toString().split("_")[0] + ".pdb"));
         }
     }
 
