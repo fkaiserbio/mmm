@@ -29,6 +29,8 @@ public class DataPointReaderConfiguration implements Jsonizable<DataPointReaderC
     private boolean parseNucleotides;
     @JsonProperty("parse-water")
     private boolean parseWater;
+    @JsonProperty("consecutive-sequence-numbering")
+    private boolean consecutiveSequenceNumbering;
 
     public List<String> getLigandLabelWhitelist() {
         return ligandLabelWhitelist;
@@ -85,5 +87,13 @@ public class DataPointReaderConfiguration implements Jsonizable<DataPointReaderC
 
     public void setParseLigands(boolean parseLigands) {
         this.parseLigands = parseLigands;
+    }
+
+    public boolean isConsecutiveSequenceNumbering() {
+        return consecutiveSequenceNumbering;
+    }
+
+    public void setConsecutiveSequenceNumbering(boolean consecutiveSequenceNumbering) {
+        this.consecutiveSequenceNumbering = consecutiveSequenceNumbering;
     }
 }

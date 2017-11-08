@@ -30,6 +30,12 @@ public class Item<LabelType extends Comparable<LabelType>> implements Comparable
         this.sequencePosition = leafSubstructure.getIdentifier().getSerial();
     }
 
+    public Item(LabelType label, LeafSubstructure<?> leafSubstructure, int sequencePosition) {
+        this.label = label;
+        this.leafSubstructure = leafSubstructure;
+        this.sequencePosition = sequencePosition;
+    }
+
     public int getSequencePosition() {
         return sequencePosition;
     }

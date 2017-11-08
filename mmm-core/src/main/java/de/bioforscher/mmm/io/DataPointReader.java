@@ -21,7 +21,6 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 /**
  * A reader for {@link DataPoint}s from PDB files. One needs to supply a {@link DataPointReaderConfiguration} object that specifies all configurations.
@@ -32,6 +31,7 @@ import java.util.stream.Collectors;
 public class DataPointReader {
 
     private static final Logger logger = LoggerFactory.getLogger(ItemsetMiner.class);
+    private final DataPointReaderConfiguration dataPointReaderConfiguration;
 
     private MultiParser multiParser;
     private StructureParserOptions structureParserOptions;
@@ -40,6 +40,7 @@ public class DataPointReader {
 
     public DataPointReader(DataPointReaderConfiguration dataPointReaderConfiguration, List<Path> structurePaths) {
         createStructureParserOptions();
+        this.dataPointReaderConfiguration = dataPointReaderConfiguration;
         multiParser = StructureParser.local()
                                      .paths(structurePaths)
                                      .everything()
@@ -51,6 +52,7 @@ public class DataPointReader {
 
     public DataPointReader(DataPointReaderConfiguration dataPointReaderConfiguration, Path chainListPath) {
         createStructureParserOptions();
+        this.dataPointReaderConfiguration = dataPointReaderConfiguration;
         if (dataPointReaderConfiguration.getPdbLocation() != null) {
             multiParser = StructureParser.local()
                                          .localPDB(new StructureParser.LocalPDB(dataPointReaderConfiguration.getPdbLocation()))
@@ -139,12 +141,17 @@ public class DataPointReader {
             logger.info("multi-model structure {} detected, using only first model", structure);
         }
         Model firstModel = structure.getFirstModel();
-        List<Item<String>> items = firstModel.getAllLeafSubstructures().stream()
-                                             .filter(leafSubstructureFilter)
-                                             .filter(leafSubstructure -> leafSubstructureFilter.test(leafSubstructure) &&
-                                                                         hasValidLabel(leafSubstructure, labelWhiteList))
-                                             .map(this::toItem)
-                                             .collect(Collectors.toList());
+        List<Item<String>> items = new ArrayList<>();
+        List<LeafSubstructure<?>> leafSubstructures = firstModel.getAllLeafSubstructures();
+        for (LeafSubstructure<?> leafSubstructure : leafSubstructures) {
+            if (leafSubstructureFilter.test(leafSubstructure)) {
+                if (leafSubstructureFilter.test(leafSubstructure) &&
+                    hasValidLabel(leafSubstructure, labelWhiteList)) {
+                    Item<String> stringItem = toItem(leafSubstructure, leafSubstructures.indexOf(leafSubstructure));
+                    items.add(stringItem);
+                }
+            }
+        }
         DataPointIdentifier dataPointIdentifier = new DataPointIdentifier(pdbIdentifier, chainIdentifier);
         return new DataPoint<>(items, dataPointIdentifier);
     }
@@ -152,10 +159,14 @@ public class DataPointReader {
     /**
      * Converts the given {@link LeafSubstructure} to an {@link Item}.
      *
-     * @param leafSubstructure The {@link LeafSubstructure} to be converted.
+     * @param leafSubstructure         The {@link LeafSubstructure} to be converted.
+     * @param consecutiveSequenceIndex The consecutive index of this {@link Item} in the {@link DataPoint}.
      * @return The converted {@link Item}.
      */
-    private Item<String> toItem(LeafSubstructure<?> leafSubstructure) {
+    private Item<String> toItem(LeafSubstructure<?> leafSubstructure, int consecutiveSequenceIndex) {
+        if (dataPointReaderConfiguration.isConsecutiveSequenceNumbering()) {
+            return new Item<>(leafSubstructure.getFamily().getThreeLetterCode(), leafSubstructure, consecutiveSequenceIndex);
+        }
         return new Item<>(leafSubstructure.getFamily().getThreeLetterCode(), leafSubstructure);
     }
 }
