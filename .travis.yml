@@ -7,7 +7,7 @@ addons:
       - oracle-java8-installer
 
 before_install:
-  - git clone -b alignment-algorithms https://github.com/cleberecht/singa.git
+  - git clone -b mmtf-support https://github.com/cleberecht/singa.git
   - cd singa/singa-all
   - mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
   - cd  ../../mmm-all
