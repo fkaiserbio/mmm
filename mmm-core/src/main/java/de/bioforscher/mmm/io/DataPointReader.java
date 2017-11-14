@@ -59,7 +59,7 @@ public class DataPointReader {
                                          .chainList(chainListPath, dataPointReaderConfiguration.getChainListSeparator())
                                          .setOptions(structureParserOptions);
         } else {
-            multiParser = StructureParser.mmtf()
+            multiParser = StructureParser.online()
                                          .chainList(chainListPath, dataPointReaderConfiguration.getChainListSeparator())
                                          .setOptions(structureParserOptions);
         }

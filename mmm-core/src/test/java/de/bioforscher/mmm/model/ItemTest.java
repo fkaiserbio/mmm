@@ -34,7 +34,7 @@ public class ItemTest {
         AminoAcid aminoAcid = AminoAcidFamily.GLYCINE.getPrototype();
         Item<String> item = new Item<>("A", aminoAcid);
         //FIXME optional check
-        assertEquals(aminoAcid.getAtomByName("CA").get().getPosition(), item.getPosition(RepresentationSchemeType.CA).orElseThrow(NoSuchElementException::new));
+        assertEquals(aminoAcid.getAtomByName("CA").get().getPosition(), item.getPosition(RepresentationSchemeType.ALPHA_CARBON).orElseThrow(NoSuchElementException::new));
     }
 
     @Test

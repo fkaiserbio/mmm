@@ -2,9 +2,7 @@ package de.bioforscher.mmm;
 
 import de.bioforscher.mmm.io.DataPointReaderConfiguration;
 import de.bioforscher.mmm.model.ItemsetComparatorType;
-import de.bioforscher.mmm.model.analysis.statistics.SignificanceEstimatorType;
 import de.bioforscher.mmm.model.configurations.ItemsetMinerConfiguration;
-import de.bioforscher.mmm.model.configurations.analysis.statistics.SignificanceEstimatorConfiguration;
 import de.bioforscher.mmm.model.configurations.metrics.CohesionMetricConfiguration;
 import de.bioforscher.mmm.model.configurations.metrics.ConsensusMetricConfiguration;
 import de.bioforscher.mmm.model.configurations.metrics.SeparationMetricConfiguration;
@@ -77,14 +75,12 @@ public class ItemsetMinerRunnerTest {
 //        itemsetMinerConfiguration.addExtractionDependentMetricConfiguration(affinityMetricConfiguration);
 //        itemsetMinerConfiguration.setItemsetComparatorType(ItemsetComparatorType.AFFINITY);
 
-        SignificanceEstimatorConfiguration significanceEstimatorConfiguration = new SignificanceEstimatorConfiguration();
-        significanceEstimatorConfiguration.setSignificanceType(SignificanceEstimatorType.CONSENSUS);
-        significanceEstimatorConfiguration.setSampleSize(10);
-        significanceEstimatorConfiguration.setSignificanceCutoff(0.1);
-        itemsetMinerConfiguration.setSignificanceEstimatorConfiguration(significanceEstimatorConfiguration);
+//        SignificanceEstimatorConfiguration significanceEstimatorConfiguration = new SignificanceEstimatorConfiguration();
+//        significanceEstimatorConfiguration.setSignificanceType(SignificanceEstimatorType.CONSENSUS);
+//        significanceEstimatorConfiguration.setSampleSize(10);
+//        significanceEstimatorConfiguration.setSignificanceCutoff(0.1);
+//        itemsetMinerConfiguration.setSignificanceEstimatorConfiguration(significanceEstimatorConfiguration);
 
-        System.out.println(itemsetMinerConfiguration.toJson());
-        ItemsetMinerRunner itemsetMinerRunner = new ItemsetMinerRunner(itemsetMinerConfiguration);
-        System.out.println();
+        new ItemsetMinerRunner(itemsetMinerConfiguration);
     }
 }
