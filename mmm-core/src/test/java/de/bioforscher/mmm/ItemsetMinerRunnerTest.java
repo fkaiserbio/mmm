@@ -58,7 +58,7 @@ public class ItemsetMinerRunnerTest {
 //        itemsetMinerConfiguration.setExtractionMetricConfiguration(adherenceMetricConfiguration);
 
         SeparationMetricConfiguration<String> separationMetricConfiguration = new SeparationMetricConfiguration<>();
-        separationMetricConfiguration.setMaximalSeparation(100);
+        separationMetricConfiguration.setMaximalSeparation(50);
         separationMetricConfiguration.setOptimalSeparation(5);
         itemsetMinerConfiguration.addExtractionDependentMetricConfiguration(separationMetricConfiguration);
 
