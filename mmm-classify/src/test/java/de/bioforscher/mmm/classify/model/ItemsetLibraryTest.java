@@ -40,7 +40,7 @@ public class ItemsetLibraryTest {
         itemsetMinerConfiguration = new ItemsetMinerConfiguration<>();
         itemsetMinerConfiguration.setMaximalEpochs(3);
         itemsetMinerConfiguration.setInputListLocation("craven2016_WSXWS_motif.txt");
-        itemsetMinerConfiguration.setOutputLocation("/tmp/WSXWS");
+        itemsetMinerConfiguration.setOutputLocation(folder.getRoot().toString() + "/mmm");
         DataPointReaderConfiguration dataPointReaderConfiguration = new DataPointReaderConfiguration();
         itemsetMinerConfiguration.setDataPointReaderConfiguration(dataPointReaderConfiguration);
         SupportMetricConfiguration<String> supportMetricConfiguration = new SupportMetricConfiguration<>();
