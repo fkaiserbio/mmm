@@ -27,7 +27,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -271,16 +270,13 @@ public class ItemsetMinerRunner {
         Files.write(reportOutputPath, report.toString().getBytes());
 
         if (significantItemsets != null && !significantItemsets.isEmpty()) {
-            NumberFormat nf = NumberFormat.getNumberInstance(Locale.US);
-            DecimalFormat decimalFormat = (DecimalFormat) nf;
-            decimalFormat.applyPattern("0.000000000000");
 
             StringJoiner stringJoiner = new StringJoiner("\n", "itemset,p-value,ks\n", "");
             for (Map.Entry<Significance, Itemset<String>> entry : significantItemsets.entrySet()) {
                 StringJoiner lineJoiner = new StringJoiner(",");
                 lineJoiner.add(entry.getValue().toSimpleString());
-                lineJoiner.add(decimalFormat.format(entry.getKey().getPvalue()));
-                lineJoiner.add(decimalFormat.format(entry.getKey().getKs()));
+                lineJoiner.add(String.valueOf(entry.getKey().getPvalue()));
+                lineJoiner.add(String.valueOf(entry.getKey().getKs()));
                 stringJoiner.add(lineJoiner.toString());
             }
 
