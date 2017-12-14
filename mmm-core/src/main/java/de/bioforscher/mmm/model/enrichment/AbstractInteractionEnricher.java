@@ -70,7 +70,7 @@ public abstract class AbstractInteractionEnricher implements DataPointEnricher<S
                                           .map(Optional::get)
                                           .map(LeafSubstructure::getAllAtoms)
                                           .flatMap(Collection::stream)
-                                          .mapToInt(Atom::getIdentifier)
+                                          .mapToInt(Atom::getAtomIdentifier)
                                           .max()
                                           .orElseThrow(() -> new RuntimeException("failed to determine next atom identifer")) + 1;
 
