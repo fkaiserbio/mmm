@@ -75,7 +75,7 @@ public class Item<LabelType extends Comparable<LabelType>> implements Comparable
     }
 
     /**
-     * Returns the geometric center of all {@link Atom}s of the associated {@link LeafSubstructure} if any.
+     * Returns the geometric center of all {@link Atom}s of the associated {@link LeafSubstructure} if any, for amino acids the alpha carbon position is returned.
      *
      * @return Optional of the position.
      */

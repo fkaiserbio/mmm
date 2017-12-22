@@ -57,7 +57,7 @@ public class InteractionShellMappingRule implements MappingRule<String> {
         String chainIdentifier = currentDataPoint.getDataPointIdentifier().getChainIdentifier();
 
         logger.info("obtaining parent structure of data point {}", currentDataPoint);
-        Structure structure = StructureParser.online()
+        Structure structure = StructureParser.pdb()
                                              .pdbIdentifier(pdbIdentifier)
                                              .parse();
         Chain chain = structure.getFirstChain();

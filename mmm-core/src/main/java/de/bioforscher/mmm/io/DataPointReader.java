@@ -10,8 +10,11 @@ import de.bioforscher.singa.structure.model.interfaces.Model;
 import de.bioforscher.singa.structure.model.interfaces.Structure;
 import de.bioforscher.singa.structure.model.oak.StructuralEntityFilter;
 import de.bioforscher.singa.structure.model.oak.Structures;
+import de.bioforscher.singa.structure.parser.pdb.structures.SourceLocation;
 import de.bioforscher.singa.structure.parser.pdb.structures.StructureParser;
+import de.bioforscher.singa.structure.parser.pdb.structures.StructureParser.LocalPDB;
 import de.bioforscher.singa.structure.parser.pdb.structures.StructureParser.MultiParser;
+import de.bioforscher.singa.structure.parser.pdb.structures.StructureParserException;
 import de.bioforscher.singa.structure.parser.pdb.structures.StructureParserOptions;
 import de.bioforscher.singa.structure.parser.pdb.structures.StructureParserOptions.Setting;
 import org.slf4j.Logger;
@@ -55,11 +58,11 @@ public class DataPointReader {
         this.dataPointReaderConfiguration = dataPointReaderConfiguration;
         if (dataPointReaderConfiguration.getPdbLocation() != null) {
             multiParser = StructureParser.local()
-                                         .localPDB(new StructureParser.LocalPDB(dataPointReaderConfiguration.getPdbLocation()))
+                                         .localPDB(new LocalPDB(dataPointReaderConfiguration.getPdbLocation(), SourceLocation.OFFLINE_PDB))
                                          .chainList(chainListPath, dataPointReaderConfiguration.getChainListSeparator())
                                          .setOptions(structureParserOptions);
         } else {
-            multiParser = StructureParser.online()
+            multiParser = StructureParser.pdb()
                                          .chainList(chainListPath, dataPointReaderConfiguration.getChainListSeparator())
                                          .setOptions(structureParserOptions);
         }
@@ -113,7 +116,13 @@ public class DataPointReader {
         int queuedStructures = multiParser.getNumberOfQueuedStructures();
         List<DataPoint<String>> dataPoints = new ArrayList<>();
         while (multiParser.hasNext()) {
-            Structure structure = multiParser.next();
+            Structure structure;
+            try {
+                structure = multiParser.next();
+            } catch (StructureParserException e) {
+                logger.warn("failed to parse structure", e);
+                continue;
+            }
             if (Structures.isAlphaCarbonStructure(structure) || Structures.isBackboneStructure(structure)) {
                 logger.warn("detected alpha carbon/backbone only structure, skipping {}", structure);
                 continue;

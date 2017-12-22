@@ -18,6 +18,7 @@ import de.bioforscher.singa.structure.model.interfaces.LeafSubstructure;
 import de.bioforscher.singa.structure.model.oak.OakAminoAcid;
 import de.bioforscher.singa.structure.model.oak.StructuralEntityFilter;
 import de.bioforscher.singa.structure.model.oak.StructuralMotif;
+import de.bioforscher.singa.structure.parser.pdb.structures.SourceLocation;
 import de.bioforscher.singa.structure.parser.pdb.structures.StructureParser;
 import de.bioforscher.singa.structure.parser.pdb.structures.StructureParser.LocalPDB;
 import de.bioforscher.singa.structure.parser.pdb.structures.StructureParser.MultiParser;
@@ -46,7 +47,7 @@ public class FingerprintMiner {
     private static final Predicate<Itemset<?>> TOP_SCORING_FILTER = itemset -> itemset.getItems().size() >= 3;
     private static final Comparator<Itemset<?>> TOP_SCORING_COMPARATOR = Comparator.comparing(Itemset::getConsensus);
     private static final int TOP_SCORING_LIMIT = 3;
-    private static final LocalPDB LOCAL_PDB = new LocalPDB("/srv/pdb");
+    private static final LocalPDB LOCAL_PDB = new LocalPDB("/srv/pdb", SourceLocation.OFFLINE_PDB);
 
     private final ItemsetMinerConfiguration<String> itemsetMinerConfiguration;
     private final Path familyChainListPath;

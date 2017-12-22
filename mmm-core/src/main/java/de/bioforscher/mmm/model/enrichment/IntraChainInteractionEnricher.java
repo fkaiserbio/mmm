@@ -32,7 +32,7 @@ public class IntraChainInteractionEnricher extends AbstractInteractionEnricher {
     public void enrichDataPoint(DataPoint<String> dataPoint) {
 
         // TODO avoid fetching of structure every time
-        OakStructure structure = (OakStructure) StructureParser.online()
+        OakStructure structure = (OakStructure) StructureParser.pdb()
                                                                .pdbIdentifier(dataPoint.getDataPointIdentifier().getPdbIdentifier())
                                                                .parse();
 

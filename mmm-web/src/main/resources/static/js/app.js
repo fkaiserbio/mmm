@@ -1,16 +1,16 @@
 var app = angular.module('app', ['ngMessages', 'ngRoute']);
 
-app.config(['$locationProvider', '$routeProvider', function ($locationProvider, $routeProvider) {
-    // hide index.html# in browser url
-    $locationProvider.html5Mode({
-        enabled: true
-    });
-
-    // $routeProvider.when('/result/:jobId', {
-    //     templateUrl: '/result/',
-    //     controller: 'ResultController'
-    // });
-}]);
+// app.config(['$locationProvider', '$routeProvider', function ($locationProvider, $routeProvider) {
+//     // hide index.html# in browser url
+//     $locationProvider.html5Mode({
+//         enabled: true
+//     });
+//
+//     // $routeProvider.when('/result/:jobId', {
+//     //     templateUrl: '/result/',
+//     //     controller: 'ResultController'
+//     // });
+// }]);
 
 app.service('JobService', ['$http', function ($http) {
 
@@ -89,13 +89,12 @@ app.controller('SubmitController', ['$scope', '$window', 'JobService', function 
                 });
         }
     };
-
     $scope.createJob();
 }]);
 
 app.controller('ResultController', ['$scope', '$location', '$interval', 'JobService', function ($scope, $location, $interval, JobService) {
+    var jobId = $location.path().split("/")[2];
     $scope.getJob = function () {
-        var jobId = $location.path().split("/")[2];
         console.info("splitted jobId " + jobId);
         JobService.getJob(jobId).then(function (response) {
             $scope.job = response.data;
@@ -107,7 +106,5 @@ app.controller('ResultController', ['$scope', '$location', '$interval', 'JobServ
         console.info("updating result page...");
         $scope.getJob();
     };
-
     $scope.getJob();
-    $interval(updateStatus, 1000);
 }]);
