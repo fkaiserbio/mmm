@@ -1,5 +1,5 @@
 # mmm
-The **M**acro**m**olecular **M**iner framework for automatic and unsupervised discovery of substructure similarity in biological structure data.
+The **M**acro**m**olecular **M**iner framework for the template-free and unsupervised detection of substructure similarity in biological structure data.
 
 <img src="mmm-core/logo/mmm.png" height="125"/>
 
@@ -16,12 +16,17 @@ The biological function of proteins and nucleic acids, such as riboswitches or r
 ### Dependencies
 The mmm software depends on the fabulous [SiNGA](https://github.com/cleberecht/singa) framework, available on [Maven Central](https://mvnrepository.com/artifact/de.bioforscher.singa).
 
+### Usage
+For detailed instructions on how to use mmm please refer to the [wiki pages](https://github.com/enauz/mmm/wiki).
+
 ---
 
 ### Citation
 
 If you use this software in your project, please cite:
 
->Kaiser, F. & Labudde, D.
->Unsupervised Discovery of Geometrically Conserved Structural Motifs and Long-Range Contacts in Proteins 
->_IEEE/ACM Trans Comput Biol Bioinform_, under review
+>Kaiser, F. & Labudde, D. (2017)
+>
+>Unsupervised Discovery of Geometrically Common Structural Motifs and Long-Range Contacts in Protein 3D Structures
+>
+>_IEEE/ACM Trans Comput Biol Bioinform_, doi:10.1109/TCBB.2017.2786250

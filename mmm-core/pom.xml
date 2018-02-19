@@ -6,7 +6,7 @@
 
     <parent>
         <artifactId>mmm-all</artifactId>
-        <groupId>de.bioforscher.mmm</groupId>
+        <groupId>bio.fkaiser.mmm</groupId>
         <version>0.1.0</version>
         <relativePath>../mmm-all/pom.xml</relativePath>
     </parent>
