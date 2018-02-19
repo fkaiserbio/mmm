@@ -118,7 +118,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>bio.fkaiser</groupId>
+            <groupId>bio.fkaiser.mmm</groupId>
             <artifactId>mmm-core</artifactId>
             <version>0.1.0</version>
         </dependency>
