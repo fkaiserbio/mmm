@@ -117,7 +117,7 @@ public class DataPointReader {
     /**
      * Initializes the {@link MultiParser} from a single given chain, using the PDB REST service to obtain sequence clusters.
      *
-     * @param inputChain
+     * @param inputChain The input chain in the format [chain-ID].[PDB-ID]
      */
     private Path initializeFromSingleChain(String inputChain) throws IOException {
 

@@ -1,7 +1,9 @@
 package bio.fkaiser.mmm.io;
 
 import bio.fkaiser.mmm.ItemsetMiner;
+import bio.fkaiser.mmm.ItemsetMinerException;
 import bio.fkaiser.mmm.model.DataPointIdentifier;
+import bio.fkaiser.mmm.model.Item;
 import bio.fkaiser.mmm.model.Itemset;
 import bio.fkaiser.mmm.model.configurations.ItemsetMinerConfiguration;
 import bio.fkaiser.mmm.model.metrics.ConsensusMetric;
@@ -10,9 +12,7 @@ import de.bioforscher.singa.structure.algorithms.superimposition.affinity.Affini
 import de.bioforscher.singa.structure.algorithms.superimposition.consensus.ConsensusAlignment;
 import de.bioforscher.singa.structure.model.identifiers.LeafIdentifier;
 import de.bioforscher.singa.structure.model.interfaces.LeafSubstructure;
-import de.bioforscher.singa.structure.model.interfaces.Structure;
 import de.bioforscher.singa.structure.model.oak.StructuralMotif;
-import de.bioforscher.singa.structure.parser.pdb.structures.StructureParser;
 import de.bioforscher.singa.structure.parser.pdb.structures.StructureWriter;
 import de.bioforscher.singa.structure.parser.pdb.structures.tokens.AtomToken;
 import org.slf4j.Logger;
@@ -172,10 +172,17 @@ public class ResultWriter<LabelType extends Comparable<LabelType>> {
             String pdbIdentifier = split[0];
             String chainIdentifier = split[1];
 
-            Structure structure = StructureParser.pdb()
-                                                 .pdbIdentifier(pdbIdentifier)
-                                                 .chainIdentifier(chainIdentifier)
-                                                 .parse();
+            // get reference data point
+            List<LeafSubstructure<?>> referenceLeafSubstructures = itemsetMiner.getDataPoints().stream()
+                                                                               .filter(dataPoint -> dataPoint.getDataPointIdentifier().getPdbIdentifier().equals(pdbIdentifier)
+                                                                                                    && dataPoint.getDataPointIdentifier().getChainIdentifier().equals(chainIdentifier))
+                                                                               .findFirst()
+                                                                               .orElseThrow(() -> new ItemsetMinerException("failed to map to reference structure " + inputChain))
+                                                                               .getItems().stream()
+                                                                               .map(Item::getLeafSubstructure)
+                                                                               .filter(Optional::isPresent)
+                                                                               .map(Optional::get)
+                                                                               .collect(Collectors.toList());
 
             List<Itemset<LabelType>> correspondingItemsets = new ArrayList<>();
             for (Map.Entry<Itemset<LabelType>, List<Itemset<LabelType>>> entry : itemsetMiner.getTotalExtractedItemsets().entrySet()) {
@@ -221,7 +228,7 @@ public class ResultWriter<LabelType extends Comparable<LabelType>> {
 
             // encode in B-factors
             List<String> allAtomLines = new ArrayList<>();
-            for (LeafSubstructure<?> leafSubstructure : structure.getFirstModel().getAllLeafSubstructures()) {
+            for (LeafSubstructure<?> leafSubstructure : referenceLeafSubstructures) {
                 Map<LeafIdentifier, Double> finalStructureCoverage = structureCoverage;
                 List<String> atomLines = AtomToken.assemblePDBLine(leafSubstructure).stream()
                                                   .map(line -> line.replace("0.00", decimalFormat.format(finalStructureCoverage.getOrDefault(leafSubstructure.getIdentifier(), 0.0))))
