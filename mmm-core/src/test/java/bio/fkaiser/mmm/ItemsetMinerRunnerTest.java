@@ -10,7 +10,6 @@ import bio.fkaiser.mmm.model.configurations.metrics.CohesionMetricConfiguration;
 import bio.fkaiser.mmm.model.configurations.metrics.ConsensusMetricConfiguration;
 import bio.fkaiser.mmm.model.configurations.metrics.SeparationMetricConfiguration;
 import bio.fkaiser.mmm.model.configurations.metrics.SupportMetricConfiguration;
-import bio.fkaiser.mmm.model.enrichment.IntraChainInteractionEnricher;
 import bio.fkaiser.mmm.model.mapping.rules.ChemicalGroupsMappingRule;
 import org.junit.Before;
 import org.junit.Rule;
@@ -97,11 +96,10 @@ public class ItemsetMinerRunnerTest {
     public void shouldRunAgainstSingleChain() throws IOException, URISyntaxException {
 
         itemsetMinerConfiguration.setInputChain("9pcy.A");
-
         itemsetMinerConfiguration.getDataPointReaderConfiguration().setPdbSequenceCluster(PDBSequenceCluster.IDENTITY_70);
 
         itemsetMinerConfiguration.setMappingRules(Stream.of(new ChemicalGroupsMappingRule()).collect(Collectors.toList()));
-        itemsetMinerConfiguration.setDataPointEnricher(new IntraChainInteractionEnricher());
+//        itemsetMinerConfiguration.setDataPointEnricher(new IntraChainInteractionEnricher());
 
         SupportMetricConfiguration<String> supportMetricConfiguration = new SupportMetricConfiguration<>();
         supportMetricConfiguration.setMinimalSupport(0.9);
