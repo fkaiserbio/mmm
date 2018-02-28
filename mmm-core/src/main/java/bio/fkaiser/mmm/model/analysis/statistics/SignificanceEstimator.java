@@ -97,6 +97,8 @@ public class SignificanceEstimator<LabelType extends Comparable<LabelType>> {
             Significance significance = new Significance(pValue, ks);
             significantItemsets.put(significance, itemset);
             logger.info("itemset {} is significant with {}", itemset.toSimpleString(), significance);
+        } else {
+            logger.info("itemset {} is insignificant", itemset.toSimpleString());
         }
     }
 

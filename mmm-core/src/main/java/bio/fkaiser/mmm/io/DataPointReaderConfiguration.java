@@ -16,6 +16,7 @@ import java.util.List;
 public class DataPointReaderConfiguration implements Jsonizable<DataPointReaderConfiguration> {
 
     private static final String DEFAULT_CHAIN_LIST_SEPARATOR = "\t";
+    private static final PDBSequenceCluster DEFAULT_SEQUENCE_CLUSTER = PDBSequenceCluster.IDENTITY_90;
 
     @JsonProperty("pdb-location")
     private String pdbLocation;
@@ -23,6 +24,8 @@ public class DataPointReaderConfiguration implements Jsonizable<DataPointReaderC
     private String chainListSeparator = DEFAULT_CHAIN_LIST_SEPARATOR;
     @JsonProperty("parse-ligands")
     private boolean parseLigands;
+    @JsonProperty("pdb-sequence-cluster")
+    private PDBSequenceCluster pdbSequenceCluster = DEFAULT_SEQUENCE_CLUSTER;
     @JsonProperty("ligand-label-whitelist")
     private List<String> ligandLabelWhitelist = new ArrayList<>();
     @JsonProperty("parse-nucleotides")
@@ -31,14 +34,6 @@ public class DataPointReaderConfiguration implements Jsonizable<DataPointReaderC
     private boolean parseWater;
     @JsonProperty("consecutive-sequence-numbering")
     private boolean consecutiveSequenceNumbering;
-
-    public List<String> getLigandLabelWhitelist() {
-        return ligandLabelWhitelist;
-    }
-
-    public void setLigandLabelWhitelist(List<String> ligandLabelWhitelist) {
-        this.ligandLabelWhitelist = ligandLabelWhitelist;
-    }
 
     /**
      * Adds the specified label to the allowed labels for ligands.
@@ -49,20 +44,20 @@ public class DataPointReaderConfiguration implements Jsonizable<DataPointReaderC
         ligandLabelWhitelist.add(ligandLabel);
     }
 
-    public boolean isParseWater() {
-        return parseWater;
+    public String getChainListSeparator() {
+        return chainListSeparator;
     }
 
-    public void setParseWater(boolean parseWater) {
-        this.parseWater = parseWater;
+    public void setChainListSeparator(String chainListSeparator) {
+        this.chainListSeparator = chainListSeparator;
     }
 
-    public boolean isParseNucleotides() {
-        return parseNucleotides;
+    public List<String> getLigandLabelWhitelist() {
+        return ligandLabelWhitelist;
     }
 
-    public void setParseNucleotides(boolean parseNucleotides) {
-        this.parseNucleotides = parseNucleotides;
+    public void setLigandLabelWhitelist(List<String> ligandLabelWhitelist) {
+        this.ligandLabelWhitelist = ligandLabelWhitelist;
     }
 
     public String getPdbLocation() {
@@ -73,12 +68,20 @@ public class DataPointReaderConfiguration implements Jsonizable<DataPointReaderC
         this.pdbLocation = pdbLocation;
     }
 
-    public String getChainListSeparator() {
-        return chainListSeparator;
+    public PDBSequenceCluster getPdbSequenceCluster() {
+        return pdbSequenceCluster;
     }
 
-    public void setChainListSeparator(String chainListSeparator) {
-        this.chainListSeparator = chainListSeparator;
+    public void setPdbSequenceCluster(PDBSequenceCluster pdbSequenceCluster) {
+        this.pdbSequenceCluster = pdbSequenceCluster;
+    }
+
+    public boolean isConsecutiveSequenceNumbering() {
+        return consecutiveSequenceNumbering;
+    }
+
+    public void setConsecutiveSequenceNumbering(boolean consecutiveSequenceNumbering) {
+        this.consecutiveSequenceNumbering = consecutiveSequenceNumbering;
     }
 
     public boolean isParseLigands() {
@@ -89,11 +92,27 @@ public class DataPointReaderConfiguration implements Jsonizable<DataPointReaderC
         this.parseLigands = parseLigands;
     }
 
-    public boolean isConsecutiveSequenceNumbering() {
-        return consecutiveSequenceNumbering;
+    public boolean isParseNucleotides() {
+        return parseNucleotides;
     }
 
-    public void setConsecutiveSequenceNumbering(boolean consecutiveSequenceNumbering) {
-        this.consecutiveSequenceNumbering = consecutiveSequenceNumbering;
+    public void setParseNucleotides(boolean parseNucleotides) {
+        this.parseNucleotides = parseNucleotides;
+    }
+
+    public boolean isParseWater() {
+        return parseWater;
+    }
+
+    public void setParseWater(boolean parseWater) {
+        this.parseWater = parseWater;
+    }
+
+    public enum PDBSequenceCluster {
+        IDENTITY_100, IDENTITY_95, IDENTITY_90, IDENTITY_70, IDENTITY_50, IDENTITY_40, IDENTITY_30;
+
+        public int getIdentity() {
+            return Integer.parseInt(this.name().split("_")[1]);
+        }
     }
 }

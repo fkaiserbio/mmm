@@ -33,6 +33,7 @@ public class AffinityMetric<LabelType extends Comparable<LabelType>> extends Abs
     private final RepresentationSchemeType representationSchemeType;
     private final Predicate<Atom> atomFilter;
     private final boolean alignWithinClusters;
+    private final Map<Itemset<LabelType>, Distribution> distributions;
     private final Map<Itemset<LabelType>, AffinityAlignment> affinityItemsets;
 
     public AffinityMetric(AffinityMetricConfiguration<LabelType> affinityMetricConfiguration) {
@@ -43,6 +44,7 @@ public class AffinityMetric<LabelType extends Comparable<LabelType>> extends Abs
         atomFilter = affinityMetricConfiguration.getAtomFilterType().getFilter();
         alignWithinClusters = affinityMetricConfiguration.isAlignWithinClusters();
 
+        distributions = new HashMap<>();
         affinityItemsets = new HashMap<>();
     }
 
@@ -100,9 +102,8 @@ public class AffinityMetric<LabelType extends Comparable<LabelType>> extends Abs
     }
 
     @Override
-
     public Map<Itemset<LabelType>, Distribution> getDistributions() {
-        return null;
+        return distributions;
     }
 
     @Override

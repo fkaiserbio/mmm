@@ -12,9 +12,8 @@ import java.util.Map;
  */
 public interface DistributionMetric<LabelType extends Comparable<LabelType>> extends EvaluationMetric<LabelType> {
 
-    Map<Itemset<LabelType>, Distribution> getDistributions();
-
     default void addObservationForItemset(Itemset<LabelType> itemset, double observationValue) {
+        //FIXME when called concurrently there is the rare case of NPE
         Map<Itemset<LabelType>, Distribution> distributions = getDistributions();
         if (distributions.containsKey(itemset)) {
             distributions.get(itemset).addObservationValue(observationValue);
@@ -24,4 +23,6 @@ public interface DistributionMetric<LabelType extends Comparable<LabelType>> ext
             distributions.put(itemset, distribution);
         }
     }
+
+    Map<Itemset<LabelType>, Distribution> getDistributions();
 }

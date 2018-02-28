@@ -7,7 +7,7 @@
     <parent>
         <artifactId>mmm-all</artifactId>
         <groupId>bio.fkaiser.mmm</groupId>
-        <version>0.1.0</version>
+        <version>0.1.1</version>
         <relativePath>../mmm-all/pom.xml</relativePath>
     </parent>
 

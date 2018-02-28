@@ -1,14 +1,20 @@
 package bio.fkaiser.mmm.io;
 
 import bio.fkaiser.mmm.ItemsetMiner;
+import bio.fkaiser.mmm.model.DataPointIdentifier;
 import bio.fkaiser.mmm.model.Itemset;
 import bio.fkaiser.mmm.model.configurations.ItemsetMinerConfiguration;
 import bio.fkaiser.mmm.model.metrics.ConsensusMetric;
 import bio.fkaiser.mmm.model.metrics.ExtractionMetric;
 import de.bioforscher.singa.structure.algorithms.superimposition.affinity.AffinityAlignment;
 import de.bioforscher.singa.structure.algorithms.superimposition.consensus.ConsensusAlignment;
+import de.bioforscher.singa.structure.model.identifiers.LeafIdentifier;
+import de.bioforscher.singa.structure.model.interfaces.LeafSubstructure;
+import de.bioforscher.singa.structure.model.interfaces.Structure;
 import de.bioforscher.singa.structure.model.oak.StructuralMotif;
+import de.bioforscher.singa.structure.parser.pdb.structures.StructureParser;
 import de.bioforscher.singa.structure.parser.pdb.structures.StructureWriter;
+import de.bioforscher.singa.structure.parser.pdb.structures.tokens.AtomToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,8 +23,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.DecimalFormat;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Writes all relevant results of an {@link ItemsetMiner} run based on the configuration made in {@link ItemsetMinerConfiguration}.
@@ -28,6 +34,7 @@ import java.util.Optional;
 public class ResultWriter<LabelType extends Comparable<LabelType>> {
 
     private static final Logger logger = LoggerFactory.getLogger(ResultWriter.class);
+    private static final int MINIMAL_REFERENCE_STRUCTURE_ITEMSET_SIZE = 3;
 
     private final ItemsetMinerConfiguration<LabelType> itemsetMinerConfiguration;
     private final Path outputPath;
@@ -153,6 +160,80 @@ public class ResultWriter<LabelType extends Comparable<LabelType>> {
             Path itemsetPath = outputPath.resolve("affinity_itemsets").resolve(rankString + "_" + itemset.toSimpleString());
             AffinityAlignment affinityAlignment = itemsetMiner.getTotalAffinityItemsets().get(itemset);
             affinityAlignment.writeClusters(itemsetPath);
+        }
+    }
+
+    public void writeReferenceStructure() throws IOException {
+        String inputChain = itemsetMinerConfiguration.getInputChain();
+        if (inputChain != null) {
+
+            // parse input structure
+            String[] split = inputChain.split("\\.");
+            String pdbIdentifier = split[0];
+            String chainIdentifier = split[1];
+
+            Structure structure = StructureParser.pdb()
+                                                 .pdbIdentifier(pdbIdentifier)
+                                                 .chainIdentifier(chainIdentifier)
+                                                 .parse();
+
+            List<Itemset<LabelType>> correspondingItemsets = new ArrayList<>();
+            for (Map.Entry<Itemset<LabelType>, List<Itemset<LabelType>>> entry : itemsetMiner.getTotalExtractedItemsets().entrySet()) {
+                // ignore small itemsets to reduce noise
+                if (entry.getKey().getItems().size() < MINIMAL_REFERENCE_STRUCTURE_ITEMSET_SIZE) {
+                    continue;
+                }
+                // determine origin data point identifier for input chain
+                entry.getValue().stream()
+                     .filter(itemset -> {
+                         Optional<DataPointIdentifier> optionalIdentifier = itemset.getOriginDataPointIdentifier();
+                         if (optionalIdentifier.isPresent()) {
+                             DataPointIdentifier identifier = optionalIdentifier.get();
+                             return identifier.getPdbIdentifier().equals(pdbIdentifier) && identifier.getChainIdentifier().equals(chainIdentifier);
+                         }
+                         return false;
+                     })
+                     .findFirst()
+                     .ifPresent(correspondingItemsets::add);
+            }
+
+            logger.info("input structure was hit by {} itemsets", correspondingItemsets.size());
+
+            Map<LeafIdentifier, Double> structureCoverage = new TreeMap<>();
+            for (Itemset<LabelType> correspondingItemset : correspondingItemsets) {
+                Optional<StructuralMotif> optionalStructuralMotif = correspondingItemset.getStructuralMotif();
+                if (optionalStructuralMotif.isPresent()) {
+                    StructuralMotif structuralMotif = optionalStructuralMotif.get();
+                    for (LeafSubstructure<?> leafSubstructure : structuralMotif.getAllLeafSubstructures()) {
+                        structureCoverage.merge(leafSubstructure.getIdentifier(), 1.0, (oldValue, newValue) -> oldValue + newValue);
+                    }
+                }
+            }
+
+            // normalize structure coverage
+            double maxValue = structureCoverage.values().stream()
+                                               .mapToDouble(Double::doubleValue)
+                                               .max().orElse(1.0);
+            structureCoverage = structureCoverage.entrySet().stream()
+                                                 .collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue() / maxValue));
+
+            DecimalFormat decimalFormat = new DecimalFormat("0.00");
+
+            // encode in B-factors
+            List<String> allAtomLines = new ArrayList<>();
+            for (LeafSubstructure<?> leafSubstructure : structure.getFirstModel().getAllLeafSubstructures()) {
+                Map<LeafIdentifier, Double> finalStructureCoverage = structureCoverage;
+                List<String> atomLines = AtomToken.assemblePDBLine(leafSubstructure).stream()
+                                                  .map(line -> line.replace("0.00", decimalFormat.format(finalStructureCoverage.getOrDefault(leafSubstructure.getIdentifier(), 0.0))))
+                                                  .collect(Collectors.toList());
+                allAtomLines.addAll(atomLines);
+            }
+
+            Path coverageStructurePath = outputPath.resolve(pdbIdentifier + "_" + chainIdentifier + "_coverage.pdb");
+            Files.write(coverageStructurePath, allAtomLines.stream().collect(Collectors.joining("\n")).getBytes());
+            logger.info("representation of structure coverage written to {}", coverageStructurePath);
+        } else {
+            throw new UnsupportedOperationException("writing of reference structure is only available if single chain input was used");
         }
     }
 }

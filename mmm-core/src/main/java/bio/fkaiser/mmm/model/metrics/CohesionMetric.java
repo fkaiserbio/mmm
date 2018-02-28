@@ -145,7 +145,7 @@ public class CohesionMetric<LabelType extends Comparable<LabelType>> extends Abs
         }
 
         @Override
-        public Void call() throws Exception {
+        public Void call() {
 
             for (Itemset<LabelType> itemset : itemsets) {
 

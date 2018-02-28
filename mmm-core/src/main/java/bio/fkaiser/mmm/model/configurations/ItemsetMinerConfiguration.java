@@ -42,6 +42,8 @@ public class ItemsetMinerConfiguration<LabelType extends Comparable<LabelType>> 
     private String creationDate;
     @JsonProperty("description")
     private String description;
+    @JsonProperty("input-chain")
+    private String inputChain;
     @JsonProperty("input-list-location")
     private String inputListLocation;
     @JsonProperty("input-directory-location")
@@ -88,19 +90,31 @@ public class ItemsetMinerConfiguration<LabelType extends Comparable<LabelType>> 
         return new ItemsetMinerConfiguration<>().fromJson(inputStream);
     }
 
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
     @Override public String toString() {
         return "ItemsetMinerConfiguration{" +
                "creationUser='" + creationUser + '\'' +
                ", creationDate='" + creationDate + '\'' +
                '}';
+    }
+
+    public void addSimpleMetricConfiguration(SimpleMetricConfiguration<LabelType> simpleMetricConfiguration) {
+        simpleMetricConfigurations.add(simpleMetricConfiguration);
+    }
+
+    public void addExtractionDependentMetricConfiguration(ExtractionDependentMetricConfiguration<LabelType> extractionDependentMetricConfiguration) {
+        extractionDependentMetricConfigurations.add(extractionDependentMetricConfiguration);
+    }
+
+    public void addMappingRule(MappingRule<LabelType> mappingRule) {
+        mappingRules.add(mappingRule);
+    }
+
+    public String getCreationDate() {
+        return creationDate;
+    }
+
+    public String getCreationUser() {
+        return creationUser;
     }
 
     public DataPointEnricher<LabelType> getDataPointEnricher() {
@@ -111,14 +125,6 @@ public class ItemsetMinerConfiguration<LabelType extends Comparable<LabelType>> 
         this.dataPointEnricher = dataPointEnricher;
     }
 
-    public String getInputDirectoryLocation() {
-        return inputDirectoryLocation;
-    }
-
-    public void setInputDirectoryLocation(String inputDirectoryLocation) {
-        this.inputDirectoryLocation = inputDirectoryLocation;
-    }
-
     public DataPointReaderConfiguration getDataPointReaderConfiguration() {
         return dataPointReaderConfiguration;
     }
@@ -127,52 +133,16 @@ public class ItemsetMinerConfiguration<LabelType extends Comparable<LabelType>> 
         this.dataPointReaderConfiguration = dataPointReaderConfiguration;
     }
 
-    public ItemsetComparatorType getItemsetComparatorType() {
-        return itemsetComparatorType;
+    public String getDescription() {
+        return description;
     }
 
-    public void setItemsetComparatorType(ItemsetComparatorType itemsetComparatorType) {
-        this.itemsetComparatorType = itemsetComparatorType;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
-    public int getMaximalEpochs() {
-        return maximalEpochs;
-    }
-
-    public void setMaximalEpochs(int maximalEpochs) {
-        this.maximalEpochs = maximalEpochs;
-    }
-
-    public List<SimpleMetricConfiguration<LabelType>> getSimpleMetricConfigurations() {
-        return simpleMetricConfigurations;
-    }
-
-    public void addSimpleMetricConfiguration(SimpleMetricConfiguration<LabelType> simpleMetricConfiguration) {
-        simpleMetricConfigurations.add(simpleMetricConfiguration);
-    }
-
-    public String getInputListLocation() {
-        return inputListLocation;
-    }
-
-    public void setInputListLocation(String inputListLocation) {
-        this.inputListLocation = inputListLocation;
-    }
-
-    public String getOutputLocation() {
-        return outputLocation;
-    }
-
-    public void setOutputLocation(String outputLocation) {
-        this.outputLocation = outputLocation;
-    }
-
-    public String getCreationUser() {
-        return creationUser;
-    }
-
-    public String getCreationDate() {
-        return creationDate;
+    public List<ExtractionDependentMetricConfiguration<LabelType>> getExtractionDependentMetricConfigurations() {
+        return extractionDependentMetricConfigurations;
     }
 
     public ExtractionMetricConfiguration<LabelType> getExtractionMetricConfiguration() {
@@ -183,12 +153,36 @@ public class ItemsetMinerConfiguration<LabelType extends Comparable<LabelType>> 
         this.extractionMetricConfiguration = extractionMetricConfiguration;
     }
 
-    public List<ExtractionDependentMetricConfiguration<LabelType>> getExtractionDependentMetricConfigurations() {
-        return extractionDependentMetricConfigurations;
+    public String getInputChain() {
+        return inputChain;
     }
 
-    public void addExtractionDependentMetricConfiguration(ExtractionDependentMetricConfiguration<LabelType> extractionDependentMetricConfiguration) {
-        extractionDependentMetricConfigurations.add(extractionDependentMetricConfiguration);
+    public void setInputChain(String inputChain) {
+        this.inputChain = inputChain;
+    }
+
+    public String getInputDirectoryLocation() {
+        return inputDirectoryLocation;
+    }
+
+    public void setInputDirectoryLocation(String inputDirectoryLocation) {
+        this.inputDirectoryLocation = inputDirectoryLocation;
+    }
+
+    public String getInputListLocation() {
+        return inputListLocation;
+    }
+
+    public void setInputListLocation(String inputListLocation) {
+        this.inputListLocation = inputListLocation;
+    }
+
+    public ItemsetComparatorType getItemsetComparatorType() {
+        return itemsetComparatorType;
+    }
+
+    public void setItemsetComparatorType(ItemsetComparatorType itemsetComparatorType) {
+        this.itemsetComparatorType = itemsetComparatorType;
     }
 
     public List<MappingRule<LabelType>> getMappingRules() {
@@ -199,8 +193,20 @@ public class ItemsetMinerConfiguration<LabelType extends Comparable<LabelType>> 
         this.mappingRules = mappingRules;
     }
 
-    public void addMappingRule(MappingRule<LabelType> mappingRule) {
-        mappingRules.add(mappingRule);
+    public int getMaximalEpochs() {
+        return maximalEpochs;
+    }
+
+    public void setMaximalEpochs(int maximalEpochs) {
+        this.maximalEpochs = maximalEpochs;
+    }
+
+    public String getOutputLocation() {
+        return outputLocation;
+    }
+
+    public void setOutputLocation(String outputLocation) {
+        this.outputLocation = outputLocation;
     }
 
     public SignificanceEstimatorConfiguration getSignificanceEstimatorConfiguration() {
@@ -209,5 +215,9 @@ public class ItemsetMinerConfiguration<LabelType extends Comparable<LabelType>> 
 
     public void setSignificanceEstimatorConfiguration(SignificanceEstimatorConfiguration significanceEstimatorConfiguration) {
         this.significanceEstimatorConfiguration = significanceEstimatorConfiguration;
+    }
+
+    public List<SimpleMetricConfiguration<LabelType>> getSimpleMetricConfigurations() {
+        return simpleMetricConfigurations;
     }
 }

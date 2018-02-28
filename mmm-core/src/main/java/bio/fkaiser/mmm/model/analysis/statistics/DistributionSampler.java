@@ -197,7 +197,7 @@ class DistributionSampler<LabelType extends Comparable<LabelType>> extends DataP
         }
 
         @Override
-        public Void call() throws Exception {
+        public Void call() {
 
             for (Itemset<LabelType> itemset : itemsets) {
 

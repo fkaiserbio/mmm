@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
 public class LigandInteractionEnricher extends AbstractInteractionEnricher {
 
     private static final Logger logger = LoggerFactory.getLogger(LigandInteractionEnricher.class);
-    private static final String PLIP_REST_PROVIDER_URL_PROTEIN = "https://biosciences.hs-mittweida.de/plip/interaction/calculate/nucleotide";
+    private static final String PLIP_REST_PROVIDER_URL_PROTEIN = "https://biosciences.hs-mittweida.de/plip/interaction/calculate/protein";
     private static final String PLIP_REST_PROVIDER_URL_NUCLEOTIDE = "https://biosciences.hs-mittweida.de/plip/interaction/calculate/nucleotide";
 
     /**

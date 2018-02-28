@@ -89,16 +89,19 @@ public class ItemsetMinerRunner {
         logger.info(">>>STEP 1<<< reading data points");
         // input path is resource
         String inputListLocation = itemsetMinerConfiguration.getInputListLocation();
+        String inputChain = itemsetMinerConfiguration.getInputChain();
+        String inputDirectoryLocation = itemsetMinerConfiguration.getInputDirectoryLocation();
 
         // decide whether to use directory, chain list, or given IDs
         DataPointReader dataPointReader;
-        if (itemsetMinerConfiguration.getInputListLocation() == null) {
-            List<Path> structurePaths = Files.list(Paths.get(itemsetMinerConfiguration.getInputDirectoryLocation()))
+        if (inputListLocation == null && inputChain == null && inputDirectoryLocation != null) {
+            logger.info("input directory will be used");
+            List<Path> structurePaths = Files.list(Paths.get(inputDirectoryLocation))
                                              .filter(path -> path.toFile().isFile())
                                              .collect(Collectors.toList());
             dataPointReader = new DataPointReader(itemsetMinerConfiguration.getDataPointReaderConfiguration(), structurePaths);
 
-        } else {
+        } else if (inputChain == null && inputDirectoryLocation == null && inputListLocation != null) {
             Path inputListPath;
             URL inputListResourceURL = Thread.currentThread().getContextClassLoader()
                                              .getResource(inputListLocation);
@@ -110,6 +113,12 @@ public class ItemsetMinerRunner {
                 logger.info("external input list will be used");
             }
             dataPointReader = new DataPointReader(itemsetMinerConfiguration.getDataPointReaderConfiguration(), inputListPath);
+        } else if (inputDirectoryLocation == null && inputListLocation == null && inputChain != null) {
+            logger.info("single chain input will be used");
+            dataPointReader = new DataPointReader(itemsetMinerConfiguration.getDataPointReaderConfiguration(), inputChain);
+        } else {
+            logger.error("only one of the following input specifications is allowed: 'input-directory-location', 'input-list-location', or 'input-chain'");
+            throw new IllegalArgumentException("input specification malformed");
         }
         dataPoints = dataPointReader.readDataPoints();
     }
@@ -251,7 +260,7 @@ public class ItemsetMinerRunner {
         }
     }
 
-    private void calculateSignificance() throws IOException {
+    private void calculateSignificance() {
 
         logger.info(">>>STEP 6<<< calculating significance");
 
@@ -266,6 +275,13 @@ public class ItemsetMinerRunner {
 
         SignificanceEstimator<String> significanceEstimator = new SignificanceEstimator<>(itemsetMiner, significanceEstimatorConfiguration);
         significantItemsets = significanceEstimator.getSignificantItemsets();
+
+        logger.info("retaining only {} significant out of {} total itemsets", significantItemsets.size(), itemsetMiner.getTotalItemsets().size());
+
+        itemsetMiner.getTotalItemsets().removeIf(entry -> !significantItemsets.values().contains(entry));
+        itemsetMiner.getTotalExtractedItemsets().entrySet().removeIf(entry -> !significantItemsets.values().contains(entry.getKey()));
+        itemsetMiner.getTotalClusteredItemsets().entrySet().removeIf(entry -> !significantItemsets.values().contains(entry.getKey()));
+        itemsetMiner.getTotalAffinityItemsets().entrySet().removeIf(entry -> !significantItemsets.values().contains(entry.getKey()));
     }
 
     private void outputResults() throws IOException {
@@ -274,6 +290,8 @@ public class ItemsetMinerRunner {
 
         ResultWriter<String> resultWriter = new ResultWriter<>(itemsetMinerConfiguration, itemsetMiner);
         resultWriter.writeItemsetMinerConfiguration();
+
+        // decide which structures to write
         if (!itemsetMiner.getTotalClusteredItemsets().isEmpty()) {
             resultWriter.writeClusteredItemsets();
         } else if (!itemsetMiner.getTotalAffinityItemsets().isEmpty()) {
@@ -281,26 +299,30 @@ public class ItemsetMinerRunner {
         } else if (!itemsetMiner.getTotalExtractedItemsets().isEmpty() && itemsetMiner.getTotalClusteredItemsets().isEmpty()) {
             resultWriter.writeExtractedItemsets();
         }
-    }
 
-    public TreeMap<SignificanceEstimator.Significance, Itemset<String>> getSignificantItemsets() {
-        return significantItemsets;
-    }
-
-
-    public ItemsetMinerConfiguration<String> getItemsetMinerConfiguration() {
-        return itemsetMinerConfiguration;
-    }
-
-    public List<EvaluationMetric<String>> getEvaluationMetrics() {
-        return evaluationMetrics;
+        // write reference structure if single chain input was used
+        if (itemsetMinerConfiguration.getInputChain() != null) {
+            resultWriter.writeReferenceStructure();
+        }
     }
 
     public List<DataPoint<String>> getDataPoints() {
         return dataPoints;
     }
 
+    public List<EvaluationMetric<String>> getEvaluationMetrics() {
+        return evaluationMetrics;
+    }
+
     public ItemsetMiner<String> getItemsetMiner() {
         return itemsetMiner;
+    }
+
+    public ItemsetMinerConfiguration<String> getItemsetMinerConfiguration() {
+        return itemsetMinerConfiguration;
+    }
+
+    public TreeMap<SignificanceEstimator.Significance, Itemset<String>> getSignificantItemsets() {
+        return significantItemsets;
     }
 }
