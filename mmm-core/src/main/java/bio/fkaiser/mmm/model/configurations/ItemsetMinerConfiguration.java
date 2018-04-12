@@ -50,6 +50,8 @@ public class ItemsetMinerConfiguration<LabelType extends Comparable<LabelType>> 
     private String inputDirectoryLocation;
     @JsonProperty("output-location")
     private String outputLocation;
+    @JsonProperty("reference-chain")
+    private String referenceChain;
     @JsonProperty("data-point-reader-configuration")
     private DataPointReaderConfiguration dataPointReaderConfiguration;
     @JsonProperty("data-point-enricher")
@@ -68,7 +70,6 @@ public class ItemsetMinerConfiguration<LabelType extends Comparable<LabelType>> 
     private int maximalEpochs = DEFAULT_MAXIMAL_EPOCHS;
     @JsonProperty("significance-estimator-configuration")
     private SignificanceEstimatorConfiguration significanceEstimatorConfiguration;
-
     public ItemsetMinerConfiguration() {
         this.creationUser = System.getProperty("user.name");
         this.creationDate = LocalDateTime.now().toString();
@@ -207,6 +208,14 @@ public class ItemsetMinerConfiguration<LabelType extends Comparable<LabelType>> 
 
     public void setOutputLocation(String outputLocation) {
         this.outputLocation = outputLocation;
+    }
+
+    public String getReferenceChain() {
+        return referenceChain;
+    }
+
+    public void setReferenceChain(String referenceChain) {
+        this.referenceChain = referenceChain;
     }
 
     public SignificanceEstimatorConfiguration getSignificanceEstimatorConfiguration() {

@@ -300,8 +300,12 @@ public class ItemsetMinerRunner {
             resultWriter.writeExtractedItemsets();
         }
 
-        // write reference structure if single chain input was used
+        // write reference structure if single chain input was used or reference structure was explicitly specified
         if (itemsetMinerConfiguration.getInputChain() != null) {
+            resultWriter.writeReferenceStructure();
+        } else if (itemsetMinerConfiguration.getReferenceChain() != null) {
+            // treat reference chain as "input" chain to write reference structure
+            itemsetMinerConfiguration.setInputChain(itemsetMinerConfiguration.getReferenceChain());
             resultWriter.writeReferenceStructure();
         }
     }
