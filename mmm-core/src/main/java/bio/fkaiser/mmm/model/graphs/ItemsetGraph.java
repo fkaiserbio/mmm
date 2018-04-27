@@ -1,6 +1,6 @@
 package bio.fkaiser.mmm.model.graphs;
 
-import de.bioforscher.singa.mathematics.graphs.model.AbstractGraph;
+import de.bioforscher.singa.mathematics.graphs.model.AbstractMapGraph;
 import de.bioforscher.singa.mathematics.vectors.Vector2D;
 
 /**
@@ -8,7 +8,7 @@ import de.bioforscher.singa.mathematics.vectors.Vector2D;
  *
  * @author fk
  */
-public class ItemsetGraph<LabelType extends Comparable<LabelType>> extends AbstractGraph<ItemsetNode<LabelType>, ItemsetEdge<LabelType>, Vector2D, Integer> {
+public class ItemsetGraph<LabelType extends Comparable<LabelType>> extends AbstractMapGraph<ItemsetNode<LabelType>, ItemsetEdge<LabelType>, Vector2D, Integer> {
 
     private int nextNodeIdentifier;
 

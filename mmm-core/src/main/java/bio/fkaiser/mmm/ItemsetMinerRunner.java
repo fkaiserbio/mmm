@@ -308,6 +308,9 @@ public class ItemsetMinerRunner {
             itemsetMinerConfiguration.setInputChain(itemsetMinerConfiguration.getReferenceChain());
             resultWriter.writeReferenceStructure();
         }
+
+        // write CSV report
+        resultWriter.writeCSV();
     }
 
     public List<DataPoint<String>> getDataPoints() {

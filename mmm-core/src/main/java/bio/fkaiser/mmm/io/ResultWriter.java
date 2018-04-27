@@ -8,6 +8,7 @@ import bio.fkaiser.mmm.model.Itemset;
 import bio.fkaiser.mmm.model.configurations.ItemsetMinerConfiguration;
 import bio.fkaiser.mmm.model.metrics.ConsensusMetric;
 import bio.fkaiser.mmm.model.metrics.ExtractionMetric;
+import de.bioforscher.singa.core.utility.Resources;
 import de.bioforscher.singa.structure.algorithms.superimposition.affinity.AffinityAlignment;
 import de.bioforscher.singa.structure.algorithms.superimposition.consensus.ConsensusAlignment;
 import de.bioforscher.singa.structure.model.identifiers.LeafIdentifier;
@@ -18,7 +19,10 @@ import de.bioforscher.singa.structure.parser.pdb.structures.tokens.AtomToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -206,41 +210,75 @@ public class ResultWriter<LabelType extends Comparable<LabelType>> {
 
             logger.info("input structure was hit by {} itemsets", correspondingItemsets.size());
 
-            Map<LeafIdentifier, Double> structureCoverage = new TreeMap<>();
+            // store absolute structure coverage
+            Map<LeafIdentifier, Double> absoluteStructureCoverage = new TreeMap<>();
             for (Itemset<LabelType> correspondingItemset : correspondingItemsets) {
                 Optional<StructuralMotif> optionalStructuralMotif = correspondingItemset.getStructuralMotif();
                 if (optionalStructuralMotif.isPresent()) {
                     StructuralMotif structuralMotif = optionalStructuralMotif.get();
                     for (LeafSubstructure<?> leafSubstructure : structuralMotif.getAllLeafSubstructures()) {
-                        structureCoverage.merge(leafSubstructure.getIdentifier(), 1.0, (oldValue, newValue) -> oldValue + newValue);
+                        absoluteStructureCoverage.merge(leafSubstructure.getIdentifier(), 1.0, (oldValue, newValue) -> oldValue + newValue);
                     }
                 }
             }
 
             // normalize structure coverage
-            double maxValue = structureCoverage.values().stream()
-                                               .mapToDouble(Double::doubleValue)
-                                               .max().orElse(1.0);
-            structureCoverage = structureCoverage.entrySet().stream()
-                                                 .collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue() / maxValue));
+            double maxValue = absoluteStructureCoverage.values().stream()
+                                                       .mapToDouble(Double::doubleValue)
+                                                       .max().orElse(1.0);
+            Map<LeafIdentifier, Double> relativeStructureCoverage = absoluteStructureCoverage.entrySet().stream()
+                                                                                             .collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue() / maxValue));
 
             DecimalFormat decimalFormat = new DecimalFormat("0.00");
 
             // encode in B-factors
             List<String> allAtomLines = new ArrayList<>();
             for (LeafSubstructure<?> leafSubstructure : referenceLeafSubstructures) {
-                Map<LeafIdentifier, Double> finalStructureCoverage = structureCoverage;
                 List<String> atomLines = AtomToken.assemblePDBLine(leafSubstructure).stream()
-                                                  .map(line -> line.replace("0.00", decimalFormat.format(finalStructureCoverage.getOrDefault(leafSubstructure.getIdentifier(), 0.0))))
+                                                  .map(line -> line.replace("0.00", decimalFormat.format(relativeStructureCoverage.getOrDefault(leafSubstructure.getIdentifier(), 0.0))))
                                                   .collect(Collectors.toList());
                 allAtomLines.addAll(atomLines);
             }
 
-            Path coverageStructurePath = outputPath.resolve(pdbIdentifier + "_" + chainIdentifier + "_coverage.pdb");
+            String coverageFileName = pdbIdentifier + "_" + chainIdentifier + "_coverage.pdb";
+            Path coverageStructurePath = outputPath.resolve(coverageFileName);
             Files.write(coverageStructurePath, allAtomLines.stream().collect(Collectors.joining("\n")).getBytes());
             logger.info("representation of structure coverage written to {}", coverageStructurePath);
+
+            // write CSV representation of structure coverage
+            StringJoiner csvJoiner = new StringJoiner("\n", "residue,absolute,relative\n", "");
+            for (Map.Entry<LeafIdentifier, Double> entry : absoluteStructureCoverage.entrySet()) {
+                csvJoiner.add(entry.getKey() + "," + entry.getValue() + "," + relativeStructureCoverage.get(entry.getKey()));
+            }
+            Path csvPath = outputPath.resolve(pdbIdentifier + "_" + chainIdentifier + "_coverage.csv");
+            Files.write(csvPath, csvJoiner.toString().getBytes());
+            logger.info("CSV representation of structure coverage written to {}", csvPath);
+
+            // write PML file for structure coverage
+            InputStream inputStream = Resources.getResourceAsStream("mmm_coverage.pml");
+            String pmlContent = new BufferedReader(new InputStreamReader(inputStream))
+                    .lines().collect(Collectors.joining("\n"));
+            pmlContent = pmlContent.replace("%COVERAGE_FILE%", coverageFileName);
+            Path pmlPath = outputPath.resolve(pdbIdentifier + "_" + chainIdentifier + "_coverage.pml");
+            Files.write(pmlPath, pmlContent.getBytes());
+            logger.info("PyMol PML file of structure coverage written to {}", pmlPath);
+
         } else {
             throw new UnsupportedOperationException("writing of reference structure is only available if single chain input was used");
         }
+    }
+
+    /**
+     * Writes the mines {@link Itemset}s to a CSV file.
+     *
+     * @throws IOException If writing of CSV file fails.
+     */
+    public void writeCSV() throws IOException {
+        String fileContent = itemsetMiner.getTotalItemsets().stream()
+                                         .map(Itemset::toCSVLine)
+                                         .collect(Collectors.joining("\n", Itemset.CSV_HEADER, ""));
+        Path csvOutputPath = outputPath.resolve("summary.csv");
+        logger.info("writing CSV output to {}", csvOutputPath);
+        Files.write(csvOutputPath, fileContent.getBytes());
     }
 }

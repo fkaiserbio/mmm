@@ -44,10 +44,6 @@ public class SignificanceEstimator<LabelType extends Comparable<LabelType>> {
         sampleDistributions(configuration.getLevelOfParallelism(), configuration.getSampleSize());
     }
 
-    public TreeMap<Significance, Itemset<LabelType>> getSignificantItemsets() {
-        return significantItemsets;
-    }
-
     /**
      * Samples background distributions with the given level of parallelism.
      *
@@ -96,10 +92,16 @@ public class SignificanceEstimator<LabelType extends Comparable<LabelType>> {
         if (pValue < significanceCutoff) {
             Significance significance = new Significance(pValue, ks);
             significantItemsets.put(significance, itemset);
+            itemset.setpValue(pValue);
+            itemset.setKs(ks);
             logger.info("itemset {} is significant with {}", itemset.toSimpleString(), significance);
         } else {
             logger.info("itemset {} is insignificant", itemset.toSimpleString());
         }
+    }
+
+    public TreeMap<Significance, Itemset<LabelType>> getSignificantItemsets() {
+        return significantItemsets;
     }
 
     /**
@@ -115,14 +117,6 @@ public class SignificanceEstimator<LabelType extends Comparable<LabelType>> {
             this.ks = ks;
         }
 
-        public double getPvalue() {
-            return pvalue;
-        }
-
-        public double getKs() {
-            return ks;
-        }
-
         @Override public String toString() {
             return "Significance{" +
                    "pvalue=" + pvalue +
@@ -132,6 +126,14 @@ public class SignificanceEstimator<LabelType extends Comparable<LabelType>> {
 
         @Override public int compareTo(Significance o) {
             return Double.compare(pvalue, o.pvalue);
+        }
+
+        public double getKs() {
+            return ks;
+        }
+
+        public double getPvalue() {
+            return pvalue;
         }
     }
 }

@@ -3,6 +3,7 @@ package bio.fkaiser.mmm.io;
 import bio.fkaiser.mmm.model.configurations.Jsonizable;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
+import de.bioforscher.singa.structure.parser.pdb.rest.cluster.PDBSequenceCluster.PDBSequenceClusterIdentity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +17,7 @@ import java.util.List;
 public class DataPointReaderConfiguration implements Jsonizable<DataPointReaderConfiguration> {
 
     private static final String DEFAULT_CHAIN_LIST_SEPARATOR = "\t";
-    private static final PDBSequenceCluster DEFAULT_SEQUENCE_CLUSTER = PDBSequenceCluster.IDENTITY_90;
+    private static final PDBSequenceClusterIdentity DEFAULT_PDB_SEQUENCE_CLUSTER_IDENTITY = PDBSequenceClusterIdentity.IDENTITY_90;
 
     @JsonProperty("pdb-location")
     private String pdbLocation;
@@ -25,7 +26,7 @@ public class DataPointReaderConfiguration implements Jsonizable<DataPointReaderC
     @JsonProperty("parse-ligands")
     private boolean parseLigands;
     @JsonProperty("pdb-sequence-cluster")
-    private PDBSequenceCluster pdbSequenceCluster = DEFAULT_SEQUENCE_CLUSTER;
+    private PDBSequenceClusterIdentity pdbSequenceCluster = DEFAULT_PDB_SEQUENCE_CLUSTER_IDENTITY;
     @JsonProperty("ligand-label-whitelist")
     private List<String> ligandLabelWhitelist = new ArrayList<>();
     @JsonProperty("parse-nucleotides")
@@ -68,11 +69,11 @@ public class DataPointReaderConfiguration implements Jsonizable<DataPointReaderC
         this.pdbLocation = pdbLocation;
     }
 
-    public PDBSequenceCluster getPdbSequenceCluster() {
+    public PDBSequenceClusterIdentity getPdbSequenceCluster() {
         return pdbSequenceCluster;
     }
 
-    public void setPdbSequenceCluster(PDBSequenceCluster pdbSequenceCluster) {
+    public void setPdbSequenceCluster(PDBSequenceClusterIdentity pdbSequenceCluster) {
         this.pdbSequenceCluster = pdbSequenceCluster;
     }
 
@@ -108,11 +109,4 @@ public class DataPointReaderConfiguration implements Jsonizable<DataPointReaderC
         this.parseWater = parseWater;
     }
 
-    public enum PDBSequenceCluster {
-        IDENTITY_100, IDENTITY_95, IDENTITY_90, IDENTITY_70, IDENTITY_50, IDENTITY_40, IDENTITY_30;
-
-        public int getIdentity() {
-            return Integer.parseInt(this.name().split("_")[1]);
-        }
-    }
 }

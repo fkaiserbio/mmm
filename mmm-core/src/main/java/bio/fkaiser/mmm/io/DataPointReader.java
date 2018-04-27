@@ -2,7 +2,6 @@ package bio.fkaiser.mmm.io;
 
 import bio.fkaiser.mmm.ItemsetMiner;
 import bio.fkaiser.mmm.ItemsetMinerException;
-import bio.fkaiser.mmm.io.DataPointReaderConfiguration.PDBSequenceCluster;
 import bio.fkaiser.mmm.model.DataPoint;
 import bio.fkaiser.mmm.model.DataPointIdentifier;
 import bio.fkaiser.mmm.model.Item;
@@ -12,6 +11,7 @@ import de.bioforscher.singa.structure.model.interfaces.Model;
 import de.bioforscher.singa.structure.model.interfaces.Structure;
 import de.bioforscher.singa.structure.model.oak.StructuralEntityFilter;
 import de.bioforscher.singa.structure.model.oak.Structures;
+import de.bioforscher.singa.structure.parser.pdb.rest.cluster.PDBSequenceCluster;
 import de.bioforscher.singa.structure.parser.pdb.structures.SourceLocation;
 import de.bioforscher.singa.structure.parser.pdb.structures.StructureParser;
 import de.bioforscher.singa.structure.parser.pdb.structures.StructureParser.LocalPDB;
@@ -22,17 +22,13 @@ import de.bioforscher.singa.structure.parser.pdb.structures.StructureParserOptio
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Predicate;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * A reader for {@link DataPoint}s from PDB files. One needs to supply a {@link DataPointReaderConfiguration} object that specifies all configurations.
@@ -117,51 +113,26 @@ public class DataPointReader {
     /**
      * Initializes the {@link MultiParser} from a single given chain, using the PDB REST service to obtain sequence clusters.
      *
-     * @param inputChain The input chain in the format [chain-ID].[PDB-ID]
+     * @param inputChain The input chain in the format [PDB-ID].[chain-ID]
      */
     private Path initializeFromSingleChain(String inputChain) throws IOException {
 
-        PDBSequenceCluster pdbSequenceCluster = dataPointReaderConfiguration.getPdbSequenceCluster();
+        PDBSequenceCluster.PDBSequenceClusterIdentity pdbSequenceCluster = dataPointReaderConfiguration.getPdbSequenceCluster();
         logger.info("obtaining PDB cluster for input chain {} and sequence cluster {}", inputChain, pdbSequenceCluster);
-        String urlLocation = PDB_CLUSTER_BASE_URL + pdbSequenceCluster.getIdentity() + "&structureId=" + inputChain;
-        logger.info("calling PDB REST: {}", urlLocation);
 
-        URL url = new URL(urlLocation);
-
-        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-
-        if (conn.getResponseCode() != 200) {
-            throw new IOException(conn.getResponseMessage());
+        String[] split = inputChain.split("\\.");
+        if (split.length != 2) {
+            throw new IllegalArgumentException("Invalid input chain specification: " + inputChain);
         }
 
-        Pattern linePattern = Pattern.compile("<pdbChain name=\"([0-9A-Z.]+)\" rank=\"(\\d+)\" />");
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-        // store already used ranks to avoid mining of homomeric structures
-        Set<Integer> ranks = new TreeSet<>();
-        StringJoiner stringJoiner = new StringJoiner("\n");
-        String line;
-        while ((line = bufferedReader.readLine()) != null) {
-            line = line.trim();
-            Matcher matcher = linePattern.matcher(line);
-            if (matcher.matches()) {
-                String chainSpecification = matcher.group(1);
-                String pdbIdentifier = chainSpecification.split("\\.")[0].toLowerCase();
-                String chainIdentifier = chainSpecification.split("\\.")[1];
-                int rank = Integer.parseInt(matcher.group(2));
-                if (!ranks.contains(rank)) {
-                    stringJoiner.add(pdbIdentifier + "\t" + chainIdentifier);
-                } else {
-                    logger.debug("ignored duplicate homomeric entry {}_{}", pdbIdentifier, chainIdentifier);
-                }
-                ranks.add(rank);
-            }
-        }
-        bufferedReader.close();
-        conn.disconnect();
+        PDBSequenceCluster sequenceCluster = PDBSequenceCluster.of(split[0], split[1], pdbSequenceCluster);
+        String chainListContent = sequenceCluster.getClusterMembers().stream()
+                                                 .map(member -> member.getPdbIdentifier().getIdentifier() + "\t" + member.getChainIdentifier())
+                                                 .collect(Collectors.joining("\n"));
 
         Path chainListPath = Files.createTempFile("mmm_", ".txt");
         logger.info("writing temporary chain list to path {}", chainListPath);
-        Files.write(chainListPath, stringJoiner.toString().getBytes());
+        Files.write(chainListPath, chainListContent.getBytes());
         return chainListPath;
     }
 
