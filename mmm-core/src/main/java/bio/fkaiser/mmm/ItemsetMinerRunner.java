@@ -11,6 +11,7 @@ import bio.fkaiser.mmm.model.configurations.metrics.ExtractionDependentMetricCon
 import bio.fkaiser.mmm.model.configurations.metrics.ExtractionMetricConfiguration;
 import bio.fkaiser.mmm.model.configurations.metrics.SimpleMetricConfiguration;
 import bio.fkaiser.mmm.model.enrichment.DataPointEnricher;
+import bio.fkaiser.mmm.model.enrichment.IntraChainInteractionEnricher;
 import bio.fkaiser.mmm.model.mapping.DataPointLabelMapper;
 import bio.fkaiser.mmm.model.mapping.MappingRule;
 import bio.fkaiser.mmm.model.metrics.EvaluationMetric;
@@ -53,8 +54,12 @@ public class ItemsetMinerRunner {
         createMetrics();
         mineDataPoints();
         calculateSignificance();
-        outputResults();
-        printReport();
+        if (itemsetMinerConfiguration.getOutputLocation() == null) {
+            logger.info("no output location specified, no results will be written");
+        } else {
+            outputResults();
+            printReport();
+        }
     }
 
     public ItemsetMinerRunner(ItemsetMinerConfiguration<String> itemsetMinerConfiguration, List<DataPoint<String>> dataPoints) throws IOException {
@@ -65,8 +70,12 @@ public class ItemsetMinerRunner {
         createMetrics();
         mineDataPoints();
         calculateSignificance();
-        outputResults();
-        printReport();
+        if (itemsetMinerConfiguration.getOutputLocation() == null) {
+            logger.info("no output location specified, no results will be written");
+        } else {
+            outputResults();
+            printReport();
+        }
     }
 
     public static void main(String[] args) throws IOException, URISyntaxException {
@@ -91,6 +100,14 @@ public class ItemsetMinerRunner {
         String inputListLocation = itemsetMinerConfiguration.getInputListLocation();
         String inputChain = itemsetMinerConfiguration.getInputChain();
         String inputDirectoryLocation = itemsetMinerConfiguration.getInputDirectoryLocation();
+
+        // check if MMTF should be used along with intra-chain contacts
+        if (itemsetMinerConfiguration.getDataPointReaderConfiguration().isMmtf()) {
+            DataPointEnricher<String> dataPointEnricher = itemsetMinerConfiguration.getDataPointEnricher();
+            if (dataPointEnricher instanceof IntraChainInteractionEnricher) {
+                throw new IllegalArgumentException("The enrichment of intra-chain contacts is not possible when using MMTF parsing.");
+            }
+        }
 
         // decide whether to use directory, chain list, or given IDs
         DataPointReader dataPointReader;
@@ -191,8 +208,8 @@ public class ItemsetMinerRunner {
 
         StringBuilder report = new StringBuilder()
                 .append("\n\n\t>>>Itemset Miner<<<")
-                .append("\n\n\tCopyright (c) 2017.\n")
-                .append("\tFlorian Kaiser, bioinformatics group Mittweida\n")
+                .append("\n\n\tCopyright (c) 2018.\n")
+                .append("\tFlorian Kaiser <contact@fkaiser.bio>\n")
                 .append("\n====CONFIGURATION====================================================\n")
                 .append("\t# of data points\t")
                 .append(dataPoints.size())

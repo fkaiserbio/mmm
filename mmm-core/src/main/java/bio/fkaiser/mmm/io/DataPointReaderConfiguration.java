@@ -21,6 +21,8 @@ public class DataPointReaderConfiguration implements Jsonizable<DataPointReaderC
 
     @JsonProperty("pdb-location")
     private String pdbLocation;
+    @JsonProperty("mmtf")
+    private boolean mmtf;
     @JsonProperty("chain-list-separator")
     private String chainListSeparator = DEFAULT_CHAIN_LIST_SEPARATOR;
     @JsonProperty("parse-ligands")
@@ -83,6 +85,14 @@ public class DataPointReaderConfiguration implements Jsonizable<DataPointReaderC
 
     public void setConsecutiveSequenceNumbering(boolean consecutiveSequenceNumbering) {
         this.consecutiveSequenceNumbering = consecutiveSequenceNumbering;
+    }
+
+    public boolean isMmtf() {
+        return mmtf;
+    }
+
+    public void setMmtf(boolean mmtf) {
+        this.mmtf = mmtf;
     }
 
     public boolean isParseLigands() {

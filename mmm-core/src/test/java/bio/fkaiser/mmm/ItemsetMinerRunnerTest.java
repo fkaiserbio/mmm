@@ -1,7 +1,6 @@
 package bio.fkaiser.mmm;
 
 import bio.fkaiser.mmm.io.DataPointReaderConfiguration;
-import bio.fkaiser.mmm.io.DataPointReaderConfiguration.PDBSequenceCluster;
 import bio.fkaiser.mmm.model.ItemsetComparatorType;
 import bio.fkaiser.mmm.model.analysis.statistics.SignificanceEstimatorType;
 import bio.fkaiser.mmm.model.configurations.ItemsetMinerConfiguration;
@@ -10,7 +9,10 @@ import bio.fkaiser.mmm.model.configurations.metrics.CohesionMetricConfiguration;
 import bio.fkaiser.mmm.model.configurations.metrics.ConsensusMetricConfiguration;
 import bio.fkaiser.mmm.model.configurations.metrics.SeparationMetricConfiguration;
 import bio.fkaiser.mmm.model.configurations.metrics.SupportMetricConfiguration;
+import bio.fkaiser.mmm.model.enrichment.IntraChainInteractionEnricher;
 import bio.fkaiser.mmm.model.mapping.rules.ChemicalGroupsMappingRule;
+import de.bioforscher.singa.structure.parser.pdb.rest.cluster.PDBSequenceCluster;
+import de.bioforscher.singa.structure.parser.pdb.rest.cluster.PDBSequenceCluster.PDBSequenceClusterIdentity;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -20,6 +22,8 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import static de.bioforscher.singa.structure.parser.pdb.rest.cluster.PDBSequenceCluster.PDBSequenceClusterIdentity.IDENTITY_70;
 
 /**
  * @author fk
@@ -35,7 +39,8 @@ public class ItemsetMinerRunnerTest {
     public void setUp() {
         itemsetMinerConfiguration = new ItemsetMinerConfiguration<>();
         itemsetMinerConfiguration.setMaximalEpochs(3);
-        itemsetMinerConfiguration.setOutputLocation(folder.getRoot().toString());
+//        itemsetMinerConfiguration.setOutputLocation(folder.getRoot().toString());
+        itemsetMinerConfiguration.setOutputLocation("/tmp/is");
         dataPointReaderConfiguration = new DataPointReaderConfiguration();
         dataPointReaderConfiguration.setConsecutiveSequenceNumbering(true);
         itemsetMinerConfiguration.setDataPointReaderConfiguration(dataPointReaderConfiguration);
@@ -47,8 +52,8 @@ public class ItemsetMinerRunnerTest {
         itemsetMinerConfiguration.setInputListLocation("craven2016_WSXWS_motif.txt");
 
 //        itemsetMinerConfiguration.setMappingRules(Stream.of(new ChemicalGroupsMappingRule()).collect(Collectors.toList()));
-        itemsetMinerConfiguration.setMaximalEpochs(3);
-//        itemsetMinerConfiguration.setDataPointEnricher(new IntraChainInteractionEnricher());
+//        itemsetMinerConfiguration.setMaximalEpochs(3);
+        itemsetMinerConfiguration.setDataPointEnricher(new IntraChainInteractionEnricher());
 
         SupportMetricConfiguration<String> supportMetricConfiguration = new SupportMetricConfiguration<>();
         supportMetricConfiguration.setMinimalSupport(0.9);
@@ -96,7 +101,7 @@ public class ItemsetMinerRunnerTest {
     public void shouldRunAgainstSingleChain() throws IOException, URISyntaxException {
 
         itemsetMinerConfiguration.setInputChain("9pcy.A");
-        itemsetMinerConfiguration.getDataPointReaderConfiguration().setPdbSequenceCluster(PDBSequenceCluster.IDENTITY_70);
+        itemsetMinerConfiguration.getDataPointReaderConfiguration().setPdbSequenceCluster(IDENTITY_70);
 
         itemsetMinerConfiguration.setMappingRules(Stream.of(new ChemicalGroupsMappingRule()).collect(Collectors.toList()));
 //        itemsetMinerConfiguration.setDataPointEnricher(new IntraChainInteractionEnricher());
@@ -140,6 +145,13 @@ public class ItemsetMinerRunnerTest {
         significanceEstimatorConfiguration.setSignificanceCutoff(0.001);
         itemsetMinerConfiguration.setSignificanceEstimatorConfiguration(significanceEstimatorConfiguration);
 
+        new ItemsetMinerRunner(itemsetMinerConfiguration);
+    }
+
+    @Test
+    public void shouldFailWithMmtfAndIntraChain() throws IOException, URISyntaxException {
+        dataPointReaderConfiguration.setMmtf(true);
+        itemsetMinerConfiguration.setDataPointEnricher(new IntraChainInteractionEnricher());
         new ItemsetMinerRunner(itemsetMinerConfiguration);
     }
 }
