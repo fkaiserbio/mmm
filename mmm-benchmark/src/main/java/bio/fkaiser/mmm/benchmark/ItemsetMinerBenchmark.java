@@ -24,12 +24,11 @@ import java.util.concurrent.TimeUnit;
 @State(Scope.Benchmark)
 public class ItemsetMinerBenchmark {
 
-    //    @Param({"PDB", "MMTF"})
-    @Param({"MMTF"})
+    @Param({"PDB", "MMTF"})
     private String parsing;
 
     //    @Param({"250", "500", "750", "1000", "1250", "1500", "1750", "2000"})
-    @Param({"250"})
+    @Param({"20", "40", "60", "80", "100"})
     private int datasetSize;
     private ItemsetMinerConfiguration<String> itemsetMinerConfiguration;
 
@@ -82,7 +81,7 @@ public class ItemsetMinerBenchmark {
             itemsetMinerConfiguration.getDataPointReaderConfiguration().setMmtf(false);
         }
 
-        String fileName = "nrpdb_041416_BLAST_e-7_pdb-mmtf_mutual_subset_" + datasetSize + ".txt";
+        String fileName = "PF00127_chains_nrpdb_041416_BLAST_e-80_" + datasetSize + ".txt";
         Path chainListPath = Paths.get(Resources.getResourceAsFileLocation(fileName));
 
         itemsetMinerConfiguration.setInputListLocation(chainListPath.toString());
