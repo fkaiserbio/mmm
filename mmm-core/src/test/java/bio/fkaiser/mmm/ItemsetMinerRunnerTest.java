@@ -11,8 +11,6 @@ import bio.fkaiser.mmm.model.configurations.metrics.SeparationMetricConfiguratio
 import bio.fkaiser.mmm.model.configurations.metrics.SupportMetricConfiguration;
 import bio.fkaiser.mmm.model.enrichment.IntraChainInteractionEnricher;
 import bio.fkaiser.mmm.model.mapping.rules.ChemicalGroupsMappingRule;
-import de.bioforscher.singa.structure.parser.pdb.rest.cluster.PDBSequenceCluster;
-import de.bioforscher.singa.structure.parser.pdb.rest.cluster.PDBSequenceCluster.PDBSequenceClusterIdentity;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -39,8 +37,7 @@ public class ItemsetMinerRunnerTest {
     public void setUp() {
         itemsetMinerConfiguration = new ItemsetMinerConfiguration<>();
         itemsetMinerConfiguration.setMaximalEpochs(3);
-//        itemsetMinerConfiguration.setOutputLocation(folder.getRoot().toString());
-        itemsetMinerConfiguration.setOutputLocation("/tmp/is");
+        itemsetMinerConfiguration.setOutputLocation(folder.getRoot().toString());
         dataPointReaderConfiguration = new DataPointReaderConfiguration();
         dataPointReaderConfiguration.setConsecutiveSequenceNumbering(true);
         itemsetMinerConfiguration.setDataPointReaderConfiguration(dataPointReaderConfiguration);
@@ -53,7 +50,7 @@ public class ItemsetMinerRunnerTest {
 
 //        itemsetMinerConfiguration.setMappingRules(Stream.of(new ChemicalGroupsMappingRule()).collect(Collectors.toList()));
 //        itemsetMinerConfiguration.setMaximalEpochs(3);
-        itemsetMinerConfiguration.setDataPointEnricher(new IntraChainInteractionEnricher());
+//        itemsetMinerConfiguration.setDataPointEnricher(new IntraChainInteractionEnricher());
 
         SupportMetricConfiguration<String> supportMetricConfiguration = new SupportMetricConfiguration<>();
         supportMetricConfiguration.setMinimalSupport(0.9);
@@ -88,11 +85,11 @@ public class ItemsetMinerRunnerTest {
 //        itemsetMinerConfiguration.addExtractionDependentMetricConfiguration(affinityMetricConfiguration);
 //        itemsetMinerConfiguration.setItemsetComparatorType(ItemsetComparatorType.AFFINITY);
 
-//        SignificanceEstimatorConfiguration significanceEstimatorConfiguration = new SignificanceEstimatorConfiguration();
-//        significanceEstimatorConfiguration.setSignificanceType(SignificanceEstimatorType.CONSENSUS);
-//        significanceEstimatorConfiguration.setSampleSize(10);
-//        significanceEstimatorConfiguration.setSignificanceCutoff(0.1);
-//        itemsetMinerConfiguration.setSignificanceEstimatorConfiguration(significanceEstimatorConfiguration);
+        SignificanceEstimatorConfiguration significanceEstimatorConfiguration = new SignificanceEstimatorConfiguration();
+        significanceEstimatorConfiguration.setSignificanceType(SignificanceEstimatorType.CONSENSUS);
+        significanceEstimatorConfiguration.setSampleSize(10);
+        significanceEstimatorConfiguration.setSignificanceCutoff(0.1);
+        itemsetMinerConfiguration.setSignificanceEstimatorConfiguration(significanceEstimatorConfiguration);
 
         new ItemsetMinerRunner(itemsetMinerConfiguration);
     }
@@ -148,7 +145,7 @@ public class ItemsetMinerRunnerTest {
         new ItemsetMinerRunner(itemsetMinerConfiguration);
     }
 
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void shouldFailWithMmtfAndIntraChain() throws IOException, URISyntaxException {
         dataPointReaderConfiguration.setMmtf(true);
         itemsetMinerConfiguration.setDataPointEnricher(new IntraChainInteractionEnricher());

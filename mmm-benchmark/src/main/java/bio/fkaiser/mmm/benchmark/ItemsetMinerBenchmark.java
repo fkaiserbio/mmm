@@ -3,9 +3,6 @@ package bio.fkaiser.mmm.benchmark;
 import bio.fkaiser.mmm.ItemsetMinerRunner;
 import bio.fkaiser.mmm.model.configurations.ItemsetMinerConfiguration;
 import de.bioforscher.singa.core.utility.Resources;
-import de.bioforscher.singa.structure.model.oak.StructuralMotif;
-import de.bioforscher.singa.structure.parser.pdb.structures.StructureParser;
-import de.bioforscher.singa.structure.parser.pfam.PfamParser;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.results.RunResult;
 import org.openjdk.jmh.runner.Runner;
@@ -27,18 +24,19 @@ import java.util.concurrent.TimeUnit;
 @State(Scope.Benchmark)
 public class ItemsetMinerBenchmark {
 
-    @Param({"PDB", "MMTF"})
+    //    @Param({"PDB", "MMTF"})
+    @Param({"MMTF"})
     private String parsing;
 
-    //    @Param({"100"})
-    @Param({"250", "500", "750", "1000", "1250", "1500", "1750", "2000"})
+    //    @Param({"250", "500", "750", "1000", "1250", "1500", "1750", "2000"})
+    @Param({"250"})
     private int datasetSize;
     private ItemsetMinerConfiguration<String> itemsetMinerConfiguration;
 
     public static void main(String[] args) throws RunnerException, IOException {
         Options opt = new OptionsBuilder()
                 .include(ItemsetMinerBenchmark.class.getSimpleName())
-                .warmupIterations(5)
+                .warmupIterations(1)
                 .measurementIterations(5)
                 .forks(1)
                 .mode(Mode.AverageTime)
@@ -67,7 +65,7 @@ public class ItemsetMinerBenchmark {
                                 confidenceInterval[1];
             stringJoiner.add(resultLine);
         }
-        Files.write(Paths.get("results_single_motif.csv"), stringJoiner.toString().getBytes());
+        Files.write(Paths.get("results_benchmark.csv"), stringJoiner.toString().getBytes());
     }
 
     @Setup

@@ -30,13 +30,6 @@
     <orderEntry type="library" name="angular-route" level="application" />
     <orderEntry type="library" name="R User Library" level="project" />
     <orderEntry type="library" name="R Skeletons" level="application" />
-    <orderEntry type="library" name="Maven: de.bioforscher.singa:singa-javafx:0.3.2" level="project" />
-    <orderEntry type="library" name="Maven: de.bioforscher.singa:singa-chemistry:0.3.2" level="project" />
-    <orderEntry type="library" name="Maven: de.bioforscher.singa:singa-sequence:0.3.2" level="project" />
-    <orderEntry type="library" name="Maven: de.bioforscher.singa:singa-core:0.3.2" level="project" />
-    <orderEntry type="library" name="Maven: de.bioforscher.singa:singa-mathematics:0.3.2" level="project" />
-    <orderEntry type="library" name="Maven: de.bioforscher.singa:singa-structure:0.3.2" level="project" />
-    <orderEntry type="library" name="Maven: de.bioforscher.singa:singa-features:0.3.2" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter-data-mongodb:1.5.4.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter:1.5.4.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot:1.5.4.RELEASE" level="project" />
