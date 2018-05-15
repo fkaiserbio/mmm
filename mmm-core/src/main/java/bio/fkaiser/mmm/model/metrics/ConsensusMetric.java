@@ -47,7 +47,7 @@ public class ConsensusMetric<LabelType extends Comparable<LabelType>> extends Ab
         clusterCutoff = consensusMetricConfiguration.getClusterCutoffValue();
         levelOfParallelism = consensusMetricConfiguration.getLevelOfParallelism();
         executorService = (levelOfParallelism == -1) ? Executors.newWorkStealingPool() : Executors.newWorkStealingPool(levelOfParallelism);
-        atomFilter = consensusMetricConfiguration.getAtomFilterType().getFilter();
+        atomFilter = consensusMetricConfiguration.getAtomFilter() == null ? consensusMetricConfiguration.getAtomFilterType().getFilter() : consensusMetricConfiguration.getAtomFilter();
         representationSchemeType = consensusMetricConfiguration.getRepresentationSchemeType();
         alignWithinClusters = consensusMetricConfiguration.isAlignWithinClusters();
 
@@ -63,15 +63,6 @@ public class ConsensusMetric<LabelType extends Comparable<LabelType>> extends Ab
      */
     public static double calculateConsensus(ConsensusAlignment consensusAlignment) {
         return consensusAlignment.getNormalizedConsensusScore();
-    }
-
-    public Map<Itemset<LabelType>, ConsensusAlignment> getClusteredItemsets() {
-        return clusteredItemsets;
-    }
-
-    @Override
-    public int getMinimalItemsetSize() {
-        return 2;
     }
 
     @Override
@@ -122,8 +113,17 @@ public class ConsensusMetric<LabelType extends Comparable<LabelType>> extends Ab
         extractedItemsets.entrySet().removeIf(entry -> entry.getKey().getConsensus() > maximalConsensus);
     }
 
+    public Map<Itemset<LabelType>, ConsensusAlignment> getClusteredItemsets() {
+        return clusteredItemsets;
+    }
+
     @Override public Map<Itemset<LabelType>, Distribution> getDistributions() {
         return distributions;
+    }
+
+    @Override
+    public int getMinimalItemsetSize() {
+        return 2;
     }
 
     private class ConsensusCalculator implements Callable<Map<Itemset<LabelType>, ConsensusAlignment>> {

@@ -40,7 +40,6 @@ import java.util.stream.Collectors;
 public class DataPointReader {
 
     private static final Logger logger = LoggerFactory.getLogger(ItemsetMiner.class);
-    private static final String PDB_CLUSTER_BASE_URL = "http://www.rcsb.org/pdb/rest/sequenceCluster?cluster=";
     private static final int MINIMAL_REQUIRED_STRUCTURES = 2;
 
     private final DataPointReaderConfiguration dataPointReaderConfiguration;
@@ -82,36 +81,6 @@ public class DataPointReader {
                     dataPointReaderConfiguration.getPdbSequenceCluster());
     }
 
-    private void initializeMultiParser(Path chainListPath) {
-        if (dataPointReaderConfiguration.getPdbLocation() != null) {
-            if (dataPointReaderConfiguration.isMmtf()) {
-                multiParser = StructureParser.local()
-                                             .localPDB(new LocalPDB(dataPointReaderConfiguration.getPdbLocation(), SourceLocation.OFFLINE_MMTF))
-                                             .chainList(chainListPath, dataPointReaderConfiguration.getChainListSeparator())
-                                             .setOptions(structureParserOptions);
-                logger.info("using local MMTF {} for parsing", dataPointReaderConfiguration.getPdbLocation());
-            } else {
-                multiParser = StructureParser.local()
-                                             .localPDB(new LocalPDB(dataPointReaderConfiguration.getPdbLocation(), SourceLocation.OFFLINE_PDB))
-                                             .chainList(chainListPath, dataPointReaderConfiguration.getChainListSeparator())
-                                             .setOptions(structureParserOptions);
-                logger.info("using local PDB {} for parsing", dataPointReaderConfiguration.getPdbLocation());
-            }
-        } else {
-            if (dataPointReaderConfiguration.isMmtf()) {
-                multiParser = StructureParser.mmtf()
-                                             .chainList(chainListPath, dataPointReaderConfiguration.getChainListSeparator())
-                                             .setOptions(structureParserOptions);
-                logger.info("using online MMFT for parsing");
-            }else{
-                multiParser = StructureParser.pdb()
-                                             .chainList(chainListPath, dataPointReaderConfiguration.getChainListSeparator())
-                                             .setOptions(structureParserOptions);
-                logger.info("using online PDB for parsing");
-            }
-        }
-    }
-
     /**
      * Checks whether the label of the given {@link LeafSubstructure} is contained in the given white list for labels.
      *
@@ -121,6 +90,44 @@ public class DataPointReader {
      */
     private static boolean hasValidLabel(LeafSubstructure<?> leafSubstructureToCheck, List<String> labelWhiteList) {
         return !(leafSubstructureToCheck instanceof Ligand) || labelWhiteList.contains(leafSubstructureToCheck.getFamily().getThreeLetterCode());
+    }
+
+    private void initializeMultiParser(Path chainListPath) {
+        if (dataPointReaderConfiguration.getPdbLocation() != null) {
+            if (dataPointReaderConfiguration.getLocalPDB() != null) {
+                multiParser = StructureParser.local()
+                                             .localPDB(dataPointReaderConfiguration.getLocalPDB())
+                                             .chainList(chainListPath, dataPointReaderConfiguration.getChainListSeparator())
+                                             .setOptions(structureParserOptions);
+                logger.info("using provided instance {} of local PDB for parsing", dataPointReaderConfiguration.getLocalPDB());
+            } else {
+                if (dataPointReaderConfiguration.isMmtf()) {
+                    multiParser = StructureParser.local()
+                                                 .localPDB(new LocalPDB(dataPointReaderConfiguration.getPdbLocation(), SourceLocation.OFFLINE_MMTF))
+                                                 .chainList(chainListPath, dataPointReaderConfiguration.getChainListSeparator())
+                                                 .setOptions(structureParserOptions);
+                    logger.info("using local MMTF {} for parsing", dataPointReaderConfiguration.getPdbLocation());
+                } else {
+                    multiParser = StructureParser.local()
+                                                 .localPDB(new LocalPDB(dataPointReaderConfiguration.getPdbLocation(), SourceLocation.OFFLINE_PDB))
+                                                 .chainList(chainListPath, dataPointReaderConfiguration.getChainListSeparator())
+                                                 .setOptions(structureParserOptions);
+                    logger.info("using local PDB {} for parsing", dataPointReaderConfiguration.getPdbLocation());
+                }
+            }
+        } else {
+            if (dataPointReaderConfiguration.isMmtf()) {
+                multiParser = StructureParser.mmtf()
+                                             .chainList(chainListPath, dataPointReaderConfiguration.getChainListSeparator())
+                                             .setOptions(structureParserOptions);
+                logger.info("using online MMFT for parsing");
+            } else {
+                multiParser = StructureParser.pdb()
+                                             .chainList(chainListPath, dataPointReaderConfiguration.getChainListSeparator())
+                                             .setOptions(structureParserOptions);
+                logger.info("using online PDB for parsing");
+            }
+        }
     }
 
     /**

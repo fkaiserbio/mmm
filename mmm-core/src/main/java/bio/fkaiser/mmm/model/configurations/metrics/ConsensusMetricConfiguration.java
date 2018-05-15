@@ -2,10 +2,14 @@ package bio.fkaiser.mmm.model.configurations.metrics;
 
 import bio.fkaiser.mmm.model.configurations.Jsonizable;
 import bio.fkaiser.mmm.model.metrics.ConsensusMetric;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import de.bioforscher.singa.structure.algorithms.superimposition.fit3d.representations.RepresentationSchemeType;
+import de.bioforscher.singa.structure.model.interfaces.Atom;
 import de.bioforscher.singa.structure.model.oak.StructuralEntityFilter.AtomFilterType;
+
+import java.util.function.Predicate;
 
 /**
  * The {@link Jsonizable} configuration of the {@link ConsensusMetric}.
@@ -43,25 +47,38 @@ public class ConsensusMetricConfiguration<LabelType extends Comparable<LabelType
     private int levelOfParallelism = DEFAULT_LEVEL_OF_PARALLELISM;
     @JsonProperty("atom-filter-type")
     private AtomFilterType atomFilterType = DEFAULT_ATOM_FILTER_TYPE;
+    @JsonIgnore
+    private Predicate<Atom> atomFilter;
     @JsonProperty("representation-scheme-type")
     private RepresentationSchemeType representationSchemeType;
     @JsonProperty("align-within-clusters")
     private boolean alignWithinClusters;
 
-    public RepresentationSchemeType getRepresentationSchemeType() {
-        return representationSchemeType;
+    @Override public String toString() {
+        return "ConsensusMetricConfiguration{" +
+               "maximalConsensus=" + maximalConsensus +
+               ", clusterCutoffValue=" + clusterCutoffValue +
+               ", levelOfParallelism=" + levelOfParallelism +
+               ", atomFilterType=" + atomFilterType +
+               ", representationSchemeType=" + representationSchemeType +
+               ", alignWithinClusters=" + alignWithinClusters +
+               '}';
     }
 
-    public void setRepresentationSchemeType(RepresentationSchemeType representationSchemeType) {
-        this.representationSchemeType = representationSchemeType;
+    public Predicate<Atom> getAtomFilter() {
+        return atomFilter;
     }
 
-    public double getMaximalConsensus() {
-        return maximalConsensus;
+    public void setAtomFilter(Predicate<Atom> atomFilter) {
+        this.atomFilter = atomFilter;
     }
 
-    public void setMaximalConsensus(double maximalConsensus) {
-        this.maximalConsensus = maximalConsensus;
+    public AtomFilterType getAtomFilterType() {
+        return atomFilterType;
+    }
+
+    public void setAtomFilterType(AtomFilterType atomFilterType) {
+        this.atomFilterType = atomFilterType;
     }
 
     public double getClusterCutoffValue() {
@@ -80,12 +97,20 @@ public class ConsensusMetricConfiguration<LabelType extends Comparable<LabelType
         this.levelOfParallelism = levelOfParallelism;
     }
 
-    public AtomFilterType getAtomFilterType() {
-        return atomFilterType;
+    public double getMaximalConsensus() {
+        return maximalConsensus;
     }
 
-    public void setAtomFilterType(AtomFilterType atomFilterType) {
-        this.atomFilterType = atomFilterType;
+    public void setMaximalConsensus(double maximalConsensus) {
+        this.maximalConsensus = maximalConsensus;
+    }
+
+    public RepresentationSchemeType getRepresentationSchemeType() {
+        return representationSchemeType;
+    }
+
+    public void setRepresentationSchemeType(RepresentationSchemeType representationSchemeType) {
+        this.representationSchemeType = representationSchemeType;
     }
 
     public boolean isAlignWithinClusters() {
@@ -94,16 +119,5 @@ public class ConsensusMetricConfiguration<LabelType extends Comparable<LabelType
 
     public void setAlignWithinClusters(boolean alignWithinClusters) {
         this.alignWithinClusters = alignWithinClusters;
-    }
-
-    @Override public String toString() {
-        return "ConsensusMetricConfiguration{" +
-               "maximalConsensus=" + maximalConsensus +
-               ", clusterCutoffValue=" + clusterCutoffValue +
-               ", levelOfParallelism=" + levelOfParallelism +
-               ", atomFilterType=" + atomFilterType +
-               ", representationSchemeType=" + representationSchemeType +
-               ", alignWithinClusters=" + alignWithinClusters +
-               '}';
     }
 }

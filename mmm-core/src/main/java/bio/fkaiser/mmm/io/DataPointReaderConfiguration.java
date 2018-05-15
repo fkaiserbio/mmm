@@ -4,6 +4,8 @@ import bio.fkaiser.mmm.model.configurations.Jsonizable;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import de.bioforscher.singa.structure.parser.pdb.rest.cluster.PDBSequenceCluster.PDBSequenceClusterIdentity;
+import de.bioforscher.singa.structure.parser.pdb.structures.StructureParser;
+import jdk.nashorn.internal.ir.annotations.Ignore;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +23,8 @@ public class DataPointReaderConfiguration implements Jsonizable<DataPointReaderC
 
     @JsonProperty("pdb-location")
     private String pdbLocation;
+    @Ignore
+    private StructureParser.LocalPDB localPDB;
     @JsonProperty("mmtf")
     private boolean mmtf;
     @JsonProperty("chain-list-separator")
@@ -61,6 +65,14 @@ public class DataPointReaderConfiguration implements Jsonizable<DataPointReaderC
 
     public void setLigandLabelWhitelist(List<String> ligandLabelWhitelist) {
         this.ligandLabelWhitelist = ligandLabelWhitelist;
+    }
+
+    public StructureParser.LocalPDB getLocalPDB() {
+        return localPDB;
+    }
+
+    public void setLocalPDB(StructureParser.LocalPDB localPDB) {
+        this.localPDB = localPDB;
     }
 
     public String getPdbLocation() {
