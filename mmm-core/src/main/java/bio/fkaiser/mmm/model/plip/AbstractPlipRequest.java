@@ -19,18 +19,22 @@ public abstract class AbstractPlipRequest {
     protected static String PLIP_REST_PROVIDER_CREDENTIALS;
 
     static {
-        // load PLIP credentials
-        InputStream baseConfigurationResource = Resources.getResourceAsStream("plip_credentials.txt");
-        if (baseConfigurationResource != null) {
-            try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(baseConfigurationResource))) {
-                List<String> fileContent = bufferedReader.lines().collect(Collectors.toList());
-                if (fileContent.size() != 1) {
-                    throw new RuntimeException("credentials file must contain exactly one line in the format user:password");
+        try {
+            // load PLIP credentials
+            InputStream baseConfigurationResource = Resources.getResourceAsStream("plip_credentials.txt");
+            if (baseConfigurationResource != null) {
+                try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(baseConfigurationResource))) {
+                    List<String> fileContent = bufferedReader.lines().collect(Collectors.toList());
+                    if (fileContent.size() != 1) {
+                        throw new RuntimeException("credentials file must contain exactly one line in the format user:password");
+                    }
+                    PLIP_REST_PROVIDER_CREDENTIALS = fileContent.get(0);
+                } catch (IOException e) {
+                    throw new RuntimeException("failed to load PLIP credentials, please provide file plip_credentials.txt under class resources", e);
                 }
-                PLIP_REST_PROVIDER_CREDENTIALS = fileContent.get(0);
-            } catch (IOException e) {
-                throw new RuntimeException("failed to load PLIP credentials, please provide file plip_credentials.txt under class resources");
             }
+        } catch (Exception e) {
+            throw new RuntimeException("failed to load PLIP credentials, please provide file plip_credentials.txt under class resources", e);
         }
     }
 
