@@ -20,11 +20,11 @@
     <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.7.21" level="project" />
     <orderEntry type="library" name="Maven: org.slf4j:slf4j-log4j12:1.7.21" level="project" />
     <orderEntry type="library" name="Maven: log4j:log4j:1.2.17" level="project" />
-    <orderEntry type="library" name="Maven: bio.fkaiser.mmm:mmm-core:0.1.2" level="project" />
-    <orderEntry type="library" name="Maven: de.bioforscher.singa:singa-core:0.3.3" level="project" />
-    <orderEntry type="library" name="Maven: de.bioforscher.singa:singa-mathematics:0.3.3" level="project" />
-    <orderEntry type="library" name="Maven: de.bioforscher.singa:singa-structure:0.3.3" level="project" />
-    <orderEntry type="library" name="Maven: de.bioforscher.singa:singa-features:0.3.3" level="project" />
+    <orderEntry type="module" module-name="mmm-core" />
+    <orderEntry type="library" name="Maven: bio.singa:singa-javafx:0.4.0" level="project" />
+    <orderEntry type="library" name="Maven: bio.singa:singa-chemistry:0.4.0" level="project" />
+    <orderEntry type="library" name="Maven: bio.singa:singa-sequence:0.4.0" level="project" />
+    <orderEntry type="library" name="Maven: org.jsoup:jsoup:1.10.1" level="project" />
     <orderEntry type="library" name="Maven: org.apache.commons:commons-math3:3.6.1" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: junit:junit:4.12" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.hamcrest:hamcrest-core:1.3" level="project" />
