@@ -4,7 +4,7 @@ import bio.fkaiser.mmm.ItemsetMiner;
 import bio.fkaiser.mmm.model.Item;
 import bio.fkaiser.mmm.model.Itemset;
 import bio.fkaiser.mmm.model.analysis.AbstractItemsetMinerAnalyzer;
-import de.bioforscher.singa.core.utility.Pair;
+import bio.singa.core.utility.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

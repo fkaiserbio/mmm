@@ -3,8 +3,8 @@ package bio.fkaiser.mmm.model.metrics;
 import bio.fkaiser.mmm.model.Item;
 import bio.fkaiser.mmm.model.Itemset;
 import bio.fkaiser.mmm.model.configurations.metrics.SeparationMetricConfiguration;
-import de.bioforscher.singa.structure.model.interfaces.AminoAcid;
-import de.bioforscher.singa.structure.model.interfaces.Nucleotide;
+import bio.singa.structure.model.interfaces.AminoAcid;
+import bio.singa.structure.model.interfaces.Nucleotide;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

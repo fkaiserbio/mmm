@@ -2,13 +2,13 @@ package bio.fkaiser.mmm.model.mapping.rules;
 
 import bio.fkaiser.mmm.model.Item;
 import bio.fkaiser.mmm.model.mapping.MappingRule;
+import bio.singa.structure.model.families.AminoAcidFamily;
+import bio.singa.structure.model.families.NucleotideFamily;
+import bio.singa.structure.model.families.StructuralFamily;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeName;
-import de.bioforscher.singa.structure.model.families.AminoAcidFamily;
-import de.bioforscher.singa.structure.model.families.NucleotideFamily;
-import de.bioforscher.singa.structure.model.families.StructuralFamily;
 
 import java.util.Optional;
 

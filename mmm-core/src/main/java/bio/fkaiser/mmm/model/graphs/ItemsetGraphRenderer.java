@@ -1,6 +1,7 @@
 package bio.fkaiser.mmm.model.graphs;
 
-import de.bioforscher.singa.javafx.renderer.graphs.GraphRenderer;
+
+import bio.singa.javafx.renderer.graphs.GraphRenderer;
 
 /**
  * A customized {@link GraphRenderer} to display {@link ItemsetGraph}s.
@@ -13,12 +14,12 @@ public class ItemsetGraphRenderer<LabelType extends Comparable<LabelType>> exten
     protected void drawNode(ItemsetNode<LabelType> node) {
         // draw node
         getGraphicsContext().setFill(getRenderingOptions().getNodeColor());
-        drawPoint(node.getPosition(), getRenderingOptions().getNodeDiameter());
+        fillPoint(node.getPosition(), getRenderingOptions().getNodeDiameter());
         // draw outline
         getGraphicsContext().setStroke(getRenderingOptions().getEdgeColor());
-        circlePoint(node.getPosition(), getRenderingOptions().getNodeDiameter());
+        strokeCircle(node.getPosition(), getRenderingOptions().getNodeDiameter());
         // draw text
         getGraphicsContext().setFill(getRenderingOptions().getIdentifierTextColor());
-        drawTextCenteredOnPoint(node.getItemset().toSimpleString(), node.getPosition());
+        strokeTextCenteredOnPoint(node.getItemset().toSimpleString(), node.getPosition());
     }
 }

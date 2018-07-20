@@ -7,8 +7,8 @@ import bio.fkaiser.mmm.model.Itemset;
 import bio.fkaiser.mmm.model.configurations.ItemsetMinerConfiguration;
 import bio.fkaiser.mmm.model.configurations.metrics.AffinityMetricConfiguration;
 import bio.fkaiser.mmm.model.configurations.metrics.ConsensusMetricConfiguration;
-import de.bioforscher.singa.structure.algorithms.superimposition.affinity.AffinityAlignment;
-import de.bioforscher.singa.structure.algorithms.superimposition.consensus.ConsensusAlignment;
+import bio.singa.structure.algorithms.superimposition.affinity.AffinityAlignment;
+import bio.singa.structure.algorithms.superimposition.consensus.ConsensusAlignment;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

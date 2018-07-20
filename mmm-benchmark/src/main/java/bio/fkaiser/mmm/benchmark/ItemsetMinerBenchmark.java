@@ -2,7 +2,7 @@ package bio.fkaiser.mmm.benchmark;
 
 import bio.fkaiser.mmm.ItemsetMinerRunner;
 import bio.fkaiser.mmm.model.configurations.ItemsetMinerConfiguration;
-import de.bioforscher.singa.core.utility.Resources;
+import bio.singa.core.utility.Resources;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.results.RunResult;
 import org.openjdk.jmh.runner.Runner;

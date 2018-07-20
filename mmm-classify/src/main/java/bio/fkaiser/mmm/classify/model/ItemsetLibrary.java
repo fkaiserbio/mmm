@@ -2,18 +2,18 @@ package bio.fkaiser.mmm.classify.model;
 
 import bio.fkaiser.mmm.model.Itemset;
 import bio.fkaiser.mmm.model.metrics.AffinityMetric;
+import bio.singa.mathematics.graphs.trees.BinaryTree;
+import bio.singa.structure.algorithms.superimposition.affinity.AffinityAlignment;
+import bio.singa.structure.algorithms.superimposition.consensus.ConsensusAlignment;
+import bio.singa.structure.algorithms.superimposition.consensus.ConsensusContainer;
+import bio.singa.structure.model.oak.StructuralMotif;
+import bio.singa.structure.parser.pdb.structures.StructureRepresentation;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import de.bioforscher.singa.mathematics.graphs.trees.BinaryTree;
-import de.bioforscher.singa.structure.algorithms.superimposition.affinity.AffinityAlignment;
-import de.bioforscher.singa.structure.algorithms.superimposition.consensus.ConsensusAlignment;
-import de.bioforscher.singa.structure.algorithms.superimposition.consensus.ConsensusContainer;
-import de.bioforscher.singa.structure.model.oak.StructuralMotif;
-import de.bioforscher.singa.structure.parser.pdb.structures.StructureRepresentation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

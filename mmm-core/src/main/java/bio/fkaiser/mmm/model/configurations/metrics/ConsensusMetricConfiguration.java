@@ -2,12 +2,12 @@ package bio.fkaiser.mmm.model.configurations.metrics;
 
 import bio.fkaiser.mmm.model.configurations.Jsonizable;
 import bio.fkaiser.mmm.model.metrics.ConsensusMetric;
+import bio.singa.structure.algorithms.superimposition.fit3d.representations.RepresentationSchemeType;
+import bio.singa.structure.model.interfaces.Atom;
+import bio.singa.structure.model.oak.StructuralEntityFilter.AtomFilterType;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
-import de.bioforscher.singa.structure.algorithms.superimposition.fit3d.representations.RepresentationSchemeType;
-import de.bioforscher.singa.structure.model.interfaces.Atom;
-import de.bioforscher.singa.structure.model.oak.StructuralEntityFilter.AtomFilterType;
 
 import java.util.function.Predicate;
 

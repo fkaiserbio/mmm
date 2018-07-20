@@ -5,7 +5,7 @@
     <parent>
         <artifactId>mmm-all</artifactId>
         <groupId>bio.fkaiser.mmm</groupId>
-        <version>0.1.2</version>
+        <version>0.2.0</version>
         <relativePath>../mmm-all/pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -120,7 +120,7 @@
         <dependency>
             <groupId>bio.fkaiser.mmm</groupId>
             <artifactId>mmm-core</artifactId>
-            <version>0.1.2</version>
+            <version>0.2.0</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>

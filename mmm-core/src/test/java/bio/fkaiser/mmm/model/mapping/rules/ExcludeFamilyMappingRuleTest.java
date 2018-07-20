@@ -6,8 +6,8 @@ import bio.fkaiser.mmm.model.DataPoint;
 import bio.fkaiser.mmm.model.Item;
 import bio.fkaiser.mmm.model.mapping.DataPointLabelMapper;
 import bio.fkaiser.mmm.model.mapping.MappingRule;
-import de.bioforscher.singa.core.utility.Resources;
-import de.bioforscher.singa.structure.model.families.AminoAcidFamily;
+import bio.singa.core.utility.Resources;
+import bio.singa.structure.model.families.AminoAcidFamily;
 import org.junit.Test;
 
 import java.io.IOException;

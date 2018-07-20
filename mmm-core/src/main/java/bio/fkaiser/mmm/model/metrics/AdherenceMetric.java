@@ -6,8 +6,8 @@ import bio.fkaiser.mmm.model.Distribution;
 import bio.fkaiser.mmm.model.Itemset;
 import bio.fkaiser.mmm.model.configurations.metrics.AdherenceMetricConfiguration;
 import bio.fkaiser.mmm.model.metrics.cohesion.VertexCandidateGenerator;
-import de.bioforscher.singa.mathematics.vectors.RegularVector;
-import de.bioforscher.singa.mathematics.vectors.Vectors;
+import bio.singa.mathematics.vectors.RegularVector;
+import bio.singa.mathematics.vectors.Vectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

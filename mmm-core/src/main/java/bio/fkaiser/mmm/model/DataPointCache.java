@@ -1,9 +1,9 @@
 package bio.fkaiser.mmm.model;
 
-import de.bioforscher.singa.mathematics.matrices.LabeledSymmetricMatrix;
-import de.bioforscher.singa.mathematics.metrics.model.VectorMetricProvider;
-import de.bioforscher.singa.mathematics.vectors.Vector3D;
-import de.bioforscher.singa.structure.algorithms.superimposition.fit3d.representations.RepresentationSchemeType;
+import bio.singa.mathematics.matrices.LabeledSymmetricMatrix;
+import bio.singa.mathematics.metrics.model.VectorMetricProvider;
+import bio.singa.mathematics.vectors.Vector3D;
+import bio.singa.structure.algorithms.superimposition.fit3d.representations.RepresentationSchemeType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

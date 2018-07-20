@@ -15,7 +15,7 @@ import bio.fkaiser.mmm.model.enrichment.IntraChainInteractionEnricher;
 import bio.fkaiser.mmm.model.mapping.DataPointLabelMapper;
 import bio.fkaiser.mmm.model.mapping.MappingRule;
 import bio.fkaiser.mmm.model.metrics.EvaluationMetric;
-import de.bioforscher.singa.structure.parser.pdb.structures.StructureParserOptions;
+import bio.singa.structure.parser.pdb.structures.StructureParserOptions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

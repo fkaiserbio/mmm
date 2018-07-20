@@ -1,10 +1,10 @@
 package bio.fkaiser.mmm.model.graphs;
 
-import de.bioforscher.singa.mathematics.graphs.model.AbstractMapGraph;
-import de.bioforscher.singa.mathematics.vectors.Vector2D;
+import bio.singa.mathematics.graphs.model.AbstractMapGraph;
+import bio.singa.mathematics.vectors.Vector2D;
 
 /**
- * A {@link de.bioforscher.singa.mathematics.graphs.model.Graph} for {@link bio.fkaiser.mmm.model.Itemset}s.
+ * A {@link bio.singa.mathematics.graphs.model.Graph} for {@link bio.fkaiser.mmm.model.Itemset}s.
  *
  * @author fk
  */

@@ -3,7 +3,7 @@ package bio.fkaiser.mmm.model.metrics;
 import bio.fkaiser.mmm.model.DataPoint;
 import bio.fkaiser.mmm.model.DataPointCache;
 import bio.fkaiser.mmm.model.Itemset;
-import de.bioforscher.singa.structure.algorithms.superimposition.fit3d.representations.RepresentationSchemeType;
+import bio.singa.structure.algorithms.superimposition.fit3d.representations.RepresentationSchemeType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

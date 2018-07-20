@@ -2,11 +2,11 @@ package bio.fkaiser.mmm.model.enrichment;
 
 import bio.fkaiser.mmm.model.DataPoint;
 import bio.fkaiser.mmm.model.plip.PlipGetRequest;
+import bio.singa.structure.model.oak.OakStructure;
+import bio.singa.structure.parser.pdb.structures.StructureParser;
+import bio.singa.structure.parser.plip.InteractionContainer;
+import bio.singa.structure.parser.plip.InteractionType;
 import com.fasterxml.jackson.annotation.JsonTypeName;
-import de.bioforscher.singa.structure.model.oak.OakStructure;
-import de.bioforscher.singa.structure.parser.pdb.structures.StructureParser;
-import de.bioforscher.singa.structure.parser.plip.InteractionContainer;
-import de.bioforscher.singa.structure.parser.plip.InteractionType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

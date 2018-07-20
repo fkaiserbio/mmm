@@ -3,9 +3,9 @@ package bio.fkaiser.mmm.model.metrics.cohesion;
 import bio.fkaiser.mmm.model.DataPoint;
 import bio.fkaiser.mmm.model.Item;
 import bio.fkaiser.mmm.model.Itemset;
-import de.bioforscher.singa.mathematics.matrices.LabeledSymmetricMatrix;
-import de.bioforscher.singa.structure.model.interfaces.LeafSubstructure;
-import de.bioforscher.singa.structure.model.oak.StructuralMotif;
+import bio.singa.mathematics.matrices.LabeledSymmetricMatrix;
+import bio.singa.structure.model.interfaces.LeafSubstructure;
+import bio.singa.structure.model.oak.StructuralMotif;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

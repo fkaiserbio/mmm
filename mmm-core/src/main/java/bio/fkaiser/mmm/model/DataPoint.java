@@ -1,8 +1,8 @@
 package bio.fkaiser.mmm.model;
 
-import de.bioforscher.singa.structure.model.interfaces.LeafSubstructure;
-import de.bioforscher.singa.structure.parser.pdb.structures.StructureWriter;
-import de.bioforscher.singa.structure.parser.plip.InteractionType;
+import bio.singa.structure.model.interfaces.LeafSubstructure;
+import bio.singa.structure.parser.pdb.structures.StructureWriter;
+import bio.singa.structure.parser.plip.InteractionType;
 
 import java.io.IOException;
 import java.nio.file.Path;

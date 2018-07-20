@@ -1,7 +1,7 @@
 package bio.fkaiser.mmm.model.plip;
 
-import de.bioforscher.singa.core.utility.Resources;
-import de.bioforscher.singa.structure.parser.plip.InteractionContainer;
+import bio.singa.core.utility.Resources;
+import bio.singa.structure.parser.plip.InteractionContainer;
 
 import java.io.BufferedReader;
 import java.io.IOException;

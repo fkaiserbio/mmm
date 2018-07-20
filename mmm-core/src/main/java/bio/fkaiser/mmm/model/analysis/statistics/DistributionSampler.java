@@ -6,11 +6,11 @@ import bio.fkaiser.mmm.model.*;
 import bio.fkaiser.mmm.model.configurations.metrics.ConsensusMetricConfiguration;
 import bio.fkaiser.mmm.model.metrics.*;
 import bio.fkaiser.mmm.model.metrics.cohesion.VertexCandidateGenerator;
-import de.bioforscher.singa.structure.algorithms.superimposition.affinity.AffinityAlignment;
-import de.bioforscher.singa.structure.algorithms.superimposition.consensus.ConsensusAlignment;
-import de.bioforscher.singa.structure.algorithms.superimposition.consensus.ConsensusBuilder;
-import de.bioforscher.singa.structure.model.oak.StructuralEntityFilter.AtomFilter;
-import de.bioforscher.singa.structure.model.oak.StructuralMotif;
+import bio.singa.structure.algorithms.superimposition.affinity.AffinityAlignment;
+import bio.singa.structure.algorithms.superimposition.consensus.ConsensusAlignment;
+import bio.singa.structure.algorithms.superimposition.consensus.ConsensusBuilder;
+import bio.singa.structure.model.oak.StructuralEntityFilter.AtomFilter;
+import bio.singa.structure.model.oak.StructuralMotif;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -6,17 +6,17 @@
 
     <groupId>bio.fkaiser.mmm</groupId>
     <artifactId>mmm-all</artifactId>
-    <version>0.1.2</version>
+    <version>0.2.0</version>
     <packaging>pom</packaging>
 
     <description>
         Macromolecular Miner
     </description>
 
-    <url>https://github.com/enauz/mmm</url>
+    <url>https://github.com/fkaiserbio/mmm</url>
 
     <properties>
-        <singa.version>0.3.3</singa.version>
+        <singa.version>0.4.0</singa.version>
     </properties>
 
     <licenses>
@@ -96,17 +96,17 @@
         </dependency>
         <!-- SiNGA framework-->
         <dependency>
-            <groupId>de.bioforscher.singa</groupId>
+            <groupId>bio.singa</groupId>
             <artifactId>singa-core</artifactId>
             <version>${singa.version}</version>
         </dependency>
         <dependency>
-            <groupId>de.bioforscher.singa</groupId>
+            <groupId>bio.singa</groupId>
             <artifactId>singa-mathematics</artifactId>
             <version>${singa.version}</version>
         </dependency>
         <dependency>
-            <groupId>de.bioforscher.singa</groupId>
+            <groupId>bio.singa</groupId>
             <artifactId>singa-structure</artifactId>
             <version>${singa.version}</version>
         </dependency>

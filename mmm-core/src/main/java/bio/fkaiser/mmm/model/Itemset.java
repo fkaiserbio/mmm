@@ -1,10 +1,10 @@
 package bio.fkaiser.mmm.model;
 
-import de.bioforscher.singa.mathematics.vectors.Vector;
-import de.bioforscher.singa.mathematics.vectors.Vector3D;
-import de.bioforscher.singa.mathematics.vectors.Vectors;
-import de.bioforscher.singa.structure.model.interfaces.LeafSubstructure;
-import de.bioforscher.singa.structure.model.oak.StructuralMotif;
+import bio.singa.mathematics.vectors.Vector;
+import bio.singa.mathematics.vectors.Vector3D;
+import bio.singa.mathematics.vectors.Vectors;
+import bio.singa.structure.model.interfaces.LeafSubstructure;
+import bio.singa.structure.model.oak.StructuralMotif;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;

@@ -3,11 +3,11 @@ package bio.fkaiser.mmm.model.metrics;
 import bio.fkaiser.mmm.model.Distribution;
 import bio.fkaiser.mmm.model.Itemset;
 import bio.fkaiser.mmm.model.configurations.metrics.ConsensusMetricConfiguration;
-import de.bioforscher.singa.structure.algorithms.superimposition.consensus.ConsensusAlignment;
-import de.bioforscher.singa.structure.algorithms.superimposition.consensus.ConsensusBuilder;
-import de.bioforscher.singa.structure.algorithms.superimposition.fit3d.representations.RepresentationSchemeType;
-import de.bioforscher.singa.structure.model.interfaces.Atom;
-import de.bioforscher.singa.structure.model.oak.StructuralMotif;
+import bio.singa.structure.algorithms.superimposition.consensus.ConsensusAlignment;
+import bio.singa.structure.algorithms.superimposition.consensus.ConsensusBuilder;
+import bio.singa.structure.algorithms.superimposition.fit3d.representations.RepresentationSchemeType;
+import bio.singa.structure.model.interfaces.Atom;
+import bio.singa.structure.model.oak.StructuralMotif;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

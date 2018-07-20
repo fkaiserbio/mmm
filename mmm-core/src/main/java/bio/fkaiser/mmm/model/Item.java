@@ -1,11 +1,11 @@
 package bio.fkaiser.mmm.model;
 
-import de.bioforscher.singa.mathematics.vectors.Vector3D;
-import de.bioforscher.singa.structure.algorithms.superimposition.fit3d.representations.RepresentationScheme;
-import de.bioforscher.singa.structure.algorithms.superimposition.fit3d.representations.RepresentationSchemeFactory;
-import de.bioforscher.singa.structure.algorithms.superimposition.fit3d.representations.RepresentationSchemeType;
-import de.bioforscher.singa.structure.model.interfaces.Atom;
-import de.bioforscher.singa.structure.model.interfaces.LeafSubstructure;
+import bio.singa.mathematics.vectors.Vector3D;
+import bio.singa.structure.algorithms.superimposition.fit3d.representations.RepresentationScheme;
+import bio.singa.structure.algorithms.superimposition.fit3d.representations.RepresentationSchemeFactory;
+import bio.singa.structure.algorithms.superimposition.fit3d.representations.RepresentationSchemeType;
+import bio.singa.structure.model.interfaces.Atom;
+import bio.singa.structure.model.interfaces.LeafSubstructure;
 
 import java.util.Optional;
 

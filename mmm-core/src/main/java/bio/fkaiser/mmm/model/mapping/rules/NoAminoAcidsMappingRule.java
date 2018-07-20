@@ -2,8 +2,8 @@ package bio.fkaiser.mmm.model.mapping.rules;
 
 import bio.fkaiser.mmm.model.Item;
 import bio.fkaiser.mmm.model.mapping.MappingRule;
+import bio.singa.structure.model.interfaces.AminoAcid;
 import com.fasterxml.jackson.annotation.JsonTypeName;
-import de.bioforscher.singa.structure.model.interfaces.AminoAcid;
 
 import java.util.Optional;
 

@@ -1,6 +1,6 @@
 package bio.fkaiser.mmm.classify;
 
-import de.bioforscher.singa.structure.algorithms.superimposition.consensus.ConsensusContainer;
+import bio.singa.structure.algorithms.superimposition.consensus.ConsensusContainer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

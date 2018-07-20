@@ -1,10 +1,10 @@
 package bio.fkaiser.mmm.model;
 
-import de.bioforscher.singa.structure.algorithms.superimposition.fit3d.representations.RepresentationSchemeType;
-import de.bioforscher.singa.structure.model.families.AminoAcidFamily;
-import de.bioforscher.singa.structure.model.identifiers.LeafIdentifier;
-import de.bioforscher.singa.structure.model.interfaces.AminoAcid;
-import de.bioforscher.singa.structure.model.oak.OakAminoAcid;
+import bio.singa.structure.algorithms.superimposition.fit3d.representations.RepresentationSchemeType;
+import bio.singa.structure.model.families.AminoAcidFamily;
+import bio.singa.structure.model.identifiers.LeafIdentifier;
+import bio.singa.structure.model.interfaces.AminoAcid;
+import bio.singa.structure.model.oak.OakAminoAcid;
 import org.junit.Test;
 
 import java.util.NoSuchElementException;

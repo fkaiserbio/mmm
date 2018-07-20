@@ -1,13 +1,13 @@
 package bio.fkaiser.mmm.model.graphs;
 
 import bio.fkaiser.mmm.model.Itemset;
-import de.bioforscher.singa.mathematics.geometry.faces.Rectangle;
-import de.bioforscher.singa.mathematics.graphs.model.AbstractNode;
-import de.bioforscher.singa.mathematics.vectors.Vector2D;
-import de.bioforscher.singa.mathematics.vectors.Vectors;
+import bio.singa.mathematics.geometry.faces.Rectangle;
+import bio.singa.mathematics.graphs.model.AbstractNode;
+import bio.singa.mathematics.vectors.Vector2D;
+import bio.singa.mathematics.vectors.Vectors;
 
 /**
- * A {@link de.bioforscher.singa.mathematics.graphs.model.Node} for an {@link ItemsetGraph}.
+ * A {@link bio.singa.mathematics.graphs.model.Node} for an {@link ItemsetGraph}.
  *
  * @author fk
  */

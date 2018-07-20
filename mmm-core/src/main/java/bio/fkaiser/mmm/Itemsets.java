@@ -2,12 +2,12 @@ package bio.fkaiser.mmm;
 
 import bio.fkaiser.mmm.model.Item;
 import bio.fkaiser.mmm.model.Itemset;
-import de.bioforscher.singa.core.utility.Pair;
-import de.bioforscher.singa.mathematics.matrices.Matrices;
-import de.bioforscher.singa.mathematics.matrices.Matrix;
-import de.bioforscher.singa.mathematics.matrices.SymmetricMatrix;
-import de.bioforscher.singa.mathematics.metrics.model.VectorMetricProvider;
-import de.bioforscher.singa.mathematics.vectors.Vector3D;
+import bio.singa.core.utility.Pair;
+import bio.singa.mathematics.matrices.Matrices;
+import bio.singa.mathematics.matrices.Matrix;
+import bio.singa.mathematics.matrices.SymmetricMatrix;
+import bio.singa.mathematics.metrics.model.VectorMetricProvider;
+import bio.singa.mathematics.vectors.Vector3D;
 
 import java.util.ArrayList;
 import java.util.Collections;

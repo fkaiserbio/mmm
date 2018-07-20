@@ -7,7 +7,7 @@
     <parent>
         <artifactId>mmm-all</artifactId>
         <groupId>bio.fkaiser.mmm</groupId>
-        <version>0.1.2</version>
+        <version>0.2.0</version>
         <relativePath>../mmm-all/pom.xml</relativePath>
     </parent>
 
@@ -16,7 +16,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>de.bioforscher.singa</groupId>
+            <groupId>bio.singa</groupId>
             <artifactId>singa-javafx</artifactId>
             <version>${singa.version}</version>
         </dependency>

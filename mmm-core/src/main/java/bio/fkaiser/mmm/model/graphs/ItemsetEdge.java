@@ -1,9 +1,9 @@
 package bio.fkaiser.mmm.model.graphs;
 
-import de.bioforscher.singa.mathematics.graphs.model.AbstractEdge;
+import bio.singa.mathematics.graphs.model.AbstractEdge;
 
 /**
- * An implementation of an {@link de.bioforscher.singa.mathematics.graphs.model.Edge} for the {@link ItemsetGraph}.
+ * An implementation of an {@link bio.singa.mathematics.graphs.model.Edge} for the {@link ItemsetGraph}.
  *
  * @author fk
  */

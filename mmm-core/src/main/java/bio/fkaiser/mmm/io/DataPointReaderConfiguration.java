@@ -1,10 +1,10 @@
 package bio.fkaiser.mmm.io;
 
 import bio.fkaiser.mmm.model.configurations.Jsonizable;
+import bio.singa.structure.parser.pdb.rest.cluster.PDBSequenceCluster.PDBSequenceClusterIdentity;
+import bio.singa.structure.parser.pdb.structures.StructureParser;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
-import de.bioforscher.singa.structure.parser.pdb.rest.cluster.PDBSequenceCluster.PDBSequenceClusterIdentity;
-import de.bioforscher.singa.structure.parser.pdb.structures.StructureParser;
 import jdk.nashorn.internal.ir.annotations.Ignore;
 
 import java.util.ArrayList;

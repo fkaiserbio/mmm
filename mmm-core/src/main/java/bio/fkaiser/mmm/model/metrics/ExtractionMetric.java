@@ -1,7 +1,7 @@
 package bio.fkaiser.mmm.model.metrics;
 
 import bio.fkaiser.mmm.model.Itemset;
-import de.bioforscher.singa.structure.algorithms.superimposition.fit3d.representations.RepresentationSchemeType;
+import bio.singa.structure.algorithms.superimposition.fit3d.representations.RepresentationSchemeType;
 
 import java.util.List;
 import java.util.Map;

@@ -3,12 +3,12 @@ package bio.fkaiser.mmm.model.enrichment;
 import bio.fkaiser.mmm.model.DataPoint;
 import bio.fkaiser.mmm.model.Item;
 import bio.fkaiser.mmm.model.plip.PlipPostRequest;
+import bio.singa.structure.model.families.NucleotideFamily;
+import bio.singa.structure.model.families.StructuralFamily;
+import bio.singa.structure.model.interfaces.Nucleotide;
+import bio.singa.structure.parser.plip.InteractionContainer;
+import bio.singa.structure.parser.plip.InteractionType;
 import com.fasterxml.jackson.annotation.JsonTypeName;
-import de.bioforscher.singa.structure.model.families.NucleotideFamily;
-import de.bioforscher.singa.structure.model.families.StructuralFamily;
-import de.bioforscher.singa.structure.model.interfaces.Nucleotide;
-import de.bioforscher.singa.structure.parser.plip.InteractionContainer;
-import de.bioforscher.singa.structure.parser.plip.InteractionType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
